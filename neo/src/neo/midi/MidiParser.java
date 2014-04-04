@@ -20,11 +20,9 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
-import neo.harmony.Chord;
-import neo.note.Motive;
-import neo.note.NotePos;
-import neo.voiceleading.VoiceLeading;
-import neo.voiceleading.VoiceLeadingSize;
+import neo.data.note.Motive;
+import neo.data.note.NoteList;
+import neo.data.note.NotePos;
 
 public class MidiParser {
 
@@ -34,33 +32,18 @@ public class MidiParser {
 	public static final int NOTE_ON = 0x90;
 	public static final int NOTE_OFF = 0x80;
 
-	public static void main(String[] args) throws Exception {
-
-		List<Motive> motives = readMidi("C:/workspace/tonal/music/Bach-choral227deel1.mid");
-		
-		
-		Map<Integer, Chord> chords = extractChordMap(motives);
-		
-		Chord previousChord = null;
-		for (Entry<Integer, Chord> ch : chords.entrySet()) {
-			System.out.print(ch.getKey() + ": ");
-			System.out.println(ch.getValue().getChordType());
-			if (previousChord != null) {
-				System.out.println("prev: " + previousChord.getChordType());
-				VoiceLeadingSize minimalVoiceLeadingSize = VoiceLeading.caculateSize(previousChord.getPitchClassMultiSet(), ch.getValue().getPitchClassMultiSet());
-				System.out.print(previousChord.getPitchClassMultiSet());
-				System.out.print(ch.getValue().getPitchClassMultiSet());
-				System.out.print(minimalVoiceLeadingSize.getVlSource());
-				System.out.print(minimalVoiceLeadingSize.getVlTarget());
-				System.out.print(minimalVoiceLeadingSize.getSize());
-				System.out.println();
-			}
-			previousChord = ch.getValue();
+	public static List<NoteList> extractNoteList(List<Motive> motives){
+		Map<Integer, List<NotePos>> chords = extractNoteMap(motives);
+		List<NoteList> list = new ArrayList<>();
+		for (Entry<Integer, List<NotePos>> ch : chords.entrySet()) {
+			NoteList noteList = new NoteList(ch.getKey(), ch.getValue());
+			list.add(noteList);
 		}
+		return list;
 	}
 
-	public static Map<Integer, Chord> extractChordMap(List<Motive> motives) {
-		Map<Integer, Chord> chords = new TreeMap<>();
+	public static Map<Integer, List<NotePos>> extractNoteMap(List<Motive> motives) {
+		Map<Integer, List<NotePos>> chords = new TreeMap<>();
 		Set<Integer> positions = new TreeSet<>();
 		for (Motive motive : motives) {
 			List<NotePos> notes = motive.getNotePositions();
@@ -68,6 +51,7 @@ public class MidiParser {
 				positions.add(notePos.getPosition());
 			}
 		}
+		int voice = 0;
 		for (Motive motive : motives) {
 			List<NotePos> notes = motive.getNotePositions();
 			int melodyLength = notes.size() - 1;
@@ -78,25 +62,27 @@ public class MidiParser {
 				Integer pitchClass = firstNote.getPitchClass();
 				NotePos secondNote = notes.get(i + 1);			
 				while (position < secondNote.getPosition()) {
-					addNoteToChordMap(chords, position, pitchClass);
+					addNoteToChordMap(chords, position, pitchClass, voice);
 					position = iterator.next();
 				}
 			}
 			NotePos lastNote = notes.get(melodyLength);
-			addNoteToChordMap(chords, lastNote.getPosition(), lastNote.getPitchClass());
+			addNoteToChordMap(chords, lastNote.getPosition(), lastNote.getPitchClass(), voice);
+			voice++;
 		}
 		return chords;
 	}
 
-	private static void addNoteToChordMap(Map<Integer, Chord> chords,
-			Integer position, Integer pitchClass) {
-		Chord chord = null;
+	private static void addNoteToChordMap(Map<Integer, List<NotePos>> chords,
+			Integer position, Integer pitchClass, int voice) {
+		List<NotePos> chord = null;
 		if (chords.containsKey(position)) {
 			chord = chords.get(position);
 		} else {
-			chord = new Chord();
+			chord = new ArrayList<>();
 		}
-		chord.addPitchClass(pitchClass);
+		NotePos notePos = new NotePos(pitchClass, voice , position);
+		chord.add(notePos);
 		chords.put(position, chord);
 	}
 

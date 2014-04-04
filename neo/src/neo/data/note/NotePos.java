@@ -1,9 +1,8 @@
-package neo.note;
+package neo.data.note;
 
 
 public class NotePos implements Comparable<NotePos>, Cloneable{
 
-	
 	/** The pitch value which indicates a rest. */
 	public static final int REST = Integer.MIN_VALUE;
 	   /** default dynamic*/
@@ -25,24 +24,19 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 	private int octave;
 	private int pitchClass;
 	private int voice;
-	
+	private int beat;
+
+	public double getBeat(int divider) {
+		return Math.floor(position / divider);
+	}
 
 	public NotePos() {
 	}
 
-	public NotePos(int pitch, int position, int length) {
-		setPitch(pitch);
-		this.position = position;
-		this.length = length;
-		this.dynamic = DEFAULT_DYNAMIC;
-	}
-	
-	public NotePos(int pitch, int position, int length, int voice) {
-		setPitch(pitch);
-		this.position = position;
-		this.length = length;
-		this.dynamic = DEFAULT_DYNAMIC;
+	public NotePos(int pitchClass, int voice, int position) {
+		this.pitchClass = pitchClass;
 		this.voice = voice;
+		this.position = position;
 	}
 
 	public int getLength() {
@@ -180,7 +174,7 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + pitch;
+		result = prime * result + pitchClass;
 		result = prime * result + position;
 		return result;
 	}
@@ -194,7 +188,7 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 		if (getClass() != obj.getClass())
 			return false;
 		NotePos other = (NotePos) obj;
-		if (pitch != other.pitch)
+		if (pitchClass != other.pitchClass)
 			return false;
 		if (position != other.position)
 			return false;

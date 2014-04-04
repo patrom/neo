@@ -1,4 +1,6 @@
-package neo.voiceleading;
+package neo.objective.voiceleading;
+
+import java.util.Collection;
 
 import com.google.common.collect.ArrayTable;
 import com.google.common.collect.HashBasedTable;
@@ -13,16 +15,16 @@ public class VoiceLeading {
 
 	public static void main(String[] args) {
 		Multiset<Integer> sourceSet = TreeMultiset.create();
-		sourceSet.add(4);
+		sourceSet.add(11);
+		sourceSet.add(2);
 		sourceSet.add(7);
-		sourceSet.add(11);
-		sourceSet.add(11);
+//		sourceSet.add(11);
 	
 		Multiset<Integer> targetSet = TreeMultiset.create();
-		targetSet.add(2);
-		targetSet.add(6);
-		targetSet.add(6);
-		targetSet.add(11);
+		targetSet.add(0);
+		targetSet.add(4);
+		targetSet.add(7);
+//		targetSet.add(11);
 
 //		for (int i = 0; i < 12; i++) {
 //			Iterator<Integer> iterator = targetSet.iterator();

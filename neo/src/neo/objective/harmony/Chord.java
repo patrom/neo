@@ -1,7 +1,10 @@
-package neo.harmony;
+package neo.objective.harmony;
 
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import neo.data.setclass.PcSetUnorderedProperties;
 
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
@@ -12,12 +15,17 @@ public class Chord {
 	private Multiset<Integer> pitchClassMultiSet = TreeMultiset.create();
 	private ChordType chordType;
 	private int voiceLeadingZone;
+	private double weight;
+	private String setClassName;
+
+	public double getWeight() {
+		return getChordType().getDissonance();
+	}
 
 	public ChordType getChordType() {
 		this.chordType = extractChordType();
 		return chordType;
 	}
-	
 	
 	public Multiset<Integer> getPitchClassMultiSet() {
 		return pitchClassMultiSet;
@@ -27,9 +35,21 @@ public class Chord {
 		return pitchClassMultiSet.elementSet();
 	}
 
-
 	public void addPitchClass(Integer pitchClass){
 		pitchClassMultiSet.add(pitchClass);
+	}
+	
+	public String getForteName() {
+		Set<Integer> pitchClassSet = getPitchClassSet();
+		int[] set = new int[pitchClassSet.size()];
+		int i = 0;
+		for (Integer pc : pitchClassSet) {
+			set[i] = pc;
+			i++;
+		}
+		PcSetUnorderedProperties pcSetCalculator = new PcSetUnorderedProperties(set);
+		this.setClassName = pcSetCalculator.getForteName();
+		return setClassName;
 	}
 
 	private ChordType extractChordType() {

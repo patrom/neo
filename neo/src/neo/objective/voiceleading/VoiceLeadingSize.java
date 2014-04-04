@@ -1,4 +1,4 @@
-package neo.voiceleading;
+package neo.objective.voiceleading;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,13 +49,21 @@ public class VoiceLeadingSize {
 	
 	public List<Integer> getVlSource() {
 		List<Integer> list = new ArrayList<>(source);
-		list.remove(0);
+		if (list.get(0) == target.get(0)) {
+			list.remove(0);
+		}else{
+			list.remove(source.size() - 1);
+		}
 		return list;
 	}
 	
 	public List<Integer> getVlTarget() {
 		List<Integer> list = new ArrayList<>(target);
-		list.remove(0);
+		if (source.get(0) == target.get(0)) {
+			list.remove(0);
+		}else{
+			list.remove(target.size() - 1);
+		}
 		return list;
 	}
 	
