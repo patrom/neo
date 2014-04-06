@@ -1,5 +1,7 @@
 package neo.data.note;
 
+import neo.instrument.Performance;
+
 
 public class NotePos implements Comparable<NotePos>, Cloneable{
 
@@ -25,6 +27,8 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 	private int pitchClass;
 	private int voice;
 	private int beat;
+	
+	private Performance performance = Performance.LEGATO;
 
 	public double getBeat(int divider) {
 		return Math.floor(position / divider);
@@ -198,6 +202,14 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+
+	public Performance getPerformance() {
+		return performance;
+	}
+	
+	public void setPerformance(Performance performance) {
+		this.performance = performance;
 	}
 
 }

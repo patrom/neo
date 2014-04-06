@@ -2,11 +2,13 @@ package neo.midi;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -23,14 +25,32 @@ import javax.sound.midi.Track;
 import neo.data.note.Motive;
 import neo.data.note.NoteList;
 import neo.data.note.NotePos;
+import neo.instrument.KontaktLibAltViolin;
+import neo.instrument.KontaktLibCello;
+import neo.instrument.KontaktLibViolin;
+import neo.instrument.MidiDevice;
 
 public class MidiParser {
 
 	private static Logger LOGGER = Logger.getLogger(MidiParser.class.getName());
 	public static final int TRACK_TIMESIGNATURE = 0x58;
+	private static Random random = new Random();
 
 	public static final int NOTE_ON = 0x90;
 	public static final int NOTE_OFF = 0x80;
+	
+	public static void main(String[] args) throws InvalidMidiDataException, IOException {
+		List<neo.instrument.Instrument> ranges = new ArrayList<>();
+		ranges.add(new KontaktLibViolin(0, 1));
+		ranges.add(new KontaktLibViolin(1, 2));
+		ranges.add(new KontaktLibAltViolin(2, 2));
+		ranges.add(new KontaktLibCello(3, 3));
+		List<Motive> motives = readMidi(MidiParser.class.getResource("/Bach-choral227deel1.mid").getPath());
+		
+		Sequence seq = MidiDevicesUtil.createSequence(motives, ranges);
+		float tempo = randomTempoFloat();
+		MidiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTACT);
+	}
 
 	public static List<NoteList> extractNoteList(List<Motive> motives){
 		Map<Integer, List<NotePos>> chords = extractNoteMap(motives);
@@ -175,6 +195,21 @@ public class MidiParser {
 		}
 		List<Motive> motives = new ArrayList<Motive>(map.values());
 		return motives;
+	}
+	
+	/**
+	 * Generates random tempo between 50 - 150 bpm
+	 * @return
+	 */
+	public static float randomTempoFloat() {
+		float r = random.nextFloat();
+		if (r < 0.5) {
+			r = (r * 100) + 100;
+		} else {
+			r = r * 100;
+		}
+		//tempo between 50 - 150
+		return r;
 	}
 
 }

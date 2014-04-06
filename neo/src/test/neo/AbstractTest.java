@@ -23,7 +23,8 @@ public abstract class AbstractTest {
 	@Before
 	public void setUp(){
 		try {
-			motives = MidiParser.readMidi("C:/workspace/tonal/music/Bach-choral227deel1.mid");
+//			motives = MidiParser.readMidi("/Users/parm/git/neo/neo/src/test/neo/Bach-choral227 deel1.mid");
+			motives = MidiParser.readMidi("/Users/parm/comp/moga/music/test3.mid");
 		} catch (InvalidMidiDataException | IOException e) {
 			e.printStackTrace();
 		}
