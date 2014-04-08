@@ -79,29 +79,29 @@ public class MidiParser {
 			Integer position = iterator.next();
 			for (int i = 0; i < melodyLength; i++) {
 				NotePos firstNote = notes.get(i);
-				Integer pitchClass = firstNote.getPitchClass();
 				NotePos secondNote = notes.get(i + 1);			
 				while (position < secondNote.getPosition()) {
-					addNoteToChordMap(chords, position, pitchClass, voice);
+					addNoteToChordMap(chords, firstNote, voice);
 					position = iterator.next();
 				}
 			}
 			NotePos lastNote = notes.get(melodyLength);
-			addNoteToChordMap(chords, lastNote.getPosition(), lastNote.getPitchClass(), voice);
+			addNoteToChordMap(chords, lastNote, voice);
 			voice++;
 		}
 		return chords;
 	}
 
-	private static void addNoteToChordMap(Map<Integer, List<NotePos>> chords,
-			Integer position, Integer pitchClass, int voice) {
+	private static void addNoteToChordMap(Map<Integer, List<NotePos>> chords, NotePos note,
+			 int voice) {
+		int position = note.getPosition();
 		List<NotePos> chord = null;
 		if (chords.containsKey(position)) {
 			chord = chords.get(position);
 		} else {
 			chord = new ArrayList<>();
 		}
-		NotePos notePos = new NotePos(pitchClass, voice , position);
+		NotePos notePos = new NotePos(note.getPitchClass(), voice , position, note.getLength());
 		chord.add(notePos);
 		chords.put(position, chord);
 	}

@@ -11,7 +11,7 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
     public static final int DEFAULT_DYNAMIC = 85;
 
 	private int pitch;
-	private int dynamic;
+	private int dynamic = DEFAULT_DYNAMIC;
 	private double rhythmValue;
 	private double duration;
 
@@ -37,10 +37,11 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 	public NotePos() {
 	}
 
-	public NotePos(int pitchClass, int voice, int position) {
+	public NotePos(int pitchClass, int voice, int position, int length) {
 		this.pitchClass = pitchClass;
 		this.voice = voice;
 		this.position = position;
+		this.length = length;
 	}
 
 	public int getLength() {

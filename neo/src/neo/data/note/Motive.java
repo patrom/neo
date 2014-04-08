@@ -8,6 +8,7 @@ import java.util.List;
 public class Motive {
 	
 	private List<NotePos> notePositions = new ArrayList<NotePos>();
+	private int length;
 
 	public Motive() {
 		notePositions = new ArrayList<NotePos>();
@@ -15,6 +16,7 @@ public class Motive {
 	
 	public Motive(List<NotePos> notePositions, int length) {
 		this.notePositions.addAll(notePositions);
+		this.length = length;
 	}
 
 	public List<NotePos> getNotePositions() {

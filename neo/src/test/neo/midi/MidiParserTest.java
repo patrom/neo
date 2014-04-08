@@ -3,9 +3,14 @@ package test.neo.midi;
 import java.util.List;
 import java.util.Map;
 
+import jm.music.data.Score;
+import jm.util.View;
+import neo.data.note.Motive;
 import neo.data.note.NoteList;
 import neo.data.note.NotePos;
+import neo.generator.Generator;
 import neo.midi.MidiParser;
+import neo.score.ScoreUtilities;
 
 import org.junit.Test;
 
