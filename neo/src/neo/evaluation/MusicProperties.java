@@ -3,6 +3,8 @@ package neo.evaluation;
 import java.util.ArrayList;
 import java.util.List;
 
+import neo.instrument.Instrument;
+
 public class MusicProperties {
 	
 	public MusicProperties() {
@@ -45,12 +47,12 @@ public class MusicProperties {
 	private double crossoverProbability;
 	private double mutationProbability;
 	
-	private List<InstrumentRange> ranges = new ArrayList<InstrumentRange>();
+	private List<Instrument> ranges = new ArrayList<>();
 	
-	public List<InstrumentRange> getRanges() {
+	public List<Instrument> getRanges() {
 		return ranges;
 	}
-	public void setRanges(List<InstrumentRange> ranges) {
+	public void setRanges(List<Instrument> ranges) {
 		this.ranges = ranges;
 	}
 	public String getHarmonyStrategy() {
@@ -169,8 +171,8 @@ public class MusicProperties {
 		this.rhythmConsDissValue = rhythmConsDissValue;
 	}
 	
-	public static InstrumentRange getInstrument(int voice, int low, int high) {
-		InstrumentRange range = new InstrumentRange();
+	public static Instrument getInstrument(int voice, int low, int high) {
+		Instrument range = new Instrument();
 		range.setVoice(voice);
 		range.setLowest(low);
 		range.setHighest(high);
