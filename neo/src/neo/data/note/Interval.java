@@ -127,8 +127,10 @@ public class Interval  {
 	}
 	
 	public static Interval getEnumInterval(int difference) {
-		Interval interval = intervalMap.get(Math.abs(difference));
-		return interval;
+		if (Math.abs(difference) > 12) {
+			difference = 13;
+		}
+		return intervalMap.get(Math.abs(difference));
 	}
 	
 }

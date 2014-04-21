@@ -17,7 +17,7 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 import javax.sound.midi.Transmitter;
 
-import neo.data.note.Motive;
+import neo.data.melody.Melody;
 import neo.data.note.NotePos;
 import neo.instrument.Instrument;
 
@@ -78,7 +78,7 @@ public class MidiDevicesUtil {
 		}
 	}
 
-	public static Sequence createSequence(List<Motive> motives, List<Instrument> instruments)
+	public static Sequence createSequence(List<Melody> motives, List<Instrument> instruments)
 			throws InvalidMidiDataException {
 		int motiveSize = motives.size();
 		if (motiveSize != instruments.size()) {
@@ -86,7 +86,7 @@ public class MidiDevicesUtil {
 		}
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
 		for (int i = 0; i < motiveSize; i++) {
-			List<NotePos> notes = motives.get(i).getNotePositions();
+			List<NotePos> notes = motives.get(i).getMelody();
 			createTrack(sequence, notes, instruments.get(i));
 		}
 		return sequence;
@@ -129,12 +129,12 @@ public class MidiDevicesUtil {
 		return keySwitch;
 	}
 
-	public static Sequence createSequenceFromStructures(List<Motive> motives, List<Instrument> instruments)
+	public static Sequence createSequenceFromStructures(List<Melody> motives, List<Instrument> instruments)
 			throws InvalidMidiDataException {
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motives.size());
 		int i = 0;
-		for (Motive motive : motives) {
-			List<NotePos> notes = motive.getNotePositions();
+		for (Melody motive : motives) {
+			List<NotePos> notes = motive.getMelody();
 			createTrack(sequence, notes, instruments.get(i));
 			i++;
 		}

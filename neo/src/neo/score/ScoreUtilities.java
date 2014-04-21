@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import neo.data.note.Motive;
+import neo.data.melody.Melody;
 import neo.data.note.NotePos;
 import neo.evaluation.MusicProperties;
 import jm.JMC;
@@ -52,12 +52,12 @@ public class ScoreUtilities implements JMC{
 		return r;
 	}
 	
-	public static Score createScoreMotives(List<Motive> motives){
+	public static Score createScoreMotives(List<Melody> motives){
 		Score score = new Score();
 		Part[] scoreParts = new Part[motives.size()];
 		int voice = 0;
-		for (Motive motive : motives) {
-			List<NotePos> notePosistions = motive.getNotePositions();
+		for (Melody motive : motives) {
+			List<NotePos> notePosistions = motive.getMelody();
 			Phrase phrase = new Phrase();
 			int lastVoice = 0;
 			if (!notePosistions.isEmpty()) {

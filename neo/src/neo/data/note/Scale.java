@@ -1,4 +1,4 @@
-package neo.evaluation;
+package neo.data.note;
 
 
 public class Scale {

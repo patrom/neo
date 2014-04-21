@@ -1,19 +1,20 @@
-package neo.data.note;
+package neo.data.harmony;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import neo.data.note.NotePos;
 import neo.objective.harmony.Chord;
 
-public class NoteList {
+public abstract class Harmony {
 	
-	private int position;
-	private List<NotePos> notes;
+	protected int position;
+	protected List<NotePos> notes;
+	protected int octaveHighestNote;
 	
-	public NoteList(int position, List<NotePos> notes) {
-		super();
+	public Harmony(int position, List<NotePos> notes, int octaveHighestNote) {
 		this.position = position;
 		this.notes = notes;
+		this.octaveHighestNote = octaveHighestNote;
 	}
 	
 	public int position(){
@@ -22,6 +23,10 @@ public class NoteList {
 	
 	public int getPosition() {
 		return position;
+	}
+	
+	public int getOctaveHighestNote() {
+		return octaveHighestNote;
 	}
 
 	public void setPosition(int position) {
@@ -46,12 +51,6 @@ public class NoteList {
 		return Math.floor(position/divider);
 	}
 	
-//	public List<NotePos> getAllNotes(){
-//		List<NotePos> allNotes = new ArrayList<>();
-//		for (NotePos notePos : notes) {
-//			allNotes.add(notePos);
-//		}	
-//		return allNotes;
-//	}
+	public abstract void translateToPitchSpace();
 	
 }

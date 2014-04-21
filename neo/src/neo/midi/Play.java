@@ -6,7 +6,7 @@ import java.util.Random;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
 
-import neo.data.note.Motive;
+import neo.data.melody.Melody;
 import neo.instrument.Instrument;
 import neo.instrument.MidiDevice;
 
@@ -14,7 +14,7 @@ public class Play {
 
 	private static Random random = new Random();
 	
-	public static void playOnKontakt(List<Motive> motives, List<Instrument> instruments) throws InvalidMidiDataException {
+	public static void playOnKontakt(List<Melody> motives, List<Instrument> instruments) throws InvalidMidiDataException {
 		Sequence seq = MidiDevicesUtil.createSequence(motives, instruments);
 		MidiDevicesUtil.playOnDevice(seq, randomTempoFloat(), MidiDevice.KONTACT);
 	}

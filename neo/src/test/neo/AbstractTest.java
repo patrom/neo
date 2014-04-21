@@ -10,14 +10,14 @@ import java.util.logging.SimpleFormatter;
 
 import javax.sound.midi.InvalidMidiDataException;
 
-import neo.data.note.Motive;
+import neo.data.melody.Melody;
 import neo.midi.MidiParser;
 
 import org.junit.Before;
 
 public abstract class AbstractTest {
 	
-	protected List<Motive> motives;
+	protected List<Melody> motives;
 	protected double[] objectives;
 	
 	@Before

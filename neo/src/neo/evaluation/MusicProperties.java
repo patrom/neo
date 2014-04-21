@@ -3,6 +3,7 @@ package neo.evaluation;
 import java.util.ArrayList;
 import java.util.List;
 
+import neo.data.note.Scale;
 import neo.instrument.Instrument;
 
 public class MusicProperties {

@@ -32,11 +32,15 @@ import java.util.logging.Logger;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
 
-import neo.data.note.NoteList;
+import neo.data.Motive;
+import neo.data.harmony.Harmony;
+import neo.data.melody.Melody;
 import neo.data.note.NotePos;
 import neo.evaluation.MusicProperties;
+import neo.generator.Generator;
 import neo.instrument.MidiDevice;
 import neo.midi.MidiDevicesUtil;
+import neo.nsga.operator.OnePointCrossover;
 import neo.score.ScoreUtilities;
 import jm.JMC;
 import jm.music.data.Score;
@@ -55,7 +59,7 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 
 
-public class NSGAII_TwelveToneMain2 implements JMC{
+public class NSGAII_TwelveToneMain implements JMC{
 	  public static Logger      logger_ ;      // Logger object
 	  public static FileHandler fileHandler_ ; // FileHandler object
 	  private static MusicProperties inputProps = new MusicProperties();
@@ -88,28 +92,21 @@ public class NSGAII_TwelveToneMain2 implements JMC{
     fileHandler_ = new FileHandler("NSGAII_main.log"); 
     logger_.addHandler(fileHandler_) ;
     
-    
-//    problem = new Kursawe("Real", 3);
     problem = new MusicAtonalProblem("music", 1, inputProps);
-    SolutionType type = new MusicSolutionAtonalType2(problem, inputProps.getMelodyLength(), inputProps.getScale()
+    SolutionType type = new MusicSolutionType(problem, inputProps.getMelodyLength(), inputProps.getScale()
 			, inputProps.getRhythmProfile(), inputProps.getPopulationStrategy(), inputProps.getRanges(), inputProps.getMelodyLength() * 12) ;
     problem.setSolutionType(type);
-//    indicators = new QualityIndicator(problem, "C://midi//paretoFrontFile.txt");
-   
     algorithm = new NSGAII_TwelveTone(problem);
-//    algorithm.setInputParameter("indicators", indicators);
-    //algorithm = new ssNSGAII(problem);
 
     // Algorithm parameters
     int populationSize = 30;
     algorithm.setInputParameter("populationSize",populationSize);
-    algorithm.setInputParameter("maxEvaluations",populationSize * 2000);
-    // Mutation and Crossover for Real codification10
-//    crossover = new OnePointCrossover(inputProps.getMelodyLength());
-//    crossover = new OnePointCrossover2();
+    algorithm.setInputParameter("maxEvaluations",populationSize * 20);
+    // Mutation and Crossover
+    crossover = new OnePointCrossover();
     //if homophonic don't do crossover!
 //    if (inputProps.getPopulationStrategy().equals("homophonic")) {
-//    	 crossover.setParameter("probabilityCrossover",0.0);       
+    	 crossover.setParameter("probabilityCrossover",0.0);       
 //	} else {
 //		 crossover.setParameter("probabilityCrossover",0.0);       
 //	}      
@@ -134,7 +131,7 @@ public class NSGAII_TwelveToneMain2 implements JMC{
     selection = SelectionFactory.getSelectionOperator("BinaryTournament2") ;                           
 
     // Add the operators to the algorithm
-//    algorithm.addOperator("crossover",crossover);
+    algorithm.addOperator("crossover",crossover);
 //    algorithm.addOperator("mutation",mutation);
 //    algorithm.addOperator("mutation2",mutation2);
 //    algorithm.addOperator("mutation3",mutation3);
@@ -142,10 +139,6 @@ public class NSGAII_TwelveToneMain2 implements JMC{
 //    algorithm.addOperator("mutation5",mutation5);
     algorithm.addOperator("selection",selection);
 
-    // Add the indicator object to the algorithm
-//    indicators = new QualityIndicator(problem, "C:/space/mulitobjectivemusic/FUN") ;//C:\space\mulitobjectivemusic\FUN
-//    algorithm.setInputParameter("indicators", indicators);
-    
     // Execute the Algorithm
     long initTime = System.currentTimeMillis();
     SolutionSet population = algorithm.execute();
@@ -159,19 +152,7 @@ public class NSGAII_TwelveToneMain2 implements JMC{
     logger_.info("Objectives values have been writen to file FUN");
     population.printObjectivesToFile("FUN");
     printVariablesToMidi(population);
-  
-    if (indicators != null) {
-      logger_.info("Quality indicators") ;
-      logger_.info("Hypervolume: " + indicators.getHypervolume(population)) ;
-      logger_.info("GD         : " + indicators.getGD(population)) ;
-      logger_.info("IGD        : " + indicators.getIGD(population)) ;
-      logger_.info("Spread     : " + indicators.getSpread(population)) ;
-      logger_.info("Epsilon    : " + indicators.getEpsilon(population)) ;  
-     
-      int evaluations = ((Integer)algorithm.getOutputParameter("evaluations")).intValue();
-      logger_.info("Speed      : " + evaluations + " evaluations") ;      
-    } // if
-  } //main
+  } 
   
   private static void printVariablesToMidi(SolutionSet solutionsList) throws JMException{
 	  Map<Double, Solution> solutionMap = new TreeMap<Double, Solution>();
@@ -189,7 +170,7 @@ public class NSGAII_TwelveToneMain2 implements JMC{
 	  ensemble[3] = CELLO;
 	  int i = 1;
 	  for (Solution solution : solutionMap.values()) {
-		List<NoteList> sentences = ((MusicVariable)solution.getDecisionVariables()[0]).getMelodies();
+		Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 //		List<MusicalStructure> structures = FugaUtilities.addTransposedVoices(sentences, inputProps.getScale(), 8, 12);
 //		sentences.addAll(structures);
 //		MusicalStructure structure = FugaUtilities.harmonizeMelody(sentences, inputProps.getScale(), 2, 1, inputProps.getMelodyLength() * 12);
@@ -197,10 +178,10 @@ public class NSGAII_TwelveToneMain2 implements JMC{
 //		MusicalStructure structure2 = FugaUtilities.harmonizeMelody(sentences, inputProps.getScale(), 2, 2, inputProps.getMelodyLength() * 12);
 //		sentences.add(structure2);
 //		changeLengths(sentences);
-		printNotes(sentences);
-		viewScore(sentences, i);
+		printNotes(motive.getHarmonies());
+		viewScore(motive.getMelodies(), i);
 //		printVextab(sentences);
-//		playOnKontakt(sentences);
+		playOnKontakt(motive.getMelodies());
 		i++;
 	  }
 	  
@@ -252,17 +233,17 @@ public class NSGAII_TwelveToneMain2 implements JMC{
 //		}
 //	}
 
-	private static void playOnKontakt(List<NoteList> sentences) {
-//		try {
-//			Sequence seq = MidiDevicesUtil.createSequence(sentences, inputProps.getRanges());
-//			MidiDevicesUtil.playOnDevice(seq, ScoreUtilities.randomTempoFloat(), MidiDevice.KONTACT);
-//		} catch (InvalidMidiDataException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+	private static void playOnKontakt(List<Melody> melodies) {
+		try {
+			Sequence seq = MidiDevicesUtil.createSequence(melodies, inputProps.getRanges());
+			MidiDevicesUtil.playOnDevice(seq, ScoreUtilities.randomTempoFloat(), MidiDevice.KONTACT);
+		} catch (InvalidMidiDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	private static void printNotes(List<NoteList> sentences) {
+	private static void printNotes(List<Harmony> sentences) {
 //		for (NoteList musicalStructure : sentences) {
 //			List<NotePos> notes = musicalStructure.getNotes();
 //			int length = musicalStructure.getLength();
@@ -280,13 +261,13 @@ public class NSGAII_TwelveToneMain2 implements JMC{
 //		System.out.println("Notes");
 	}
 	
-	private static void viewScore(List<NoteList> sentences, int i) {
-//		Score score = ScoreUtilities.createScore2(sentences, null);
-//		if (i <=8) {
-//			score.setTitle("test " + (i));
-//			Write.midi(score, "test" + (i) + ".mid");	
-//			View.notate(score);	
-//		}
+	private static void viewScore(List<Melody> melodies, int i) {
+		Score score = ScoreUtilities.createScoreMotives(melodies);
+		if (i <=8) {
+			score.setTitle("test " + (i));
+			Write.midi(score, "test" + (i) + ".mid");	
+			View.notate(score);	
+		}
 	}
   
-} // NSGAII_main
+} 

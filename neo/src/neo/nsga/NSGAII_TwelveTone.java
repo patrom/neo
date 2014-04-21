@@ -73,9 +73,9 @@ public class NSGAII_TwelveTone extends Algorithm {
 
     //Read the operators
     List<Operator> mutationOperators = new ArrayList<Operator>();
-    mutationOperators.add(operators_.get("mutation"));
-    mutationOperators.add(operators_.get("mutation2")); 
-    mutationOperators.add(operators_.get("mutation3"));
+//    mutationOperators.add(operators_.get("mutation"));
+//    mutationOperators.add(operators_.get("mutation2")); 
+//    mutationOperators.add(operators_.get("mutation3"));
 //    mutationOperators.add(operators_.get("mutation4"));
 //    mutationOperators.add(operators_.get("mutation5"));
     

@@ -22,8 +22,9 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
-import neo.data.note.Motive;
-import neo.data.note.NoteList;
+import neo.data.harmony.Harmony;
+import neo.data.harmony.UniformPitchSpace;
+import neo.data.melody.Melody;
 import neo.data.note.NotePos;
 import neo.instrument.KontaktLibAltViolin;
 import neo.instrument.KontaktLibCello;
@@ -45,35 +46,35 @@ public class MidiParser {
 		ranges.add(new KontaktLibViolin(1, 2));
 		ranges.add(new KontaktLibAltViolin(2, 2));
 		ranges.add(new KontaktLibCello(3, 3));
-		List<Motive> motives = readMidi(MidiParser.class.getResource("/Bach-choral227deel1.mid").getPath());
+		List<Melody> motives = readMidi(MidiParser.class.getResource("/Bach-choral227deel1.mid").getPath());
 		
 		Sequence seq = MidiDevicesUtil.createSequence(motives, ranges);
 		float tempo = randomTempoFloat();
 		MidiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTACT);
 	}
 
-	public static List<NoteList> extractNoteList(List<Motive> motives){
+	public static List<Harmony> extractHarmony(List<Melody> motives, int octave){
 		Map<Integer, List<NotePos>> chords = extractNoteMap(motives);
-		List<NoteList> list = new ArrayList<>();
+		List<Harmony> list = new ArrayList<>();
 		for (Entry<Integer, List<NotePos>> ch : chords.entrySet()) {
-			NoteList noteList = new NoteList(ch.getKey(), ch.getValue());
+			Harmony noteList = new UniformPitchSpace(ch.getKey(), ch.getValue(), octave);
 			list.add(noteList);
 		}
 		return list;
 	}
 
-	public static Map<Integer, List<NotePos>> extractNoteMap(List<Motive> motives) {
+	public static Map<Integer, List<NotePos>> extractNoteMap(List<Melody> motives) {
 		Map<Integer, List<NotePos>> chords = new TreeMap<>();
 		Set<Integer> positions = new TreeSet<>();
-		for (Motive motive : motives) {
-			List<NotePos> notes = motive.getNotePositions();
+		for (Melody motive : motives) {
+			List<NotePos> notes = motive.getMelody();
 			for (NotePos notePos : notes) {
 				positions.add(notePos.getPosition());
 			}
 		}
 		int voice = 0;
-		for (Motive motive : motives) {
-			List<NotePos> notes = motive.getNotePositions();
+		for (Melody motive : motives) {
+			List<NotePos> notes = motive.getMelody();
 			int melodyLength = notes.size() - 1;
 			Iterator<Integer> iterator = positions.iterator();
 			Integer position = iterator.next();
@@ -106,7 +107,7 @@ public class MidiParser {
 		chords.put(position, chord);
 	}
 
-	public static List<Motive> readMidi(String path)
+	public static List<Melody> readMidi(String path)
 			throws InvalidMidiDataException, IOException {
 		Sequence sequence = MidiSystem.getSequence(new File(path));
 		LOGGER.finer("Ticks: " + sequence.getResolution());
@@ -117,7 +118,7 @@ public class MidiParser {
 		int size = sequence.getTracks().length;
 		voice = size - 1;
 		int resolution = 12;
-		Map<Integer, Motive> map = new TreeMap<Integer, Motive>();
+		Map<Integer, Melody> map = new TreeMap<Integer, Melody>();
 
 		for (int j = 0; j < size; j++) {
 			Track track = sequence.getTracks()[j];
@@ -188,12 +189,12 @@ public class MidiParser {
 				NotePos lastNote = notes.get(notes.size() - 1);
 				int length = lastNote.getPosition() + lastNote.getLength()
 						- firstNote.getPosition();
-				Motive motive = new Motive(notes, length);
+				Melody motive = new Melody(notes, length);
 				map.put(voice, motive);
 			}
 			voice--;
 		}
-		List<Motive> motives = new ArrayList<Motive>(map.values());
+		List<Melody> motives = new ArrayList<Melody>(map.values());
 		return motives;
 	}
 	

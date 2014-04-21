@@ -1,29 +1,31 @@
-package neo.data.note;
+package neo.data.melody;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import neo.data.note.NotePos;
 
-public class Motive {
+
+public class Melody {
 	
 	private List<NotePos> notePositions = new ArrayList<NotePos>();
 	private int length;
 
-	public Motive() {
+	public Melody() {
 		notePositions = new ArrayList<NotePos>();
 	}
 	
-	public Motive(List<NotePos> notePositions, int length) {
+	public Melody(List<NotePos> notePositions, int length) {
 		this.notePositions.addAll(notePositions);
 		this.length = length;
 	}
 
-	public List<NotePos> getNotePositions() {
+	public List<NotePos> getMelody() {
 		return notePositions;
 	}
 	
-	public List<NotePos> getNotePositionsWithoutRests() {
+	public List<NotePos> getMelodyWithoutRests() {
 		List<NotePos> positions = new ArrayList<NotePos>();
 		for (NotePos note : notePositions) {
 			if (!note.isRest()) {

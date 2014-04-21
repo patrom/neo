@@ -60,7 +60,7 @@ public class MusicAtonalProblem extends Problem {
 //		FugaDecorator decorator = new FugaDecorator(controller, 12, 48);
 //		DebussyDecorator decorator = new DebussyDecorator(controller);
 		
-		double[] objectives = controller.evaluate(((MusicVariable)variables[0]).getMelodies());
+		double[] objectives = controller.evaluate(((MusicVariable)variables[0]).getMotive());
 		
 		double harmonyObjective = 1 - harmonyMembershipFunction.membership(objectives[0]);
 		solution.setObjective(0, harmonyObjective);//harmony

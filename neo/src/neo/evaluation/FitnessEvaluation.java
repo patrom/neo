@@ -23,9 +23,10 @@ import java.util.stream.Collectors;
 import javax.sound.midi.InvalidMidiDataException;
 
 import jm.music.data.Note;
-import neo.data.note.Examples;
-import neo.data.note.Motive;
-import neo.data.note.NoteList;
+import neo.data.Motive;
+import neo.data.harmony.Examples;
+import neo.data.harmony.Harmony;
+import neo.data.melody.Melody;
 import neo.data.note.NotePos;
 import neo.midi.MidiParser;
 import neo.objective.InnerMetricWeight;
@@ -72,13 +73,14 @@ public class FitnessEvaluation {
 	}
 
 	public static void main(String[] args) {
-		List<NoteList> list = new ArrayList<>();
+		List<Harmony> list = new ArrayList<>();
 		list.add(Examples.getChord(0, 0,4,7));
 		list.add(Examples.getChord(6, 1,4,6));
 		list.add(Examples.getChord(12, 11,2,7));
 		list.add(Examples.getChord(24, 0,4,9));
+		Motive motive = new Motive (list);
 		FitnessEvaluation fitnessEvaluation = new FitnessEvaluation();
-		double[] objectives = fitnessEvaluation.evaluate(list);
+		double[] objectives = fitnessEvaluation.evaluate(motive);
 		LOGGER.info("test" + "\n"  
 				+ "Harmony: " + objectives[0] + ", " 
 				+ "VoiceLeading: " + objectives[1] + ", " 
@@ -90,21 +92,21 @@ public class FitnessEvaluation {
 //				+ "repetitions rhythms: " + objectives[7]);
 	}
 	
-	public double[] evaluate(List<NoteList> list) {
+	public double[] evaluate(Motive motive) {
 		double[] objectives = new double[5];
-			
+		List<Harmony> harmonies = motive.getHarmonies();
 		switch (numerator) {//4/4 = 4 ; 2/4 = 2 ; 3/4 = 3 ; 6/8 = 6
 		case 2:
-			applyDynamicTemplate(list, 6, true);
+			applyDynamicTemplate(harmonies, 6, true);
 			break;
 		case 3:
-			applyDynamicTemplate(list, 12, false);	
+			applyDynamicTemplate(harmonies, 12, false);	
 			break;
 		case 4:
-			applyDynamicTemplate(list, 12, true);
+			applyDynamicTemplate(harmonies, 12, true);
 			break;
 		case 6:
-			applyDynamicTemplate(list, 6, false);
+			applyDynamicTemplate(harmonies, 6, false);
 			break;
 		default:
 			break;
@@ -115,14 +117,14 @@ public class FitnessEvaluation {
 //		LOGGER.fine("Inner metric map: " + map.toString());
 
 		//harmony
-		double harmonyMean = evaluateHarmony(list);
+		double harmonyMean = evaluateHarmony(harmonies);
 		LOGGER.fine("mean harmonicValues: " + harmonyMean);
 
 		//voice leading
-		double voiceLeading = evaluateVL(list, 12);
+		double voiceLeading = evaluateVL(harmonies, 12);
 		LOGGER.fine("max voiceLeadingSize: " + voiceLeading);
 		
-		double melodicValue = evaluateMelody(list);
+		double melodicValue = evaluateMelody(harmonies);
 		if (Double.isNaN(melodicValue)) {
 			melodicValue = Double.MAX_VALUE;
 		}
@@ -147,11 +149,11 @@ public class FitnessEvaluation {
 	}
 
 
-	private void applyDynamicTemplate(List<NoteList> noteList, int beat, boolean even) {
+	private void applyDynamicTemplate(List<Harmony> noteList, int beat, boolean even) {
 		int e = even?2:3;
 		int doubleBeat = beat * e;
 		int maxValue = 0;
-		for (NoteList list : noteList) {
+		for (Harmony list : noteList) {
 			int position = list.getPosition();		
 			//add to every note
 			int valueToAdd = rhythmTemplateValue + DEFAULT_NOTE_ON_VALUE;
@@ -171,7 +173,7 @@ public class FitnessEvaluation {
 		}
 		
 		//normalize values
-		for (NoteList list : noteList) {
+		for (Harmony list : noteList) {
 			List<NotePos> notes = list.getNotes();
 			for (NotePos note : notes) {
 				double normalizedValue = note.getPositionWeight() / maxValue;
@@ -221,17 +223,17 @@ public class FitnessEvaluation {
 		return map;
 	}
 	
-	private double evaluateHarmony(List<NoteList> noteList) {
+	private double evaluateHarmony(List<Harmony> noteList) {
 		OptionalDouble optionalDouble = noteList.stream().map(n -> n.toChord()).mapToDouble(ch -> ch.getWeight()).average();
 //		return noteList.stream().map(n -> n.toChord()).mapToDouble(ch -> ch.getWeight()).peek(System.out::println).sum();
 		return optionalDouble.getAsDouble();
 	}
 
-	private double evaluateVL(List<NoteList> noteList, int beatDivider){
-		Map<Double, List<NoteList>> map = noteList.stream().collect(Collectors.groupingBy(ch -> ch.getBeat(beatDivider)));
+	private double evaluateVL(List<Harmony> noteList, int beatDivider){
+		Map<Double, List<Harmony>> map = noteList.stream().collect(Collectors.groupingBy(ch -> ch.getBeat(beatDivider)));
 		Map<Double, Chord> bestChordMap = new TreeMap<>();
-		for (Entry<Double, List<NoteList>> entry: map.entrySet()) {
-			List<NoteList> list = entry.getValue();
+		for (Entry<Double, List<Harmony>> entry: map.entrySet()) {
+			List<Harmony> list = entry.getValue();
 			Optional<Chord> bestChord = list.stream().map(t -> t.toChord()).max(Comparator.comparing(Chord::getWeight));
 			if(bestChord.isPresent()) {
 				bestChordMap.put(entry.getKey(), bestChord.get());
@@ -253,9 +255,9 @@ public class FitnessEvaluation {
 		return totalSize/(chords.length - 1);
 	}
 	
-	private double evaluateMelody(List<NoteList> noteList) {
+	private double evaluateMelody(List<Harmony> noteList) {
 		List<NotePos> allNotes = new ArrayList<>();
-		for (NoteList list : noteList) {
+		for (Harmony list : noteList) {
 			for (NotePos notePos : list.getNotes()) {
 				allNotes.add(notePos);
 			}
@@ -266,7 +268,7 @@ public class FitnessEvaluation {
 		int count = 0;
 		for(Entry<Integer, List<NotePos>> voices : melodies.entrySet()){
 			List<NotePos> notePositions = voices.getValue();
-			notePositions.stream().forEach(n -> System.out.print( "," + n.getPitchClass()));
+			notePositions.stream().forEach(n -> System.out.print( "," + n.getPitch()));
 			System.out.println();
 			if (notePositions.size() > 1) {
 				List<Double> listWeights;
