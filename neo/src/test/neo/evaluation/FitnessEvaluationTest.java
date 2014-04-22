@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import neo.data.Motive;
 import neo.data.harmony.Examples;
 import neo.data.harmony.Harmony;
-import neo.evaluation.FitnessEvaluation;
+import neo.evaluation.FitnessEvaluationTemplate;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,24 +19,16 @@ public class FitnessEvaluationTest extends AbstractTest{
 
 	private static Logger LOGGER = Logger.getLogger(FitnessEvaluationTest.class.getName());
 	
-	FitnessEvaluation fitnessEvaluation;
+	FitnessEvaluationTemplate fitnessEvaluation;
 	
 	@Before
 	public void setUp(){
-		fitnessEvaluation = new FitnessEvaluation();
+		fitnessEvaluation = new FitnessEvaluationTemplate();
 	}
 	
 	@After
 	public void objectivesInfo() {
-		LOGGER.info("test" + "\n"  
-				+ "Harmony: " + objectives[0] + ", " 
-				+ "VoiceLeading: " + objectives[1] + ", " 
-				+ "Melody: " + objectives[2] + ", "
-				+ "Rhythm: " + objectives[3] + ", "
-				+ "tonality: " + objectives[4] + "\n");
-//				+ "Constraints: lowest interval register: " + objectives[5] + ", "
-//				+ "repetitions Pitches: " + objectives[6] + ", "
-//				+ "repetitions rhythms: " + objectives[7]);
+		LOGGER.info(objectives.toString());
 	}
 	
 	@Test

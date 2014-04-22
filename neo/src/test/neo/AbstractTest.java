@@ -11,6 +11,7 @@ import java.util.logging.SimpleFormatter;
 import javax.sound.midi.InvalidMidiDataException;
 
 import neo.data.melody.Melody;
+import neo.evaluation.FitnessObjectives;
 import neo.midi.MidiParser;
 
 import org.junit.Before;
@@ -18,7 +19,7 @@ import org.junit.Before;
 public abstract class AbstractTest {
 	
 	protected List<Melody> motives;
-	protected double[] objectives;
+	protected FitnessObjectives objectives;
 	
 	@Before
 	public void setUp(){

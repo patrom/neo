@@ -1,6 +1,5 @@
 package neo.evaluation;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,15 +19,11 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 
-import javax.sound.midi.InvalidMidiDataException;
-
 import jm.music.data.Note;
 import neo.data.Motive;
 import neo.data.harmony.Examples;
 import neo.data.harmony.Harmony;
-import neo.data.melody.Melody;
 import neo.data.note.NotePos;
-import neo.midi.MidiParser;
 import neo.objective.InnerMetricWeight;
 import neo.objective.harmony.Chord;
 import neo.objective.melody.MelodicFunctions;
@@ -38,17 +33,14 @@ import neo.objective.voiceleading.VoiceLeadingSize;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
-public class FitnessEvaluation {
+public class FitnessEvaluationTemplate {
 
-	private static Logger LOGGER = Logger.getLogger(FitnessEvaluation.class.getName());
+	private static Logger LOGGER = Logger.getLogger(FitnessEvaluationTemplate.class.getName());
 	
 	private static final int DYNAMIC_FACTOR = 3;
 	private static final double DYNAMIC = Note.DEFAULT_DYNAMIC;
 	private static final int DEFAULT_NOTE_ON_VALUE = 10;//note on accent
 
-	private static final double DEFAULT_REGISTER_VALUE = 1.0;//lowest interval C(48)-E(52)
-
-	private static final int UPPER_LIMIT_PITCH = 84;
 	//constants
 	private final int REST = Integer.MIN_VALUE;
 	
@@ -63,13 +55,13 @@ public class FitnessEvaluation {
 		return properties;
 	}
 
-	public FitnessEvaluation(MusicProperties properties) {
+	public FitnessEvaluationTemplate(MusicProperties properties) {
 		this.properties = properties;
 		this.numerator = properties.getNumerator();
 		this.rhythmTemplateValue = properties.getRhythmTemplateValue();
 	}
 	
-	public FitnessEvaluation() {
+	public FitnessEvaluationTemplate() {
 	}
 
 	public static void main(String[] args) {
@@ -79,21 +71,12 @@ public class FitnessEvaluation {
 		list.add(Examples.getChord(12, 11,2,7));
 		list.add(Examples.getChord(24, 0,4,9));
 		Motive motive = new Motive (list);
-		FitnessEvaluation fitnessEvaluation = new FitnessEvaluation();
-		double[] objectives = fitnessEvaluation.evaluate(motive);
-		LOGGER.info("test" + "\n"  
-				+ "Harmony: " + objectives[0] + ", " 
-				+ "VoiceLeading: " + objectives[1] + ", " 
-				+ "Melody: " + objectives[2] + ", "
-				+ "Rhythm: " + objectives[3] + ", "
-				+ "tonality: " + objectives[4] + "\n");
-//				+ "Constraints: lowest interval register: " + objectives[5] + ", "
-//				+ "repetitions Pitches: " + objectives[6] + ", "
-//				+ "repetitions rhythms: " + objectives[7]);
+		FitnessEvaluationTemplate fitnessEvaluation = new FitnessEvaluationTemplate();
+		FitnessObjectives fitnessValueObject = fitnessEvaluation.evaluate(motive);
+		LOGGER.info(fitnessValueObject.toString());
 	}
 	
-	public double[] evaluate(Motive motive) {
-		double[] objectives = new double[5];
+	public FitnessObjectives evaluate(Motive motive) {
 		List<Harmony> harmonies = motive.getHarmonies();
 		switch (numerator) {//4/4 = 4 ; 2/4 = 2 ; 3/4 = 3 ; 6/8 = 6
 		case 2:
@@ -136,16 +119,17 @@ public class FitnessEvaluation {
 //		double tonalityValue = evaluateMajorMinorTonality(sentences);
 //		LOGGER.fine("tonalityValue = " + tonalityValue);
 		
-		objectives[0] = harmonyMean;
-		objectives[1] = voiceLeading;
-		objectives[2] = melodicValue;
+		FitnessObjectives fitnessObjectives = new FitnessObjectives();
+		fitnessObjectives.setHarmony(harmonyMean);
+		fitnessObjectives.setMelody(melodicValue);
+		fitnessObjectives.setVoiceleading(voiceLeading);
 //		objectives[3] = rhythmicValue;
 //		objectives[4] = 1 - tonalityValue;
 		//constraints
 //		objectives[5] = lowestIntervalRegisterValue;
 //		objectives[6] = repetitionsrhythmsMean;	//only for small motives (5 - 10 notes)
 //		objectives[7] = repetitionsPitchesMean;	//only for small motives (5 - 10 notes)
-		return objectives;	
+		return fitnessObjectives;	
 	}
 
 
