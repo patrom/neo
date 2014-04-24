@@ -23,11 +23,16 @@ import jm.music.data.Note;
 import neo.data.Motive;
 import neo.data.harmony.Examples;
 import neo.data.harmony.Harmony;
+import neo.data.melody.Melody;
 import neo.data.note.NotePos;
 import neo.objective.InnerMetricWeight;
+import neo.objective.Objective;
 import neo.objective.harmony.Chord;
+import neo.objective.harmony.HarmonicObjective;
 import neo.objective.melody.MelodicFunctions;
+import neo.objective.melody.MelodicObjective;
 import neo.objective.voiceleading.VoiceLeading;
+import neo.objective.voiceleading.VoiceLeadingObjective;
 import neo.objective.voiceleading.VoiceLeadingSize;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -50,6 +55,9 @@ public class FitnessEvaluationTemplate {
 	private int numerator = 4;
 
 	private MusicProperties properties;
+	private Objective harmonicObjective;
+	private Objective melodicObjective;
+	private Objective voiceLeadingObjective;
 
 	public MusicProperties getProperties() {
 		return properties;
@@ -59,24 +67,12 @@ public class FitnessEvaluationTemplate {
 		this.properties = properties;
 		this.numerator = properties.getNumerator();
 		this.rhythmTemplateValue = properties.getRhythmTemplateValue();
+		harmonicObjective = new HarmonicObjective();
+		melodicObjective = new MelodicObjective();
+		voiceLeadingObjective = new VoiceLeadingObjective(properties);
 	}
 	
-	public FitnessEvaluationTemplate() {
-	}
-
-	public static void main(String[] args) {
-		List<Harmony> list = new ArrayList<>();
-		list.add(Examples.getChord(0, 0,4,7));
-		list.add(Examples.getChord(6, 1,4,6));
-		list.add(Examples.getChord(12, 11,2,7));
-		list.add(Examples.getChord(24, 0,4,9));
-		Motive motive = new Motive (list);
-		FitnessEvaluationTemplate fitnessEvaluation = new FitnessEvaluationTemplate();
-		FitnessObjectives fitnessValueObject = fitnessEvaluation.evaluate(motive);
-		LOGGER.info(fitnessValueObject.toString());
-	}
-	
-	public FitnessObjectives evaluate(Motive motive) {
+	public FitnessObjectiveValues evaluate(Motive motive) {
 		List<Harmony> harmonies = motive.getHarmonies();
 		switch (numerator) {//4/4 = 4 ; 2/4 = 2 ; 3/4 = 3 ; 6/8 = 6
 		case 2:
@@ -100,14 +96,14 @@ public class FitnessEvaluationTemplate {
 //		LOGGER.fine("Inner metric map: " + map.toString());
 
 		//harmony
-		double harmonyMean = evaluateHarmony(harmonies);
+		double harmonyMean = evaluateHarmony(motive);
 		LOGGER.fine("mean harmonicValues: " + harmonyMean);
 
 		//voice leading
-		double voiceLeading = evaluateVL(harmonies, 12);
+		double voiceLeading = evaluateVL(motive);
 		LOGGER.fine("max voiceLeadingSize: " + voiceLeading);
 		
-		double melodicValue = evaluateMelody(harmonies);
+		double melodicValue = evaluateMelody(motive);
 		if (Double.isNaN(melodicValue)) {
 			melodicValue = Double.MAX_VALUE;
 		}
@@ -119,7 +115,7 @@ public class FitnessEvaluationTemplate {
 //		double tonalityValue = evaluateMajorMinorTonality(sentences);
 //		LOGGER.fine("tonalityValue = " + tonalityValue);
 		
-		FitnessObjectives fitnessObjectives = new FitnessObjectives();
+		FitnessObjectiveValues fitnessObjectives = new FitnessObjectiveValues();
 		fitnessObjectives.setHarmony(harmonyMean);
 		fitnessObjectives.setMelody(melodicValue);
 		fitnessObjectives.setVoiceleading(voiceLeading);
@@ -207,83 +203,18 @@ public class FitnessEvaluationTemplate {
 		return map;
 	}
 	
-	private double evaluateHarmony(List<Harmony> noteList) {
-		OptionalDouble optionalDouble = noteList.stream().map(n -> n.toChord()).mapToDouble(ch -> ch.getWeight()).average();
-//		return noteList.stream().map(n -> n.toChord()).mapToDouble(ch -> ch.getWeight()).peek(System.out::println).sum();
-		return optionalDouble.getAsDouble();
+	private double evaluateHarmony(Motive motive) {
+		return harmonicObjective.evaluate(motive);
 	}
 
-	private double evaluateVL(List<Harmony> noteList, int beatDivider){
-		Map<Double, List<Harmony>> map = noteList.stream().collect(Collectors.groupingBy(ch -> ch.getBeat(beatDivider)));
-		Map<Double, Chord> bestChordMap = new TreeMap<>();
-		for (Entry<Double, List<Harmony>> entry: map.entrySet()) {
-			List<Harmony> list = entry.getValue();
-			Optional<Chord> bestChord = list.stream().map(t -> t.toChord()).max(Comparator.comparing(Chord::getWeight));
-			if(bestChord.isPresent()) {
-				bestChordMap.put(entry.getKey(), bestChord.get());
-			}
-		}
-		Chord[] chords = new Chord[bestChordMap.size()];
-		chords = bestChordMap.values().toArray(chords);
-//		map.forEach((k,v) -> v.stream().map(ch -> ch.toChord()));
-		bestChordMap.forEach((p,ch) -> System.out.println(p + ": " + ch.getChordType()));
-		int totalSize = 0;
-		for(int i = 0; i < chords.length - 1; i++){
-			VoiceLeadingSize minimalVoiceLeadingSize = VoiceLeading.caculateSize(chords[i].getPitchClassMultiSet(), chords[i + 1].getPitchClassMultiSet());
-			System.out.print(minimalVoiceLeadingSize.getVlSource());
-			System.out.print(minimalVoiceLeadingSize.getVlTarget());
-			System.out.print(minimalVoiceLeadingSize.getSize());
-			System.out.println();
-			totalSize = totalSize + minimalVoiceLeadingSize.getSize();
-		}
-		return totalSize/(chords.length - 1);
+	private double evaluateVL(Motive motive){
+		return voiceLeadingObjective.evaluate(motive);
 	}
 	
-	private double evaluateMelody(List<Harmony> noteList) {
-		List<NotePos> allNotes = new ArrayList<>();
-		for (Harmony list : noteList) {
-			for (NotePos notePos : list.getNotes()) {
-				allNotes.add(notePos);
-			}
-		}
-		Map<Integer, List<NotePos>> melodies = allNotes.stream().collect(Collectors.groupingBy(n -> n.getVoice()));
-		melodies.forEach((p, ch) -> System.out.println(p + ": " +ch));
-		double total = 0.0;
-		int count = 0;
-		for(Entry<Integer, List<NotePos>> voices : melodies.entrySet()){
-			List<NotePos> notePositions = voices.getValue();
-			notePositions.stream().forEach(n -> System.out.print( "," + n.getPitch()));
-			System.out.println();
-			if (notePositions.size() > 1) {
-				List<Double> listWeights;
-				if (notePositions.size() > 4) {
-					listWeights = MelodicFunctions.getMelodicWeights2(notePositions, 4);
-				} else {
-					listWeights = MelodicFunctions.getMelodicWeights2(notePositions, notePositions.size());
-				}
-				double[] melodicWeights = listToArray(listWeights);
-				LOGGER.fine(Arrays.toString(melodicWeights));
-				DescriptiveStatistics stats = new DescriptiveStatistics(melodicWeights);
-				// Compute some statistics
-				double mean = stats.getGeometricMean();
-//					double mean = stats.getStandardDeviation();
-				LOGGER.fine("melodicValue mean: " + mean);
-				LOGGER.fine("melodicValue standarddeviation: " + stats.getStandardDeviation());
-				if (!Double.isNaN(mean)) {//when melody contains no intervals (note repeat, octave)
-					total = total + mean;
-					count++;
-			}
-		}
-		}
-		return total/count;
+	private double evaluateMelody(Motive motive) {
+		return melodicObjective.evaluate(motive);
 	}
 		
-		public double[] listToArray(List<Double> values) {
-			Double[] valuesArray = new Double[values.size()];
-			valuesArray = values.toArray(valuesArray);
-			double[] v = ArrayUtils.toPrimitive(valuesArray);
-			return v;
-		}
 	
 //	private double evaluateRhythm(List<MusicalStructure> sentences, int numerator) {
 //		double total = 0;

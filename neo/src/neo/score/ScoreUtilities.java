@@ -57,7 +57,7 @@ public class ScoreUtilities implements JMC{
 		Part[] scoreParts = new Part[motives.size()];
 		int voice = 0;
 		for (Melody motive : motives) {
-			List<NotePos> notePosistions = motive.getMelody();
+			List<NotePos> notePosistions = motive.getNotes();
 			Phrase phrase = new Phrase();
 			int lastVoice = 0;
 			if (!notePosistions.isEmpty()) {

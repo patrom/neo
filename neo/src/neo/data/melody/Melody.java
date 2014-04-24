@@ -21,11 +21,11 @@ public class Melody {
 		this.length = length;
 	}
 
-	public List<NotePos> getMelody() {
+	public List<NotePos> getNotes() {
 		return notePositions;
 	}
 	
-	public List<NotePos> getMelodyWithoutRests() {
+	public List<NotePos> getNotesWithoutRests() {
 		List<NotePos> positions = new ArrayList<NotePos>();
 		for (NotePos note : notePositions) {
 			if (!note.isRest()) {

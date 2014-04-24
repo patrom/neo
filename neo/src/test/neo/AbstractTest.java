@@ -11,7 +11,8 @@ import java.util.logging.SimpleFormatter;
 import javax.sound.midi.InvalidMidiDataException;
 
 import neo.data.melody.Melody;
-import neo.evaluation.FitnessObjectives;
+import neo.evaluation.FitnessObjectiveValues;
+import neo.evaluation.MusicProperties;
 import neo.midi.MidiParser;
 
 import org.junit.Before;
@@ -19,23 +20,20 @@ import org.junit.Before;
 public abstract class AbstractTest {
 	
 	protected List<Melody> motives;
-	protected FitnessObjectives objectives;
+	protected FitnessObjectiveValues objectives;
+	protected MusicProperties musicProperties;
 	
 	@Before
-	public void setUp(){
-		try {
-//			motives = MidiParser.readMidi("/Users/parm/git/neo/neo/src/test/neo/Bach-choral227 deel1.mid");
-			motives = MidiParser.readMidi("/Users/parm/comp/moga/music/test3.mid");
-		} catch (InvalidMidiDataException | IOException e) {
-			e.printStackTrace();
-		}
+	public void abstractSetUp() throws InvalidMidiDataException, IOException{
+		musicProperties = new MusicProperties();
+//		motives = MidiParser.readMidi("/Users/parm/git/neo/neo/src/test/neo/Bach-choral227 deel1.mid");
+		motives = MidiParser.readMidi("/Users/parm/comp/moga/music/test3.mid");
 	}
 
-	public AbstractTest() {
+	public AbstractTest(){
 		try {
 			configureLogger(Level.INFO);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

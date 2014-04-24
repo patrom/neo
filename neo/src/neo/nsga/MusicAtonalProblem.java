@@ -5,7 +5,7 @@ import jmetal.base.Solution;
 import jmetal.base.Variable;
 import jmetal.util.JMException;
 import neo.evaluation.FitnessEvaluationTemplate;
-import neo.evaluation.FitnessObjectives;
+import neo.evaluation.FitnessObjectiveValues;
 import neo.evaluation.MusicProperties;
 import net.sourceforge.jFuzzyLogic.membership.MembershipFunction;
 import net.sourceforge.jFuzzyLogic.membership.MembershipFunctionTriangular;
@@ -61,7 +61,7 @@ public class MusicAtonalProblem extends Problem {
 //		FugaDecorator decorator = new FugaDecorator(controller, 12, 48);
 //		DebussyDecorator decorator = new DebussyDecorator(controller);
 		
-		FitnessObjectives objectives = controller.evaluate(((MusicVariable)variables[0]).getMotive());
+		FitnessObjectiveValues objectives = controller.evaluate(((MusicVariable)variables[0]).getMotive());
 		
 		double harmonyObjective = 1 - harmonyMembershipFunction.membership(objectives.getHarmony());
 		solution.setObjective(0, harmonyObjective);//harmony

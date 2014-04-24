@@ -19,11 +19,11 @@ public class FitnessEvaluationTest extends AbstractTest{
 
 	private static Logger LOGGER = Logger.getLogger(FitnessEvaluationTest.class.getName());
 	
-	FitnessEvaluationTemplate fitnessEvaluation;
-	
+	private FitnessEvaluationTemplate fitnessEvaluation;
+
 	@Before
 	public void setUp(){
-		fitnessEvaluation = new FitnessEvaluationTemplate();
+		fitnessEvaluation = new FitnessEvaluationTemplate(musicProperties);
 	}
 	
 	@After

@@ -86,7 +86,7 @@ public class MidiDevicesUtil {
 		}
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
 		for (int i = 0; i < motiveSize; i++) {
-			List<NotePos> notes = motives.get(i).getMelody();
+			List<NotePos> notes = motives.get(i).getNotes();
 			createTrack(sequence, notes, instruments.get(i));
 		}
 		return sequence;
@@ -134,7 +134,7 @@ public class MidiDevicesUtil {
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motives.size());
 		int i = 0;
 		for (Melody motive : motives) {
-			List<NotePos> notes = motive.getMelody();
+			List<NotePos> notes = motive.getNotes();
 			createTrack(sequence, notes, instruments.get(i));
 			i++;
 		}

@@ -1,6 +1,6 @@
 package neo.evaluation;
 
-public class FitnessObjectives {
+public class FitnessObjectiveValues {
 
 	private double harmony;
 	private double melody;
@@ -26,7 +26,7 @@ public class FitnessObjectives {
 	}
 	@Override
 	public String toString() {
-		return "FitnessValueObject [harmony=" + harmony + ", melody=" + melody
+		return "FitnessObjectiveValues [harmony=" + harmony + ", melody=" + melody
 				+ ", voiceleading=" + voiceleading + "]";
 	}
 	
