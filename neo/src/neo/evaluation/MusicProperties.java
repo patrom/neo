@@ -14,6 +14,7 @@ public class MusicProperties {
 		ranges.add(getInstrument(2, 60, 74));
 		ranges.add(getInstrument(3, 65, 80));
 	}
+	private int harmonyBeatDivider = 12;
 	
 	//harmony
 	private double harmonyConsDissValue = 0.3;
@@ -178,6 +179,12 @@ public class MusicProperties {
 		range.setLowest(low);
 		range.setHighest(high);
 		return range;
+	}
+	public int getHarmonyBeatDivider() {
+		return harmonyBeatDivider;
+	}
+	public void setHarmonyBeatDivider(int harmonyBeatDivider) {
+		this.harmonyBeatDivider = harmonyBeatDivider;
 	}
 	
 }

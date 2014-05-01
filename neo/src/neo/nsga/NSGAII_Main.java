@@ -40,6 +40,7 @@ import neo.evaluation.MusicProperties;
 import neo.generator.Generator;
 import neo.instrument.MidiDevice;
 import neo.midi.MidiDevicesUtil;
+import neo.midi.Play;
 import neo.nsga.operator.OnePointCrossover;
 import neo.score.ScoreUtilities;
 import jm.JMC;
@@ -59,7 +60,7 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 
 
-public class NSGAII_TwelveToneMain implements JMC{
+public class NSGAII_Main implements JMC{
 	  public static Logger      logger_ ;      // Logger object
 	  public static FileHandler fileHandler_ ; // FileHandler object
 	  private static MusicProperties inputProps = new MusicProperties();
@@ -73,12 +74,13 @@ public class NSGAII_TwelveToneMain implements JMC{
    *      - jmetal.metaheuristics.nsgaII.NSGAII_main
    *      - jmetal.metaheuristics.nsgaII.NSGAII_main problemName
    *      - jmetal.metaheuristics.nsgaII.NSGAII_main problemName paretoFrontFile
+ * @throws InvalidMidiDataException 
    */
   public static void main(String [] args) throws 
                                   JMException, 
                                   SecurityException, 
                                   IOException, 
-                                  ClassNotFoundException {
+                                  ClassNotFoundException, InvalidMidiDataException {
     Problem   problem   ;         // The problem to solve
     Algorithm algorithm ;         // The algorithm to use
     Operator  crossover ;         // Crossover operator
@@ -91,12 +93,11 @@ public class NSGAII_TwelveToneMain implements JMC{
     logger_      = Configuration.logger_ ;
     fileHandler_ = new FileHandler("NSGAII_main.log"); 
     logger_.addHandler(fileHandler_) ;
-    
-    problem = new MusicAtonalProblem("music", 1, inputProps);
-    SolutionType type = new MusicSolutionType(problem, inputProps.getMelodyLength(), inputProps.getScale()
-			, inputProps.getRhythmProfile(), inputProps.getPopulationStrategy(), inputProps.getRanges(), inputProps.getMelodyLength() * 12) ;
+    inputProps = new MusicProperties();
+    problem = new MusicProblem("music", 1, inputProps);
+    SolutionType type = new MusicSolutionType(problem, inputProps) ;
     problem.setSolutionType(type);
-    algorithm = new NSGAII_TwelveTone(problem);
+    algorithm = new NSGAII(problem);
 
     // Algorithm parameters
     int populationSize = 30;
@@ -154,7 +155,7 @@ public class NSGAII_TwelveToneMain implements JMC{
     printVariablesToMidi(population);
   } 
   
-  private static void printVariablesToMidi(SolutionSet solutionsList) throws JMException{
+  private static void printVariablesToMidi(SolutionSet solutionsList) throws JMException, InvalidMidiDataException{
 	  Map<Double, Solution> solutionMap = new TreeMap<Double, Solution>();
 	  Iterator<Solution> iterator = solutionsList.iterator();
 	  
@@ -181,7 +182,7 @@ public class NSGAII_TwelveToneMain implements JMC{
 		printNotes(motive.getHarmonies());
 		viewScore(motive.getMelodies(), i);
 //		printVextab(sentences);
-		playOnKontakt(motive.getMelodies());
+		Play.playOnKontakt(motive.getMelodies(), inputProps.getRanges());
 		i++;
 	  }
 	  
@@ -190,6 +191,8 @@ public class NSGAII_TwelveToneMain implements JMC{
 			System.out.println(j + ": " + solution);
 			j++;
 	  }
+	  
+	  
 	  
 //	  for (Solution solution : solutionMap.values()) {
 //		  List<MusicalStructure> structures = ((MusicVariable)solution.getDecisionVariables()[0]).getMelodies();
@@ -212,8 +215,16 @@ public class NSGAII_TwelveToneMain implements JMC{
 //	    	i++;
 //  		  }
 //	  }
-
   }
+  
+	private static void viewScore(List<Melody> melodies, int i) {
+		Score score = ScoreUtilities.createScoreMotives(melodies);
+		if (i <=8) {
+			score.setTitle("test " + (i));
+			Write.midi(score, "test" + (i) + ".mid");	
+			View.notate(score);	
+		}
+	}
 
 //	private static void printVextab(List<MusicalStructure> sentences) {
 //		String vexTab = ScoreUtilities.createVexTab(sentences, inputProps);
@@ -233,16 +244,6 @@ public class NSGAII_TwelveToneMain implements JMC{
 //		}
 //	}
 
-	private static void playOnKontakt(List<Melody> melodies) {
-		try {
-			Sequence seq = MidiDevicesUtil.createSequence(melodies, inputProps.getRanges());
-			MidiDevicesUtil.playOnDevice(seq, ScoreUtilities.randomTempoFloat(), MidiDevice.KONTACT);
-		} catch (InvalidMidiDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	private static void printNotes(List<Harmony> sentences) {
 //		for (NoteList musicalStructure : sentences) {
 //			List<NotePos> notes = musicalStructure.getNotes();
@@ -261,13 +262,4 @@ public class NSGAII_TwelveToneMain implements JMC{
 //		System.out.println("Notes");
 	}
 	
-	private static void viewScore(List<Melody> melodies, int i) {
-		Score score = ScoreUtilities.createScoreMotives(melodies);
-		if (i <=8) {
-			score.setTitle("test " + (i));
-			Write.midi(score, "test" + (i) + ".mid");	
-			View.notate(score);	
-		}
-	}
-  
 } 

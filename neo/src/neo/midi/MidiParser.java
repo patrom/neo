@@ -2,7 +2,6 @@ package neo.midi;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -67,14 +66,14 @@ public class MidiParser {
 		Map<Integer, List<NotePos>> chords = new TreeMap<>();
 		Set<Integer> positions = new TreeSet<>();
 		for (Melody motive : motives) {
-			List<NotePos> notes = motive.getMelody();
+			List<NotePos> notes = motive.getNotes();
 			for (NotePos notePos : notes) {
 				positions.add(notePos.getPosition());
 			}
 		}
 		int voice = 0;
 		for (Melody motive : motives) {
-			List<NotePos> notes = motive.getMelody();
+			List<NotePos> notes = motive.getNotes();
 			int melodyLength = notes.size() - 1;
 			Iterator<Integer> iterator = positions.iterator();
 			Integer position = iterator.next();
