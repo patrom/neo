@@ -23,7 +23,12 @@ public class FitnessEvaluationTest extends AbstractTest{
 
 	@Before
 	public void setUp(){
-		fitnessEvaluation = new FitnessEvaluationTemplate(musicProperties);
+		List<Harmony> list = new ArrayList<>();
+		list.add(Examples.getChord(0,6, 0,4,7));
+		list.add(Examples.getChord(6,6, 1,4,6));
+		list.add(Examples.getChord(12,12, 11,2,7));
+		list.add(Examples.getChord(24,12, 0,4,9));
+		fitnessEvaluation = new FitnessEvaluationTemplate(musicProperties, new Motive(list));
 	}
 	
 	@After
@@ -33,13 +38,7 @@ public class FitnessEvaluationTest extends AbstractTest{
 	
 	@Test
 	public void evaluationTest() {
-		List<Harmony> list = new ArrayList<>();
-		list.add(Examples.getChord(0,6, 0,4,7));
-		list.add(Examples.getChord(6,6, 1,4,6));
-		list.add(Examples.getChord(12,12, 11,2,7));
-		list.add(Examples.getChord(24,12, 0,4,9));
-		Motive motive = new Motive(list);
-		objectives = fitnessEvaluation.evaluate(motive);
+		objectives = fitnessEvaluation.evaluate();
 	}
 
 }

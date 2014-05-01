@@ -17,7 +17,7 @@ import jmetal.util.*;
 /**
  * This class implements the NSGA-II algorithm. 
  */
-public class NSGAII_TwelveTone extends Algorithm {
+public class NSGAII extends Algorithm {
 
   /**
    * stores the problem  to solve
@@ -28,7 +28,7 @@ public class NSGAII_TwelveTone extends Algorithm {
    * Constructor
    * @param problem Problem to solve
    */
-  public NSGAII_TwelveTone(Problem problem) {
+  public NSGAII(Problem problem) {
     this.problem_ = problem;
   } // NSGAII
 

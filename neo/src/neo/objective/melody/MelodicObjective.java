@@ -1,20 +1,23 @@
 package neo.objective.melody;
 
-import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
 import neo.data.Motive;
 import neo.data.melody.Melody;
 import neo.data.note.NotePos;
 import neo.objective.Objective;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+
 public class MelodicObjective extends Objective {
 
+	public MelodicObjective(Motive motive) {
+		super(motive);
+	}
+
 	@Override
-	public double evaluate(Motive motive) {
+	public double evaluate() {
 		double total = 0.0;
 		int count = 0;
 		for(Melody melody : motive.getMelodies()){

@@ -11,7 +11,7 @@ import net.sourceforge.jFuzzyLogic.membership.MembershipFunction;
 import net.sourceforge.jFuzzyLogic.membership.MembershipFunctionTriangular;
 import net.sourceforge.jFuzzyLogic.membership.Value;
 
-public class MusicAtonalProblem extends Problem {
+public class MusicProblem extends Problem {
 
 	private MusicProperties properties;
 
@@ -31,7 +31,7 @@ public class MusicAtonalProblem extends Problem {
 	 * @param voices 
 	 * @param scale 
 	   */
-	  public MusicAtonalProblem(String solutionType, int numberOfVariables, MusicProperties inputProps) throws ClassNotFoundException {
+	  public MusicProblem(String solutionType, int numberOfVariables, MusicProperties inputProps) throws ClassNotFoundException {
 	    numberOfVariables_   = numberOfVariables ;
 	    numberOfObjectives_  = 5                           ;
 	    numberOfConstraints_ = 0                            ;
@@ -57,11 +57,11 @@ public class MusicAtonalProblem extends Problem {
 	@Override
 	public void evaluate(Solution solution) throws JMException {
 		Variable[] variables = solution.getDecisionVariables();
-		FitnessEvaluationTemplate controller = new FitnessEvaluationTemplate(properties);
+		FitnessEvaluationTemplate controller = new FitnessEvaluationTemplate(properties, ((MusicVariable)variables[0]).getMotive());
 //		FugaDecorator decorator = new FugaDecorator(controller, 12, 48);
 //		DebussyDecorator decorator = new DebussyDecorator(controller);
 		
-		FitnessObjectiveValues objectives = controller.evaluate(((MusicVariable)variables[0]).getMotive());
+		FitnessObjectiveValues objectives = controller.evaluate();
 		
 		double harmonyObjective = 1 - harmonyMembershipFunction.membership(objectives.getHarmony());
 		solution.setObjective(0, harmonyObjective);//harmony

@@ -6,31 +6,20 @@ import jmetal.base.Problem;
 import jmetal.base.SolutionType;
 import jmetal.base.Variable;
 import neo.data.Motive;
-import neo.data.harmony.Harmony;
+import neo.evaluation.MusicProperties;
 import neo.generator.Generator;
 import neo.instrument.Instrument;
 
 public class MusicSolutionType extends SolutionType {
 
-	public int[] scale;
 	public List<Instrument> ranges;
-	public int melodyLength ;
-	private int[] profile;
-	private String strategy;
-	private int length;
 	
-	public MusicSolutionType(Problem problem, int melodyLenth, int[] scale, int[] profile, String strategy, List<Instrument> ranges, int length) {
+	public MusicSolutionType(Problem problem, MusicProperties musicProperties) {
 		super(problem);
 		problem.variableType_ = new Class[problem.getNumberOfVariables()];
 		problem.setSolutionType(this);
-		this.scale = scale;
-		this.melodyLength = melodyLenth;
-		this.ranges = ranges;
-		this.profile = profile;
-		this.strategy = strategy;
-		this.length = length;
+		this.ranges = musicProperties.getRanges();
 	}
-
 
 	@Override
 	public Variable[] createVariables() throws ClassNotFoundException {
@@ -42,6 +31,5 @@ public class MusicSolutionType extends SolutionType {
 		variables[0] = new MusicVariable(motive);
 		return variables ;
 	}	
-
 
 }

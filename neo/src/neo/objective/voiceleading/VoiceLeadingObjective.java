@@ -3,9 +3,9 @@ package neo.objective.voiceleading;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import neo.data.Motive;
@@ -16,12 +16,12 @@ import neo.objective.harmony.Chord;
 
 public class VoiceLeadingObjective extends Objective {
 
-	public VoiceLeadingObjective(MusicProperties properties) {
-		super(properties);
+	public VoiceLeadingObjective(MusicProperties musicProperties, Motive motive) {
+		super(musicProperties, motive);
 	}
 
 	@Override
-	public double evaluate(Motive motive) {
+	public double evaluate() {
 		Map<Double, List<Harmony>> map = motive.getHarmonies().stream().collect(Collectors.groupingBy(ch -> ch.getBeat(musicProperties.getHarmonyBeatDivider())));
 		Map<Double, Chord> bestChordMap = new TreeMap<>();
 		for (Entry<Double, List<Harmony>> entry: map.entrySet()) {

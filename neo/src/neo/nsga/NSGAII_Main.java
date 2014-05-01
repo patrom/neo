@@ -60,7 +60,7 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 
 
-public class NSGAII_TwelveToneMain implements JMC{
+public class NSGAII_Main implements JMC{
 	  public static Logger      logger_ ;      // Logger object
 	  public static FileHandler fileHandler_ ; // FileHandler object
 	  private static MusicProperties inputProps = new MusicProperties();
@@ -93,12 +93,11 @@ public class NSGAII_TwelveToneMain implements JMC{
     logger_      = Configuration.logger_ ;
     fileHandler_ = new FileHandler("NSGAII_main.log"); 
     logger_.addHandler(fileHandler_) ;
-    
-    problem = new MusicAtonalProblem("music", 1, inputProps);
-    SolutionType type = new MusicSolutionType(problem, inputProps.getMelodyLength(), inputProps.getScale()
-			, inputProps.getRhythmProfile(), inputProps.getPopulationStrategy(), inputProps.getRanges(), inputProps.getMelodyLength() * 12) ;
+    inputProps = new MusicProperties();
+    problem = new MusicProblem("music", 1, inputProps);
+    SolutionType type = new MusicSolutionType(problem, inputProps) ;
     problem.setSolutionType(type);
-    algorithm = new NSGAII_TwelveTone(problem);
+    algorithm = new NSGAII(problem);
 
     // Algorithm parameters
     int populationSize = 30;
