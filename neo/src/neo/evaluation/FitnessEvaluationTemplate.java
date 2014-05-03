@@ -76,7 +76,7 @@ public class FitnessEvaluationTemplate {
 	}
 	
 	public FitnessObjectiveValues evaluate() {
-		calculateNoteValues();
+		calculateNotePositionValues();
 		return evaluateObjectives();
 	}
 
@@ -115,7 +115,7 @@ public class FitnessEvaluationTemplate {
 		return fitnessObjectives;	
 	}
 
-	private void calculateNoteValues() {
+	private void calculateNotePositionValues() {
 		calculateBeatValues();//change to apply rhythmic template;
 		calculateInnerMetricValues();
 	}

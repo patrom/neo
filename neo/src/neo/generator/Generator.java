@@ -16,7 +16,7 @@ import neo.data.Motive;
 import neo.data.harmony.Harmony;
 import neo.data.harmony.UniformPitchSpace;
 import neo.data.note.NotePos;
-import neo.instrument.KontaktPiano;
+import neo.instrument.KontaktLibPiano;
 import neo.instrument.MidiDevice;
 import neo.midi.MidiDevicesUtil;
 import neo.score.ScoreUtilities;
@@ -39,10 +39,10 @@ public class Generator {
 //		ranges.add(new KontaktLibViolin(1, 2));
 //		ranges.add(new KontaktLibAltViolin(2, 2));
 //		ranges.add(new KontaktLibCello(3, 3));
-		ranges.add(new KontaktPiano(0,0));
-		ranges.add(new KontaktPiano(1,0));
-		ranges.add(new KontaktPiano(2,0));
-		ranges.add(new KontaktPiano(3,0));
+		ranges.add(new KontaktLibPiano(0,0));
+		ranges.add(new KontaktLibPiano(1,0));
+		ranges.add(new KontaktLibPiano(2,0));
+		ranges.add(new KontaktLibPiano(3,0));
 		
 		Sequence seq = MidiDevicesUtil.createSequence(motive.getMelodies(), ranges);
 		float tempo = 80f;

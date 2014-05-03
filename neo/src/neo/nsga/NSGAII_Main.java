@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -64,6 +65,7 @@ public class NSGAII_Main implements JMC{
 	  public static Logger      logger_ ;      // Logger object
 	  public static FileHandler fileHandler_ ; // FileHandler object
 	  private static MusicProperties inputProps = new MusicProperties();
+	  private static Random random = new Random();
 
   /**
    * @param args Command line arguments.
@@ -75,25 +77,20 @@ public class NSGAII_Main implements JMC{
    *      - jmetal.metaheuristics.nsgaII.NSGAII_main problemName
    *      - jmetal.metaheuristics.nsgaII.NSGAII_main problemName paretoFrontFile
  * @throws InvalidMidiDataException 
+ * @throws ClassNotFoundException 
    */
-  public static void main(String [] args) throws 
-                                  JMException, 
-                                  SecurityException, 
-                                  IOException, 
-                                  ClassNotFoundException, InvalidMidiDataException {
+  public static void main(String [] args) throws JMException, SecurityException, IOException, InvalidMidiDataException, ClassNotFoundException {
     Problem   problem   ;         // The problem to solve
     Algorithm algorithm ;         // The algorithm to use
     Operator  crossover ;         // Crossover operator
     Operator  mutation  ;         // Mutation operator
     Operator  selection ;         // Selection operator
     
-    QualityIndicator indicators = null; // Object to get quality indicators
-
     // Logger object and file to store log messages
     logger_      = Configuration.logger_ ;
     fileHandler_ = new FileHandler("NSGAII_main.log"); 
     logger_.addHandler(fileHandler_) ;
-    inputProps = new MusicProperties();
+
     problem = new MusicProblem("music", 1, inputProps);
     SolutionType type = new MusicSolutionType(problem, inputProps) ;
     problem.setSolutionType(type);
@@ -163,12 +160,6 @@ public class NSGAII_Main implements JMC{
 		MusicSolution solution = (MusicSolution) iterator.next();
 		solutionMap.put(solution.getHarmony(), solution);
 	  }
-	  
-	  int[] ensemble = new int[4];
-	  ensemble[0] = VIOLIN;
-	  ensemble[1] = VIOLIN;
-	  ensemble[2] = VIOLA;
-	  ensemble[3] = CELLO;
 	  int i = 1;
 	  for (Solution solution : solutionMap.values()) {
 		Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
@@ -182,7 +173,11 @@ public class NSGAII_Main implements JMC{
 		printNotes(motive.getHarmonies());
 		viewScore(motive.getMelodies(), i);
 //		printVextab(sentences);
-		Play.playOnKontakt(motive.getMelodies(), inputProps.getRanges());
+		if (inputProps.getTempo() > 0f) {
+			Play.playOnKontakt(motive.getMelodies(), inputProps.getRanges(), inputProps.getTempo());
+		} else {
+			Play.playOnKontakt(motive.getMelodies(), inputProps.getRanges(), randomTempoFloat());
+		}
 		i++;
 	  }
 	  
@@ -191,8 +186,6 @@ public class NSGAII_Main implements JMC{
 			System.out.println(j + ": " + solution);
 			j++;
 	  }
-	  
-	  
 	  
 //	  for (Solution solution : solutionMap.values()) {
 //		  List<MusicalStructure> structures = ((MusicVariable)solution.getDecisionVariables()[0]).getMelodies();
@@ -260,6 +253,21 @@ public class NSGAII_Main implements JMC{
 //			System.out.println();
 //		}
 //		System.out.println("Notes");
+	}
+	
+	/**
+	 * Generates random tempo between 50 - 150 bpm
+	 * @return
+	 */
+	private static float randomTempoFloat() {
+		float r = random.nextFloat();
+		if (r < 0.5) {
+			r = (r * 100) + 100;
+		} else {
+			r = r * 100;
+		}
+		//tempo between 50 - 150
+		return r;
 	}
 	
 } 

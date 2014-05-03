@@ -15,6 +15,7 @@ public class MusicProperties {
 		ranges.add(getInstrument(3, 65, 80));
 	}
 	private int harmonyBeatDivider = 12;
+	private float tempo;
 	
 	//harmony
 	private double harmonyConsDissValue = 0.3;
@@ -185,6 +186,12 @@ public class MusicProperties {
 	}
 	public void setHarmonyBeatDivider(int harmonyBeatDivider) {
 		this.harmonyBeatDivider = harmonyBeatDivider;
+	}
+	public float getTempo() {
+		return tempo;
+	}
+	public void setTempo(float tempo) {
+		this.tempo = tempo;
 	}
 	
 }

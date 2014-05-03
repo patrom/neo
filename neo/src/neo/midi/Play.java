@@ -1,7 +1,10 @@
 package neo.midi;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
-import java.util.Random;
+import java.util.stream.Collectors;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
@@ -12,26 +15,17 @@ import neo.instrument.MidiDevice;
 
 public class Play {
 
-	private static Random random = new Random();
-	
-	public static void playOnKontakt(List<Melody> motives, List<Instrument> instruments) throws InvalidMidiDataException {
+	public static void playOnKontakt(List<Melody> motives, List<Instrument> instruments, float tempo) throws InvalidMidiDataException {
 		Sequence seq = MidiDevicesUtil.createSequence(motives, instruments);
-		MidiDevicesUtil.playOnDevice(seq, randomTempoFloat(), MidiDevice.KONTACT);
+		MidiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTACT);
 	}
 	
-	/**
-	 * Generates random tempo between 50 - 150 bpm
-	 * @return
-	 */
-	private static float randomTempoFloat() {
-		float r = random.nextFloat();
-		if (r < 0.5) {
-			r = (r * 100) + 100;
-		} else {
-			r = r * 100;
+	public static void playMidiFilesOnKontaktFor(String path, List<Instrument> instruments, float tempo) throws IOException, InvalidMidiDataException {
+		List<File> midiFiles = Files.list(new File(path).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		for (File midiFile : midiFiles) {
+			List<Melody> motives = MidiParser.readMidi(midiFile);
+			playOnKontakt(motives, instruments, tempo);
 		}
-		//tempo between 50 - 150
-		return r;
 	}
 	
 }

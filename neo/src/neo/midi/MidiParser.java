@@ -105,10 +105,16 @@ public class MidiParser {
 		chord.add(notePos);
 		chords.put(position, chord);
 	}
+	
+	
+	public static List<Melody> readMidi(String path) throws InvalidMidiDataException, IOException{
+		File file = new File(path);
+		return readMidi(file);
+	}
 
-	public static List<Melody> readMidi(String path)
+	public static List<Melody> readMidi(File midiFile)
 			throws InvalidMidiDataException, IOException {
-		Sequence sequence = MidiSystem.getSequence(new File(path));
+		Sequence sequence = MidiSystem.getSequence(midiFile);
 		LOGGER.finer("Ticks: " + sequence.getResolution());
 		LOGGER.finer("PPQ: " + sequence.PPQ);
 		LOGGER.finer("DivisionType: " + sequence.getDivisionType());
