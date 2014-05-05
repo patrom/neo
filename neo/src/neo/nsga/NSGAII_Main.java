@@ -27,23 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.Sequence;
 
-import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.data.melody.Melody;
-import neo.data.note.NotePos;
-import neo.evaluation.MusicProperties;
-import neo.generator.Generator;
-import neo.instrument.MidiDevice;
-import neo.midi.MidiDevicesUtil;
-import neo.midi.Play;
-import neo.nsga.operator.OnePointCrossover;
-import neo.score.ScoreUtilities;
 import jm.JMC;
 import jm.music.data.Score;
 import jm.util.View;
@@ -54,54 +40,33 @@ import jmetal.base.Problem;
 import jmetal.base.Solution;
 import jmetal.base.SolutionSet;
 import jmetal.base.SolutionType;
-import jmetal.base.operator.mutation.Mutation;
 import jmetal.base.operator.selection.SelectionFactory;
-import jmetal.qualityIndicator.QualityIndicator;
-import jmetal.util.Configuration;
 import jmetal.util.JMException;
+import neo.data.Motive;
+import neo.data.harmony.Harmony;
+import neo.data.melody.Melody;
+import neo.evaluation.MusicProperties;
+import neo.midi.Play;
+import neo.nsga.operator.OnePointCrossover;
+import neo.score.ScoreUtilities;
 
 
 public class NSGAII_Main implements JMC{
-	  public static Logger      logger_ ;      // Logger object
-	  public static FileHandler fileHandler_ ; // FileHandler object
 	  private static MusicProperties inputProps = new MusicProperties();
 	  private static Random random = new Random();
 
-  /**
-   * @param args Command line arguments.
-   * @throws JMException 
-   * @throws IOException 
-   * @throws SecurityException 
-   * Usage: three options
-   *      - jmetal.metaheuristics.nsgaII.NSGAII_main
-   *      - jmetal.metaheuristics.nsgaII.NSGAII_main problemName
-   *      - jmetal.metaheuristics.nsgaII.NSGAII_main problemName paretoFrontFile
- * @throws InvalidMidiDataException 
- * @throws ClassNotFoundException 
-   */
   public static void main(String [] args) throws JMException, SecurityException, IOException, InvalidMidiDataException, ClassNotFoundException {
-    Problem   problem   ;         // The problem to solve
-    Algorithm algorithm ;         // The algorithm to use
-    Operator  crossover ;         // Crossover operator
-    Operator  mutation  ;         // Mutation operator
-    Operator  selection ;         // Selection operator
-    
-    // Logger object and file to store log messages
-    logger_      = Configuration.logger_ ;
-    fileHandler_ = new FileHandler("NSGAII_main.log"); 
-    logger_.addHandler(fileHandler_) ;
-
-    problem = new MusicProblem("music", 1, inputProps);
+    Problem problem = new MusicProblem("music", 1, inputProps);
     SolutionType type = new MusicSolutionType(problem, inputProps) ;
     problem.setSolutionType(type);
-    algorithm = new NSGAII(problem);
+    Algorithm algorithm = new NSGAII(problem);
 
     // Algorithm parameters
     int populationSize = 30;
     algorithm.setInputParameter("populationSize",populationSize);
     algorithm.setInputParameter("maxEvaluations",populationSize * 20);
     // Mutation and Crossover
-    crossover = new OnePointCrossover();
+    Operator crossover = new OnePointCrossover();
     //if homophonic don't do crossover!
 //    if (inputProps.getPopulationStrategy().equals("homophonic")) {
     	 crossover.setParameter("probabilityCrossover",0.0);       
@@ -110,7 +75,7 @@ public class NSGAII_Main implements JMC{
 //	}      
 //    crossover.setParameter("distributionIndex",20.0);
 
-//    mutation = MutationFactory.getMutationOperator("BitFlipMutation");
+//    Operator mutation = MutationFactory.getMutationOperator("BitFlipMutation");
 //    mutation = new OneNoteMutation(inputProps.getScale(), inputProps.getRanges());
 //    mutation.setParameter("probabilityOneNote",0.0);
     
@@ -126,7 +91,7 @@ public class NSGAII_Main implements JMC{
     
     
     // Selection Operator 
-    selection = SelectionFactory.getSelectionOperator("BinaryTournament2") ;                           
+    Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament2") ;                           
 
     // Add the operators to the algorithm
     algorithm.addOperator("crossover",crossover);
@@ -138,16 +103,11 @@ public class NSGAII_Main implements JMC{
     algorithm.addOperator("selection",selection);
 
     // Execute the Algorithm
-    long initTime = System.currentTimeMillis();
     SolutionSet population = algorithm.execute();
-    long estimatedTime = System.currentTimeMillis() - initTime;
     
     // Result messages 
-    logger_.info("Total execution time: "+estimatedTime + "ms");
-    logger_.info("Variables values have been writen to file VAR");
 //    population.printVariablesToFile("VAR");   
 //    population.printVariablesToNotes("VAR"); 
-    logger_.info("Objectives values have been writen to file FUN");
     population.printObjectivesToFile("FUN");
     printVariablesToMidi(population);
   } 
