@@ -1,4 +1,4 @@
-package neo.nsga.operator;
+package neo.nsga.operator.crossover;
 
 import jmetal.base.Solution;
 import jmetal.base.operator.crossover.Crossover;

@@ -36,7 +36,7 @@ public class MusicProperties {
 	private int[] rhythmProfile = {0,0,0,10,10};//whole note (with divisions), half note, quarter note, triplet half note, triplet quarter note.
 	
 	//tonality
-	private int[] scale = Scale.MAJOR_SCALE;
+	private Scale scale = new Scale(Scale.MAJOR_SCALE);
 	
 	//generation
 	private int numerator = 4;//2/4,4/4,3/4 - 6/8
@@ -113,12 +113,10 @@ public class MusicProperties {
 	public void setInnerMetricFactor(int innerMetricFactor) {
 		this.innerMetricFactor = innerMetricFactor;
 	}
-	public int[] getScale() {
+	public Scale getScale() {
 		return scale;
 	}
-	public void setScale(int[] scale) {
-		this.scale = scale;
-	}
+	
 	public int getNumerator() {
 		return numerator;
 	}

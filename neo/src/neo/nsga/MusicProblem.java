@@ -63,12 +63,12 @@ public class MusicProblem extends Problem {
 		
 		FitnessObjectiveValues objectives = controller.evaluate();
 		
-		double harmonyObjective = 1 - harmonyMembershipFunction.membership(objectives.getHarmony());
+		double harmonyObjective = 1 - (objectives.getHarmony());
 		solution.setObjective(0, harmonyObjective);//harmony
 //		solution.setObjective(0, objectives[0]);//harmony
-		solution.setObjective(1, objectives.getVoiceleading() - 1);//voice leading size: - 1 because 1 is the optimal value to be minimized!
-		double melodyObjective = 1 - melodyMembershipFunction.membership(objectives.getMelody());
-		solution.setObjective(2, melodyObjective);//melody
+//		solution.setObjective(1, objectives.getVoiceleading() - 1);//voice leading size: - 1 because 1 is the optimal value to be minimized!
+//		double melodyObjective = 1 - melodyMembershipFunction.membership(objectives.getMelody());
+//		solution.setObjective(2, melodyObjective);//melody
 //		double rhythmObjective = 1 - melodyMembershipFunction.membership(objectives[3]);
 //		solution.setObjective(3, rhythmObjective);//rhythm
 ////		
@@ -89,9 +89,9 @@ public class MusicProblem extends Problem {
 		MusicSolution musicSolution = (MusicSolution) solution;
 //		musicSolution.setHarmony(objectives[0]);
 		musicSolution.setHarmony(harmonyObjective);
-		musicSolution.setVoiceLeading(objectives.getVoiceleading());
-		musicSolution.setMelody(objectives.getMelody());
-		musicSolution.setMelody(melodyObjective);
+//		musicSolution.setVoiceLeading(objectives.getVoiceleading());
+//		musicSolution.setMelody(objectives.getMelody());
+//		musicSolution.setMelody(melodyObjective);
 //		musicSolution.setRhythm(rhythmObjective);
 //		musicSolution.setTonality(objectives[4]);
 //		musicSolution.setConstraintLowestInterval(objectives[5]);

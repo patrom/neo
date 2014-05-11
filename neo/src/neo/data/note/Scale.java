@@ -1,5 +1,6 @@
 package neo.data.note;
 
+import java.util.Random;
 
 public class Scale {
 	
@@ -26,4 +27,70 @@ public class Scale {
 			ALL_INTERVAL_TRETRACHORD1 = {0, 1, 4, 6},
 			ALL_INTERVAL_TRETRACHORD2 = {0, 1, 3, 7},
 			ALL_INTERVAL_HEXACHORD = {0, 1, 2, 4, 7, 8};
+	
+	private Random random = new Random(System.currentTimeMillis());
+	private int[] scale;
+	
+	public Scale(int[] scale) {
+		super();
+		this.scale = scale;
+	}
+
+	public int pickRandomFromScale(){
+	    int index = random.nextInt(scale.length);
+	    return scale[index];
+	}
+	
+	public  int transpose(int pitchClass, int steps){
+		for (int i = 0; i < scale.length; i++) {
+			if (pitchClass  == scale[i]) {
+				int index = (i + steps)% scale.length;
+				return scale[index];
+			}
+		}
+		return pitchClass;
+	}
+	
+	
+	public int pickNextPitchFromScale(int pitchClass){
+		for (int i = 0; i < scale.length; i++) {
+			if (pitchClass == scale[i]) {
+				if (i == scale.length - 1) {
+					return scale[0];//end of array, pick first
+				} else {
+					return scale[i + 1];
+				}
+			}
+		}
+		return pitchClass;
+	}
+	
+	public int pickPreviousPitchFromScale(int pitchClass){
+		for (int i = 0; i < scale.length; i++) {
+			if (pitchClass == scale[i]) {
+				if (i == 0) {
+					return scale[scale.length - 1];//begin of array, pick last
+				} else {
+					return scale[i - 1];
+				}
+			}
+		}
+		return pitchClass;
+	}
+	
+	public int pickLowerStepFromScale(int pitchClass, int lowerStep){
+		for (int i = 0; i < scale.length; i++) {
+			if (pitchClass == scale[i]) {
+				int step = i - lowerStep;
+				if (step < 0) {
+					step = step + scale.length;
+					return scale[step];
+				} else {
+					return scale[step];
+				}
+			}
+		}
+		return pitchClass;
+	}
+
 }

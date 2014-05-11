@@ -15,9 +15,9 @@ public class LogConfig {
 		ch.setLevel(level);
 		topLogger.addHandler(ch);
 		topLogger.setLevel(level);
-		FileHandler fileTxt = new FileHandler("Logging.txt");
-		SimpleFormatter formatterTxt = new SimpleFormatter();
-		fileTxt.setFormatter(formatterTxt);
-		topLogger.addHandler(fileTxt);
+//		FileHandler fileTxt = new FileHandler("Logging.txt");
+//		SimpleFormatter formatterTxt = new SimpleFormatter();
+//		fileTxt.setFormatter(formatterTxt);
+//		topLogger.addHandler(fileTxt);
 	}
 }

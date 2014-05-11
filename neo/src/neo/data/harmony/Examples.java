@@ -3,6 +3,7 @@ package neo.data.harmony;
 import java.util.ArrayList;
 import java.util.List;
 
+import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.note.NotePos;
 
 public class Examples {
@@ -20,7 +21,7 @@ public class Examples {
 			NotePos notePos = new NotePos(pitchClass[i] , i , position, length);
 			list.add(notePos);
 		}
-		Harmony noteList = new UniformPitchSpace(position , list, 6);
+		Harmony noteList = new Harmony(position , list, new UniformPitchSpace(6));
 		return noteList;
 	}
 }

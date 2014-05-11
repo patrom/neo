@@ -2,19 +2,21 @@ package neo.data.harmony;
 
 import java.util.List;
 
+import neo.data.harmony.pitchspace.PitchSpaceStrategy;
 import neo.data.note.NotePos;
 import neo.objective.harmony.Chord;
 
-public abstract class Harmony {
+public class Harmony {
 	
 	protected int position;
 	protected List<NotePos> notes;
-	protected int octaveHighestNote;
+	private PitchSpaceStrategy pitchSpaceStrategy;
 	
-	public Harmony(int position, List<NotePos> notes, int octaveHighestNote) {
+	public Harmony(int position, List<NotePos> notes, PitchSpaceStrategy pitchSpaceStrategy) {
 		this.position = position;
 		this.notes = notes;
-		this.octaveHighestNote = octaveHighestNote;
+		this.pitchSpaceStrategy = pitchSpaceStrategy;
+		this.pitchSpaceStrategy.setNotes(notes);
 	}
 	
 	public int position(){
@@ -25,10 +27,6 @@ public abstract class Harmony {
 		return position;
 	}
 	
-	public int getOctaveHighestNote() {
-		return octaveHighestNote;
-	}
-
 	public void setPosition(int position) {
 		this.position = position;
 	}
@@ -50,7 +48,13 @@ public abstract class Harmony {
 	public double getBeat(int divider) {
 		return Math.floor(position/divider);
 	}
-	
-	public abstract void translateToPitchSpace();
+
+	public void translateToPitchSpace() {
+		pitchSpaceStrategy.translateToPitchSpace();
+	}
+
+	public PitchSpaceStrategy getPitchSpaceStrategy() {
+		return pitchSpaceStrategy;
+	}
 	
 }

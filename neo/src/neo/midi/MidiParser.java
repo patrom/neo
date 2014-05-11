@@ -22,7 +22,7 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
 import neo.data.harmony.Harmony;
-import neo.data.harmony.UniformPitchSpace;
+import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.melody.Melody;
 import neo.data.note.NotePos;
 import neo.instrument.KontaktLibAltViolin;
@@ -56,7 +56,7 @@ public class MidiParser {
 		Map<Integer, List<NotePos>> chords = extractNoteMap(motives);
 		List<Harmony> list = new ArrayList<>();
 		for (Entry<Integer, List<NotePos>> ch : chords.entrySet()) {
-			Harmony noteList = new UniformPitchSpace(ch.getKey(), ch.getValue(), octave);
+			Harmony noteList = new Harmony(ch.getKey(), ch.getValue(), new UniformPitchSpace(octave));
 			list.add(noteList);
 		}
 		return list;

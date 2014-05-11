@@ -8,7 +8,7 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
-import neo.data.harmony.UniformPitchSpace;
+import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.note.NotePos;
 
 public class MusicVariable extends Variable {
@@ -34,8 +34,8 @@ public class MusicVariable extends Variable {
 
 	private void cloneMotives(Motive motive) {
 		List<Harmony> harmonies = new ArrayList<>();
-		for (Harmony noteList : motive.getHarmonies()) {
-			List<NotePos> notePositions = noteList.getNotes();
+		for (Harmony harmony : motive.getHarmonies()) {
+			List<NotePos> notePositions = harmony.getNotes();
 			List<NotePos> newNotePositions = new ArrayList<NotePos>();
 			int l = notePositions.size();
 			for (int i = 0; i < l; i++) {		
@@ -52,8 +52,8 @@ public class MusicVariable extends Variable {
 				notePosition.setDynamic(notePositions.get(i).getDynamic());
 				newNotePositions.add(notePosition);
 			}
-			Harmony harmony = new UniformPitchSpace(noteList.getPosition(), newNotePositions, noteList.getOctaveHighestNote());
-			harmonies.add(harmony);
+			Harmony copyHarmony = new Harmony(harmony.getPosition(), newNotePositions, harmony.getPitchSpaceStrategy());
+			harmonies.add(copyHarmony);
 		}
 		this.motive = new Motive(harmonies);
 	}

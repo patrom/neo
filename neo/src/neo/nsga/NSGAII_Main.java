@@ -40,14 +40,17 @@ import jmetal.base.Problem;
 import jmetal.base.Solution;
 import jmetal.base.SolutionSet;
 import jmetal.base.SolutionType;
+import jmetal.base.operator.mutation.Mutation;
 import jmetal.base.operator.selection.SelectionFactory;
 import jmetal.util.JMException;
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
 import neo.data.melody.Melody;
+import neo.data.note.Scale;
 import neo.evaluation.MusicProperties;
 import neo.midi.Play;
-import neo.nsga.operator.OnePointCrossover;
+import neo.nsga.operator.crossover.OnePointCrossover;
+import neo.nsga.operator.mutation.OneNoteMutation;
 import neo.score.ScoreUtilities;
 
 
@@ -57,7 +60,7 @@ public class NSGAII_Main implements JMC{
 
   public static void main(String [] args) throws JMException, SecurityException, IOException, InvalidMidiDataException, ClassNotFoundException {
     Problem problem = new MusicProblem("music", 1, inputProps);
-    SolutionType type = new MusicSolutionType(problem, inputProps) ;
+    SolutionType type = new MusicSolutionType(problem, inputProps.getScale()) ;
     problem.setSolutionType(type);
     Algorithm algorithm = new NSGAII(problem);
 
@@ -76,8 +79,8 @@ public class NSGAII_Main implements JMC{
 //    crossover.setParameter("distributionIndex",20.0);
 
 //    Operator mutation = MutationFactory.getMutationOperator("BitFlipMutation");
-//    mutation = new OneNoteMutation(inputProps.getScale(), inputProps.getRanges());
-//    mutation.setParameter("probabilityOneNote",0.0);
+      Operator oneNoteMutation = new OneNoteMutation(inputProps.getScale());
+      oneNoteMutation.setParameter("probabilityOneNote",1.0);
     
 //    mutation = new SwitchVoiceMutationAtonal(inputProps.getRanges());
 //    mutation.setParameter("probabilitySwitchVoice",0.0);
@@ -95,7 +98,7 @@ public class NSGAII_Main implements JMC{
 
     // Add the operators to the algorithm
     algorithm.addOperator("crossover",crossover);
-//    algorithm.addOperator("mutation",mutation);
+    algorithm.addOperator("oneNoteMutation", oneNoteMutation);
 //    algorithm.addOperator("mutation2",mutation2);
 //    algorithm.addOperator("mutation3",mutation3);
 //    algorithm.addOperator("mutation4",mutation4);
@@ -133,11 +136,11 @@ public class NSGAII_Main implements JMC{
 		printNotes(motive.getHarmonies());
 		viewScore(motive.getMelodies(), i);
 //		printVextab(sentences);
-		if (inputProps.getTempo() > 0f) {
-			Play.playOnKontakt(motive.getMelodies(), inputProps.getRanges(), inputProps.getTempo());
-		} else {
-			Play.playOnKontakt(motive.getMelodies(), inputProps.getRanges(), randomTempoFloat());
-		}
+//		if (inputProps.getTempo() > 0f) {
+//			Play.playOnKontakt(motive.getMelodies(), inputProps.getRanges(), inputProps.getTempo());
+//		} else {
+//			Play.playOnKontakt(motive.getMelodies(), inputProps.getRanges(), randomTempoFloat());
+//		}
 		i++;
 	  }
 	  

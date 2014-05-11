@@ -84,17 +84,17 @@ public class FitnessEvaluationTemplate {
 	private FitnessObjectiveValues evaluateObjectives() {
 		//harmony
 		double harmonyMean = evaluateHarmony();
-		LOGGER.fine("mean harmonicValues: " + harmonyMean);
+		LOGGER.info("mean harmonicValues: " + harmonyMean);
 
 		//voice leading
-		double voiceLeading = evaluateVL();
-		LOGGER.fine("max voiceLeadingSize: " + voiceLeading);
+//		double voiceLeading = evaluateVL();
+//		LOGGER.fine("max voiceLeadingSize: " + voiceLeading);
 		
-		double melodicValue = evaluateMelody();
-		if (Double.isNaN(melodicValue)) {
-			melodicValue = Double.MAX_VALUE;
-		}
-		LOGGER.fine("melodicValue = " + melodicValue);
+//		double melodicValue = evaluateMelody();
+//		if (Double.isNaN(melodicValue)) {
+//			melodicValue = Double.MAX_VALUE;
+//		}
+//		LOGGER.fine("melodicValue = " + melodicValue);
 		
 //		double rhythmicValue = evaluateRhythm(sentences, numerator);
 //		LOGGER.fine("rhythmicValue = " + rhythmicValue);
@@ -104,8 +104,8 @@ public class FitnessEvaluationTemplate {
 		
 		FitnessObjectiveValues fitnessObjectives = new FitnessObjectiveValues();
 		fitnessObjectives.setHarmony(harmonyMean);
-		fitnessObjectives.setMelody(melodicValue);
-		fitnessObjectives.setVoiceleading(voiceLeading);
+//		fitnessObjectives.setMelody(melodicValue);
+//		fitnessObjectives.setVoiceleading(voiceLeading);
 //		objectives[3] = rhythmicValue;
 //		objectives[4] = 1 - tonalityValue;
 		//constraints
@@ -125,7 +125,7 @@ public class FitnessEvaluationTemplate {
 //		Map<Integer, Double> map = applyInnerMetricWeight(sentences);
 //		LOGGER.fine("Inner metric map: " + map.toString());
 	}
-
+	
 	private void calculateBeatValues() {
 		List<Harmony> harmonies = motive.getHarmonies();
 		switch (numerator) {//4/4 = 4 ; 2/4 = 2 ; 3/4 = 3 ; 6/8 = 6
@@ -178,6 +178,7 @@ public class FitnessEvaluationTemplate {
 			}
 		}
 	}
+	
 	
 //	private Map<Integer, Double> applyInnerMetricWeight(List<NoteList> noteList) {
 //		Map<Integer, Double> melodiesMap = new TreeMap<Integer, Double>();

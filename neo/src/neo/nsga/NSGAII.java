@@ -51,12 +51,6 @@ public class NSGAII extends Algorithm {
     SolutionSet offspringPopulation;
     SolutionSet union;
 
-//    Operator mutationOperator;
-//    Operator mutationOperator2;
-//    Operator mutationOperator3;
-    Operator crossoverOperator;
-    Operator selectionOperator;
-
     Distance distance = new Distance();
 
     //Read the parameters
@@ -66,25 +60,18 @@ public class NSGAII extends Algorithm {
 
     //Initialize the variables
     population = new SolutionSet(populationSize);
-    
     evaluations = 0;
-
     requiredEvaluations = 0;
 
     //Read the operators
     List<Operator> mutationOperators = new ArrayList<Operator>();
-//    mutationOperators.add(operators_.get("mutation"));
+    mutationOperators.add(operators_.get("oneNoteMutation"));
 //    mutationOperators.add(operators_.get("mutation2")); 
 //    mutationOperators.add(operators_.get("mutation3"));
 //    mutationOperators.add(operators_.get("mutation4"));
 //    mutationOperators.add(operators_.get("mutation5"));
-    
-//    mutationOperator = operators_.get("mutation");
-//    mutationOperator2 = operators_.get("mutation2");
-//    mutationOperator3 = operators_.get("mutation3");
-   
-    crossoverOperator = operators_.get("crossover");
-    selectionOperator = operators_.get("selection");
+    Operator crossoverOperator = operators_.get("crossover");
+    Operator selectionOperator = operators_.get("selection");
 
     // Create the initial solutionSet
     Solution newSolution;

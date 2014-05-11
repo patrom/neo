@@ -14,8 +14,10 @@ import jm.util.View;
 import jm.util.Write;
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
-import neo.data.harmony.UniformPitchSpace;
+import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.note.NotePos;
+import neo.data.note.Scale;
+import neo.evaluation.RhythmPosition;
 import neo.instrument.KontaktLibPiano;
 import neo.instrument.MidiDevice;
 import neo.midi.MidiDevicesUtil;
@@ -27,9 +29,13 @@ public class Generator {
 
 	public static void main(String[] args) throws InvalidMidiDataException {
 		int chordSize = 4;
-		int beat = 6;
-		int[] rhythmTemplate = {0, 12, 24,36};
-		Motive motive = generateMotive(rhythmTemplate, chordSize, beat);
+		int octave = 6;
+		RhythmPosition[] rhythmTemplate = new RhythmPosition[4];
+		rhythmTemplate[0] = new RhythmPosition(0, 25);
+		rhythmTemplate[1] = new RhythmPosition(12, 25);
+		rhythmTemplate[2] = new RhythmPosition(18, 25);
+		rhythmTemplate[3] = new RhythmPosition(24, 25);
+		Motive motive = generateMotive(new Scale(Scale.MAJOR_SCALE),rhythmTemplate,  chordSize, octave);
 		Score score = ScoreUtilities.createScoreMotives(motive.getMelodies());
 		View.notate(score);
 		Write.midi(score, "midi/test.mid");
@@ -50,18 +56,22 @@ public class Generator {
 		
 	}
 
-	public static Motive generateMotive(int[] rhythmTemplate ,int chordSize, int octaveHighestNote) {
+	public static Motive generateMotive(Scale scale, RhythmPosition[] rhythmTemplate ,int chordSize, int octaveHighestNote) {
 		List<Harmony> harmonies = new ArrayList<>();
-		for (int i = 0; i < rhythmTemplate.length - 1; i++) {
-			List<Integer> chordPitchClasses = random.ints(0, 12).limit(chordSize).boxed().collect(toList());
+		for (int i = 0; i < rhythmTemplate.length - 1; i++) {	
+			List<Integer> chordPitchClasses = new ArrayList<>();
+			for (int j = 0; j < chordSize; j++) {
+				int pitchClass = scale.pickRandomFromScale();
+				chordPitchClasses.add(pitchClass);
+			}
 			int voice = chordPitchClasses.size() - 1;
 			List<NotePos> notePositions = new ArrayList<>();
 			for (Integer pc : chordPitchClasses) {
-				NotePos notePos = new NotePos(pc, voice , rhythmTemplate[i], rhythmTemplate[i+1] - rhythmTemplate[i]);
+				NotePos notePos = new NotePos(pc, voice , rhythmTemplate[i].getPosition(), rhythmTemplate[i+1].getPosition() - rhythmTemplate[i].getPosition());
 				notePositions.add(notePos);
 				voice--;
 			}
-			Harmony harmony = new UniformPitchSpace(rhythmTemplate[i], notePositions, octaveHighestNote);
+			Harmony harmony = new Harmony(rhythmTemplate[i].getPosition(), notePositions, new UniformPitchSpace(octaveHighestNote));
 			harmony.translateToPitchSpace();
 			harmonies.add(harmony);		
 		}

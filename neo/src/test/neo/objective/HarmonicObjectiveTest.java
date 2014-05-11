@@ -27,6 +27,7 @@ public class HarmonicObjectiveTest{
 		list.add(Examples.getChord(24,12, 0,4,9));
 		harmonicObjective = new HarmonicObjective(new Motive(list));
 		double harmonicValue = harmonicObjective.evaluate();
+		System.out.println(harmonicValue);
 		double expectedValue = (((2 * ChordType.MAJOR.getDissonance()) + ChordType.MINOR.getDissonance()) + ChordType.CH3.getDissonance())/4;
 		assertEquals("Wrong harmonic value of chords", expectedValue, harmonicValue, 0);
 	}

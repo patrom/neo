@@ -4,19 +4,19 @@ public enum ChordType {
 
 	MAJOR(1,3),
 	MINOR(1,3),
-	HALFDIM(1,3),
-	AUGM(1,3),
+	HALFDIM(0,3),
+	AUGM(0,3),
 	CH0(0,0),
 	CH1(0,1),
 	CH2(0,2),
 	CH3(0.5,3),
 	CH4(0.5,4),
 	CH5(0,5),
-	MAJOR7(1,4),
-	MINOR7(1,4),
-	DOM7(1,4),
-	HALFDIM7(1,4),
-	DIM(1,4);
+	MAJOR7(0,4),
+	MINOR7(0,4),
+	DOM7(0,4),
+	HALFDIM7(0,4),
+	DIM(0,4);
 	
 	
 	private double dissonance;

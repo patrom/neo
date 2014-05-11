@@ -1,14 +1,11 @@
-package neo.data.harmony;
-
-import java.util.List;
+package neo.data.harmony.pitchspace;
 
 import neo.data.note.NotePos;
 
-public class UniformPitchSpace extends Harmony {
+public class UniformPitchSpace extends PitchSpaceStrategy {
 
-	public UniformPitchSpace(int position, List<NotePos> notes,
-			int octaveHighestNote) {
-		super(position, notes, octaveHighestNote);
+	public UniformPitchSpace(int octaveHighestNote) {
+		super(octaveHighestNote);
 	}
 
 	@Override
