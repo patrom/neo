@@ -16,12 +16,12 @@ public class Examples {
 	}
 	
 	public static Harmony getChord (int position, int length, int... pitchClass) {
-		List<NotePos> list = new ArrayList<>();
+		List<NotePos> notes = new ArrayList<>();
 		for (int i = 0; i < pitchClass.length; i++) {
 			NotePos notePos = new NotePos(pitchClass[i] , i , position, length);
-			list.add(notePos);
+			notes.add(notePos);
 		}
-		Harmony noteList = new Harmony(position , list, new UniformPitchSpace(6));
+		Harmony noteList = new Harmony(position , length, notes, new UniformPitchSpace(6));
 		return noteList;
 	}
 }

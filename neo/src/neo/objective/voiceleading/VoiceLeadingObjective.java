@@ -26,7 +26,7 @@ public class VoiceLeadingObjective extends Objective {
 		Map<Double, Chord> bestChordMap = new TreeMap<>();
 		for (Entry<Double, List<Harmony>> entry: map.entrySet()) {
 			List<Harmony> list = entry.getValue();
-			Optional<Chord> bestChord = list.stream().map(t -> t.toChord()).max(Comparator.comparing(Chord::getWeight));
+			Optional<Chord> bestChord = list.stream().map(t -> t.getChord()).max(Comparator.comparing(Chord::getWeight));
 			if(bestChord.isPresent()) {
 				bestChordMap.put(entry.getKey(), bestChord.get());
 			}

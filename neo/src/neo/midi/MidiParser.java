@@ -56,7 +56,7 @@ public class MidiParser {
 		Map<Integer, List<NotePos>> chords = extractNoteMap(motives);
 		List<Harmony> list = new ArrayList<>();
 		for (Entry<Integer, List<NotePos>> ch : chords.entrySet()) {
-			Harmony noteList = new Harmony(ch.getKey(), ch.getValue(), new UniformPitchSpace(octave));
+			Harmony noteList = new Harmony(ch.getKey(),ch.getValue().get(0).getLength(), ch.getValue(), new UniformPitchSpace(octave));
 			list.add(noteList);
 		}
 		return list;

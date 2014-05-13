@@ -11,25 +11,22 @@ public class Harmony {
 	protected int position;
 	protected List<NotePos> notes;
 	private PitchSpaceStrategy pitchSpaceStrategy;
+	private Chord chord;
+	private int length;
 	
-	public Harmony(int position, List<NotePos> notes, PitchSpaceStrategy pitchSpaceStrategy) {
+	public Harmony(int position, int length, List<NotePos> notes, PitchSpaceStrategy pitchSpaceStrategy) {
 		this.position = position;
+		this.length = length;
 		this.notes = notes;
 		this.pitchSpaceStrategy = pitchSpaceStrategy;
 		this.pitchSpaceStrategy.setNotes(notes);
-	}
-	
-	public int position(){
-		return position;
+		toChord();
 	}
 	
 	public int getPosition() {
 		return position;
 	}
 	
-	public void setPosition(int position) {
-		this.position = position;
-	}
 	public List<NotePos> getNotes() {
 		return notes;
 	}
@@ -37,12 +34,11 @@ public class Harmony {
 		this.notes = notes;
 	}
 	
-	public Chord toChord(){
-		Chord chord = new Chord();
+	private void toChord(){
+		this.chord = new Chord();
 		for (NotePos note : notes) {
 			chord.addPitchClass(note.getPitchClass());
 		}
-		return chord;
 	}
 
 	public double getBeat(int divider) {
@@ -55,6 +51,18 @@ public class Harmony {
 
 	public PitchSpaceStrategy getPitchSpaceStrategy() {
 		return pitchSpaceStrategy;
+	}
+
+	public double getWeight() {
+		return chord.getWeight();
+	}
+
+	public Chord getChord() {
+		return chord;
+	}
+
+	public int getLength() {
+		return length;
 	}
 	
 }

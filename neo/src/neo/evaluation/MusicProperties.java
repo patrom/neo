@@ -2,20 +2,36 @@ package neo.evaluation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import neo.data.note.Scale;
 import neo.instrument.Instrument;
 
 public class MusicProperties {
 	
+	
+	private int harmonyBeatDivider = 12;
+	private float tempo;
+	private int[] rhythmGeneratorTemplate = {0,12,18,24};
+	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>();
+	private int minimumLength = 6;
+	
+	//tonality
+	private Scale scale = new Scale(Scale.MAJOR_SCALE);
+	
 	public MusicProperties() {
+		rhythmWeightValues.put(0, 1.0);
+		rhythmWeightValues.put(6, 0.5);
+		rhythmWeightValues.put(12, 1.0);
+		rhythmWeightValues.put(18, 0.5);
+		rhythmWeightValues.put(24, 1.0);
+		
 		ranges.add(getInstrument(0, 48, 60));
 		ranges.add(getInstrument(1, 54, 70));
 		ranges.add(getInstrument(2, 60, 74));
 		ranges.add(getInstrument(3, 65, 80));
 	}
-	private int harmonyBeatDivider = 12;
-	private float tempo;
 	
 	//harmony
 	private double harmonyConsDissValue = 0.3;
@@ -35,9 +51,7 @@ public class MusicProperties {
 	private int innerMetricFactor = 10;// add 100/innerMetricFactor
 	private int[] rhythmProfile = {0,0,0,10,10};//whole note (with divisions), half note, quarter note, triplet half note, triplet quarter note.
 	
-	//tonality
-	private Scale scale = new Scale(Scale.MAJOR_SCALE);
-	
+
 	//generation
 	private int numerator = 4;//2/4,4/4,3/4 - 6/8
 //	private int voices = 4;
@@ -190,6 +204,24 @@ public class MusicProperties {
 	}
 	public void setTempo(float tempo) {
 		this.tempo = tempo;
+	}
+	public int[] getRhythmGeneratorTemplate() {
+		return rhythmGeneratorTemplate;
+	}
+	public void setRhythmGeneratorTemplate(int[] rhythmGeneratorTemplate) {
+		this.rhythmGeneratorTemplate = rhythmGeneratorTemplate;
+	}
+	public Map<Integer, Double> getRhythmWeightValues() {
+		return rhythmWeightValues;
+	}
+	public void setRhythmWeightValues(Map<Integer, Double> rhythmWeightValues) {
+		this.rhythmWeightValues = rhythmWeightValues;
+	}
+	public int getMinimumLength() {
+		return minimumLength;
+	}
+	public void setMinimumLength(int minimumLength) {
+		this.minimumLength = minimumLength;
 	}
 	
 }

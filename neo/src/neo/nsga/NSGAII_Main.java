@@ -60,7 +60,7 @@ public class NSGAII_Main implements JMC{
 
   public static void main(String [] args) throws JMException, SecurityException, IOException, InvalidMidiDataException, ClassNotFoundException {
     Problem problem = new MusicProblem("music", 1, inputProps);
-    SolutionType type = new MusicSolutionType(problem, inputProps.getScale()) ;
+    SolutionType type = new MusicSolutionType(problem, inputProps) ;
     problem.setSolutionType(type);
     Algorithm algorithm = new NSGAII(problem);
 
