@@ -14,7 +14,7 @@ public class MusicProperties {
 	private int harmonyBeatDivider = 12;
 	private float tempo;
 	private int[] rhythmGeneratorTemplate = {0,12,18,24};
-	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>();
+	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength = 6;
 	
 	//tonality

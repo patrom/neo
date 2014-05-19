@@ -133,7 +133,8 @@ public class NSGAII_Main implements JMC{
 //		MusicalStructure structure2 = FugaUtilities.harmonizeMelody(sentences, inputProps.getScale(), 2, 2, inputProps.getMelodyLength() * 12);
 //		sentences.add(structure2);
 //		changeLengths(sentences);
-		printNotes(motive.getHarmonies());
+		printHarmonies(motive.getHarmonies());
+//		printNotes(motive.getHarmonies());
 		viewScore(motive.getMelodies(), i);
 //		printVextab(sentences);
 //		if (inputProps.getTempo() > 0f) {
@@ -173,6 +174,11 @@ public class NSGAII_Main implements JMC{
 //	  }
   }
   
+	private static void printHarmonies(List<Harmony> harmonies) {
+		harmonies.forEach(h ->  System.out.print(h.getChord().getChordType() + ", "));
+		System.out.println();
+	}
+
 	private static void viewScore(List<Melody> melodies, int i) {
 		Score score = ScoreUtilities.createScoreMotives(melodies);
 		if (i <=8) {

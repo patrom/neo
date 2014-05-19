@@ -53,7 +53,6 @@ public class FitnessEvaluationTemplate {
 
 	private int numerator = 4;
 
-	private MusicProperties properties;
 	private Objective harmonicObjective;
 	private Objective melodicObjective;
 	private Objective voiceLeadingObjective;
@@ -61,9 +60,8 @@ public class FitnessEvaluationTemplate {
 
 	public FitnessEvaluationTemplate(MusicProperties properties, Motive motive) {
 		this.motive = motive;
-		this.properties = properties;
 		this.numerator = properties.getNumerator();
-		harmonicObjective = new HarmonicObjective(motive);
+		harmonicObjective = new HarmonicObjective(properties, motive);
 		melodicObjective = new MelodicObjective(motive);
 		voiceLeadingObjective = new VoiceLeadingObjective(properties, motive);
 		
@@ -76,7 +74,7 @@ public class FitnessEvaluationTemplate {
 	}
 	
 	public FitnessObjectiveValues evaluate() {
-		calculateNotePositionValues();
+//		calculateNotePositionValues();
 		return evaluateObjectives();
 	}
 
@@ -87,8 +85,8 @@ public class FitnessEvaluationTemplate {
 		LOGGER.info("mean harmonicValues: " + harmonyMean);
 
 		//voice leading
-//		double voiceLeading = evaluateVL();
-//		LOGGER.fine("max voiceLeadingSize: " + voiceLeading);
+		double voiceLeading = evaluateVL();
+		LOGGER.fine("max voiceLeadingSize: " + voiceLeading);
 		
 //		double melodicValue = evaluateMelody();
 //		if (Double.isNaN(melodicValue)) {
@@ -105,7 +103,7 @@ public class FitnessEvaluationTemplate {
 		FitnessObjectiveValues fitnessObjectives = new FitnessObjectiveValues();
 		fitnessObjectives.setHarmony(harmonyMean);
 //		fitnessObjectives.setMelody(melodicValue);
-//		fitnessObjectives.setVoiceleading(voiceLeading);
+		fitnessObjectives.setVoiceleading(voiceLeading);
 //		objectives[3] = rhythmicValue;
 //		objectives[4] = 1 - tonalityValue;
 		//constraints
