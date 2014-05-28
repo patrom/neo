@@ -66,13 +66,6 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 
 	public void setPitch(int pitch) {
 		this.pitch = pitch;
-		if (this.pitch != Integer.MIN_VALUE) {
-			setPitchClass(this.pitch % 12);
-			setOctave((int) Math.floor(pitch/12));
-		}else{
-			setPitchClass(0);
-			setOctave(0);
-		}
 	}
 
 	public int getDynamic() {

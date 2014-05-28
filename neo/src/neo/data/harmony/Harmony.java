@@ -1,9 +1,12 @@
 package neo.data.harmony;
 
+import java.util.Collections;
 import java.util.List;
 
+import jmetal.util.PseudoRandom;
 import neo.data.harmony.pitchspace.PitchSpaceStrategy;
 import neo.data.note.NotePos;
+import neo.data.note.Scale;
 import neo.objective.harmony.Chord;
 
 public class Harmony {
@@ -19,7 +22,6 @@ public class Harmony {
 		this.length = length;
 		this.notes = notes;
 		this.pitchSpaceStrategy = pitchSpaceStrategy;
-		this.pitchSpaceStrategy.setNotes(notes);
 		toChord();
 	}
 	
@@ -28,10 +30,7 @@ public class Harmony {
 	}
 	
 	public List<NotePos> getNotes() {
-		return notes;
-	}
-	public void setNotes(List<NotePos> notes) {
-		this.notes = notes;
+		return Collections.unmodifiableList(notes);
 	}
 	
 	private void toChord(){
@@ -63,6 +62,15 @@ public class Harmony {
 
 	public int getLength() {
 		return length;
+	}
+	
+	public void mutateNoteToPreviousPitchFromScale(Scale scale){
+		int noteIndex = PseudoRandom.randInt(0, notes.size() - 1);
+		NotePos note = notes.get(noteIndex);
+		int newPitchClass = scale.pickPreviousPitchFromScale(note.getPitchClass());
+		note.setPitchClass(newPitchClass);
+		toChord();
+		pitchSpaceStrategy.translateToPitchSpace();
 	}
 	
 }

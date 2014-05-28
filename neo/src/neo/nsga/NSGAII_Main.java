@@ -65,9 +65,9 @@ public class NSGAII_Main implements JMC{
     Algorithm algorithm = new NSGAII(problem);
 
     // Algorithm parameters
-    int populationSize = 30;
+    int populationSize = 20;
     algorithm.setInputParameter("populationSize",populationSize);
-    algorithm.setInputParameter("maxEvaluations",populationSize * 20);
+    algorithm.setInputParameter("maxEvaluations",populationSize * 200);
     // Mutation and Crossover
     Operator crossover = new OnePointCrossover();
     //if homophonic don't do crossover!
@@ -176,10 +176,15 @@ public class NSGAII_Main implements JMC{
   
 	private static void printHarmonies(List<Harmony> harmonies) {
 		harmonies.forEach(h ->  System.out.print(h.getChord().getChordType() + ", "));
+		harmonies.forEach(h ->  System.out.println(h.getChord().getPitchClassMultiSet() + ", "));
+		harmonies.forEach(h ->  System.out.println(h.getChord().getPitchClassSet() + ", "));
+		harmonies.forEach(h ->  System.out.println(h.getNotes() + ", "));
 		System.out.println();
 	}
 
 	private static void viewScore(List<Melody> melodies, int i) {
+		melodies.forEach(h ->  System.out.println(h.getNotes() + ", "));
+		System.out.println();
 		Score score = ScoreUtilities.createScoreMotives(melodies);
 		if (i <=8) {
 			score.setTitle("test " + (i));

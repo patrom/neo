@@ -66,7 +66,7 @@ public class FitnessEvaluationTemplate {
 		voiceLeadingObjective = new VoiceLeadingObjective(properties, motive);
 		
 		try {
-			LogConfig.configureLogger(Level.INFO);
+			LogConfig.configureLogger(Level.SEVERE);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

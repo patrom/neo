@@ -7,15 +7,17 @@ import neo.data.note.NotePos;
 public abstract class PitchSpaceStrategy {
 
 	protected List<NotePos> notes;
-	protected int octaveHighestNote;
+	protected int octaveHighestPitchClass;
 	
-	public PitchSpaceStrategy(int octaveHighestNote) {
-		this.octaveHighestNote = octaveHighestNote;
+	public PitchSpaceStrategy(List<NotePos> notes, int octaveHighestPitchClass) {
+		this.notes = notes;
+		this.octaveHighestPitchClass = octaveHighestPitchClass;
 	}
 
 	public abstract void translateToPitchSpace();
-
-	public void setNotes(List<NotePos> notes) {
-		this.notes = notes;
+	
+	public int getOctaveHighestPitchClass() {
+		return octaveHighestPitchClass;
 	}
+
 }

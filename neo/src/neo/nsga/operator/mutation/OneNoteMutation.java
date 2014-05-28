@@ -18,7 +18,6 @@ import jmetal.util.PseudoRandom;
 public class OneNoteMutation extends Mutation {
 	
 	private Scale scale;
-	private static Random random = new Random(System.currentTimeMillis());
 	
 	public OneNoteMutation() {	
 	} 
@@ -39,12 +38,7 @@ public class OneNoteMutation extends Mutation {
 			List<Harmony> harmonies = motive.getHarmonies();
 			int harmonyIndex = PseudoRandom.randInt(0, harmonies.size() - 1);
 			Harmony harmony = harmonies.get(harmonyIndex);
-			List<NotePos> notes = harmony.getNotes();
-			int noteIndex = PseudoRandom.randInt(0, notes.size() - 1);
-			NotePos note = notes.get(noteIndex);
-			int newPitchClass = scale.pickPreviousPitchFromScale(note.getPitchClass());
-			note.setPitchClass(newPitchClass);
-			harmony.translateToPitchSpace();
+			harmony.mutateNoteToPreviousPitchFromScale(scale);
 			System.out.println("mutated");
 		} 
 	}

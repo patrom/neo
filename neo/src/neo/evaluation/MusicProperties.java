@@ -16,6 +16,8 @@ public class MusicProperties {
 	private int[] rhythmGeneratorTemplate = {0,12,18,24};
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength = 6;
+	private int chordSize = 3;
+	private int octaveHighestPitchClass = 5;
 	
 	//tonality
 	private Scale scale = new Scale(Scale.MAJOR_SCALE);
@@ -223,5 +225,18 @@ public class MusicProperties {
 	public void setMinimumLength(int minimumLength) {
 		this.minimumLength = minimumLength;
 	}
+	public int getChordSize() {
+		return chordSize;
+	}
+	public void setChordSize(int chordSize) {
+		this.chordSize = chordSize;
+	}
+	public int getOctaveHighestPitchClass() {
+		return octaveHighestPitchClass;
+	}
+	public void setOctaveHighestPitchClass(int octaveHighestPitchClass) {
+		this.octaveHighestPitchClass = octaveHighestPitchClass;
+	}
+
 	
 }

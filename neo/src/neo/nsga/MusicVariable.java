@@ -8,6 +8,8 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
+import neo.data.harmony.pitchspace.PitchSpaceStrategy;
+import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.note.NotePos;
 
 public class MusicVariable extends Variable {
@@ -42,6 +44,7 @@ public class MusicVariable extends Variable {
 				notePosition.setLength(notePositions.get(i).getLength());
 				notePosition.setPosition(notePositions.get(i).getPosition());
 				notePosition.setPitch(notePositions.get(i).getPitch());
+				notePosition.setPitchClass(notePositions.get(i).getPitchClass());
 				notePosition.setDuration(notePositions.get(i).getDuration());
 				notePosition.setVoice(notePositions.get(i).getVoice());
 				notePosition.setInnerMetricWeight(notePositions.get(i).getInnerMetricWeight());
@@ -51,7 +54,13 @@ public class MusicVariable extends Variable {
 				notePosition.setDynamic(notePositions.get(i).getDynamic());
 				newNotePositions.add(notePosition);
 			}
-			Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), newNotePositions, harmony.getPitchSpaceStrategy());
+			PitchSpaceStrategy pitchSpaceStrategy = harmony.getPitchSpaceStrategy();
+			PitchSpaceStrategy newPitchSpaceStrategy = null;
+			if (pitchSpaceStrategy instanceof UniformPitchSpace) {
+				newPitchSpaceStrategy = new UniformPitchSpace(newNotePositions, pitchSpaceStrategy.getOctaveHighestPitchClass());
+				
+			}
+			Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), newNotePositions, newPitchSpaceStrategy);
 			harmonies.add(copyHarmony);
 		}
 		this.motive = new Motive(harmonies);

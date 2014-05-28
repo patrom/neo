@@ -12,6 +12,8 @@ public class MusicSolutionType extends SolutionType {
 
 	private Scale scale;
 	private int[] rhythmGeneratorTemplate;
+	private int chordSize;
+	private int octave;
 	
 	public MusicSolutionType(Problem problem, MusicProperties musicProperties) {
 		super(problem);
@@ -19,13 +21,13 @@ public class MusicSolutionType extends SolutionType {
 		problem.setSolutionType(this);
 		this.scale = musicProperties.getScale();
 		this.rhythmGeneratorTemplate = musicProperties.getRhythmGeneratorTemplate();
+		this.octave = musicProperties.getOctaveHighestPitchClass();
+		this.chordSize = musicProperties.getChordSize();
 	}
 
 	@Override
 	public Variable[] createVariables() throws ClassNotFoundException {
 		Variable[] variables = new Variable[problem_.getNumberOfVariables()];
-		int chordSize = 4;
-		int octave = 5;
 		Motive motive = Generator.generateMotive(scale, rhythmGeneratorTemplate, chordSize, octave);
 		variables[0] = new MusicVariable(motive);
 		return variables ;

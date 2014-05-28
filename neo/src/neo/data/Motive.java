@@ -17,7 +17,6 @@ public class Motive {
 		
 	public Motive(List<Harmony> harmonies) {
 		this.harmonies = harmonies;
-		extractMelodies();
 	}
 
 	public List<Harmony> getHarmonies() {
@@ -25,10 +24,10 @@ public class Motive {
 	}
 	
 	public List<Melody> getMelodies() {
-		return melodies;
+		return extractMelodies();
 	}
 	
-	private void extractMelodies() {
+	private List<Melody> extractMelodies() {
 		List<NotePos> allNotes = new ArrayList<>();
 		for (Harmony list : harmonies) {
 			for (NotePos notePos : list.getNotes()) {
@@ -40,6 +39,7 @@ public class Motive {
 			Melody motive = new Melody(entry.getValue(), 0);
 			melodies.add(motive);
 		}
+		return melodies;
 	}
 	
 }

@@ -21,7 +21,7 @@ public class Examples {
 			NotePos notePos = new NotePos(pitchClass[i] , i , position, length);
 			notes.add(notePos);
 		}
-		Harmony noteList = new Harmony(position , length, notes, new UniformPitchSpace(6));
+		Harmony noteList = new Harmony(position , length, notes, new UniformPitchSpace(notes, 6));
 		return noteList;
 	}
 }

@@ -1,13 +1,10 @@
 package neo.objective.harmony;
 
-import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import neo.data.setclass.PcSetUnorderedProperties;
 
 import com.google.common.collect.Multiset;
-import com.google.common.collect.Multisets;
 import com.google.common.collect.TreeMultiset;
 
 public class Chord {

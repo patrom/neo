@@ -29,6 +29,11 @@ public class Generator {
 		int octave = 6;
 		int[] rhythmGeneratorTemplate = {0,12,18,24};
 		Motive motive = generateMotive(new Scale(Scale.MAJOR_SCALE), rhythmGeneratorTemplate,  chordSize, octave);
+		List<Harmony> harmonies = motive.getHarmonies();
+		harmonies.forEach(h ->  System.out.print(h.getChord().getChordType() + ", "));
+		harmonies.forEach(h ->  System.out.println(h.getChord().getPitchClassMultiSet() + ", "));
+		harmonies.forEach(h ->  System.out.println(h.getChord().getPitchClassSet() + ", "));
+		harmonies.forEach(h ->  System.out.println(h.getNotes() + ", "));
 		Score score = ScoreUtilities.createScoreMotives(motive.getMelodies());
 		View.notate(score);
 		Write.midi(score, "midi/test.mid");
@@ -65,7 +70,8 @@ public class Generator {
 				notePositions.add(notePos);
 				voice--;
 			}
-			Harmony harmony = new Harmony(rhythmGeneratorTemplate[i], length, notePositions, new UniformPitchSpace(octaveHighestNote));
+			Harmony harmony = new Harmony(rhythmGeneratorTemplate[i], length, 
+					notePositions, new UniformPitchSpace(notePositions, octaveHighestNote));
 			harmony.translateToPitchSpace();
 			harmonies.add(harmony);		
 		}
