@@ -39,7 +39,7 @@ public class OneNoteMutation extends Mutation {
 			int harmonyIndex = PseudoRandom.randInt(0, harmonies.size() - 1);
 			Harmony harmony = harmonies.get(harmonyIndex);
 			harmony.mutateNoteToPreviousPitchFromScale(scale);
-			System.out.println("mutated");
+			System.out.println("one note mutated");
 		} 
 	}
 

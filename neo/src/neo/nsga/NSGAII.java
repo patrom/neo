@@ -6,13 +6,18 @@
 package neo.nsga;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import jmetal.base.*;
+import jmetal.base.Algorithm;
+import jmetal.base.Operator;
+import jmetal.base.Problem;
+import jmetal.base.Solution;
+import jmetal.base.SolutionSet;
 import jmetal.qualityIndicator.QualityIndicator;
-import jmetal.util.*;
+import jmetal.util.Distance;
+import jmetal.util.JMException;
+import jmetal.util.Ranking;
 
 /**
  * This class implements the NSGA-II algorithm. 
@@ -30,7 +35,7 @@ public class NSGAII extends Algorithm {
    */
   public NSGAII(Problem problem) {
     this.problem_ = problem;
-  } // NSGAII
+  } 
 
   /**   
    * Runs the NSGA-II algorithm.
@@ -66,10 +71,7 @@ public class NSGAII extends Algorithm {
     //Read the operators
     List<Operator> mutationOperators = new ArrayList<Operator>();
     mutationOperators.add(operators_.get("oneNoteMutation"));
-//    mutationOperators.add(operators_.get("mutation2")); 
-//    mutationOperators.add(operators_.get("mutation3"));
-//    mutationOperators.add(operators_.get("mutation4"));
-//    mutationOperators.add(operators_.get("mutation5"));
+    mutationOperators.add(operators_.get("pitchSpaceMutation")); 
     Operator crossoverOperator = operators_.get("crossover");
     Operator selectionOperator = operators_.get("selection");
 
@@ -81,8 +83,7 @@ public class NSGAII extends Algorithm {
       problem_.evaluateConstraints(newSolution);
       evaluations++;
       population.add(newSolution);
-    } //for       
-    
+    }       
     
     int changeCount = 0;
     
@@ -110,9 +111,8 @@ public class NSGAII extends Algorithm {
           offspringPopulation.add(offSpring[0]);
           offspringPopulation.add(offSpring[1]);
           evaluations += 2;
-        } // if                            
-      } // for
-
+        }                           
+      }
 
       // Create the solutionSet union of solutionSet and offSpring
       union = ((SolutionSet) population).union(offspringPopulation);
@@ -134,7 +134,7 @@ public class NSGAII extends Algorithm {
         //Add the individuals of this front
         for (int k = 0; k < front.size(); k++) {
           population.add(front.get(k));
-        } // for
+        } 
 
         //Decrement remain
         remain = remain - front.size();
@@ -143,8 +143,8 @@ public class NSGAII extends Algorithm {
         index++;
         if (remain > 0) {
           front = ranking.getSubfront(index);
-        } // if        
-      } // while
+        }        
+      } 
 
       // Remain is less than front(index).size, insert only the best one
       if (remain > 0) {  // front contains individuals to insert                        
@@ -152,10 +152,10 @@ public class NSGAII extends Algorithm {
         front.sort(new jmetal.base.operator.comparator.CrowdingComparator());
         for (int k = 0; k < remain; k++) {
           population.add(front.get(k));
-        } // for
+        } 
 
         remain = 0;
-      } // if                               
+      }                               
 
       // This piece of code shows how to use the indicator object into the code
       // of NSGA-II. In particular, it finds the number of evaluations required
@@ -167,8 +167,8 @@ public class NSGAII extends Algorithm {
         double p = indicators.getTrueParetoFrontHypervolume();
         if (HV >= (0.98 * indicators.getTrueParetoFrontHypervolume())) {
           requiredEvaluations = evaluations;
-        } // if
-      } // if
+        } 
+      } 
       // check changes pareto front
 //      SolutionSet paretoFront = ranking.getSubfront(0);
       List<Solution> frontSolutions = copyList(population);
@@ -179,7 +179,7 @@ public class NSGAII extends Algorithm {
 		} else {
 			changeCount++;
 		}
-    } // while
+    } 
 
     // Return as output parameter the required evaluations
     setOutputParameter("evaluations", requiredEvaluations);
@@ -188,7 +188,6 @@ public class NSGAII extends Algorithm {
     Ranking ranking = new Ranking(population);
     return ranking.getSubfront(0);
   }
-
 
 	private boolean hasPopulationChanged(List<Solution> oldSolutions, List<Solution> frontSolutions) {
 		for (Solution solution : oldSolutions) {
@@ -207,5 +206,5 @@ public class NSGAII extends Algorithm {
 			copySolutions.add(solution);
 		}
 		return copySolutions;
-	} // execute
-} // NSGA-II
+	} 
+} 

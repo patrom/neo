@@ -4,7 +4,9 @@ import java.util.Collections;
 import java.util.List;
 
 import jmetal.util.PseudoRandom;
+import neo.data.harmony.pitchspace.BassOctavePitchSpace;
 import neo.data.harmony.pitchspace.PitchSpaceStrategy;
+import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.note.NotePos;
 import neo.data.note.Scale;
 import neo.objective.harmony.Chord;
@@ -70,7 +72,15 @@ public class Harmony {
 		int newPitchClass = scale.pickPreviousPitchFromScale(note.getPitchClass());
 		note.setPitchClass(newPitchClass);
 		toChord();
-		pitchSpaceStrategy.translateToPitchSpace();
+	}
+	
+	public void mutatePitchSpaceStrategy(){
+		if (pitchSpaceStrategy instanceof UniformPitchSpace) {
+			this.pitchSpaceStrategy = new BassOctavePitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClass());
+		}else{
+			this.pitchSpaceStrategy = new UniformPitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClass());
+		}
+		
 	}
 	
 }

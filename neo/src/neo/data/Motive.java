@@ -24,6 +24,7 @@ public class Motive {
 	}
 	
 	public List<Melody> getMelodies() {
+		harmonies.forEach(h -> h.translateToPitchSpace());
 		return extractMelodies();
 	}
 	
@@ -36,10 +37,43 @@ public class Motive {
 		}
 		Map<Integer, List<NotePos>> melodyMap = allNotes.stream().collect(Collectors.groupingBy(n -> n.getVoice()));
 		for (Entry<Integer, List<NotePos>> entry: melodyMap.entrySet()) {
-			Melody motive = new Melody(entry.getValue(), 0);
+			List<NotePos> notes = entry.getValue();
+			List<NotePos> clonedNotes = new ArrayList<>();
+			for (NotePos notePos : notes) {
+				try {
+					clonedNotes.add((NotePos) notePos.clone());
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
+			}
+			List<NotePos> notePositions = concatNotesWithSamePitch(clonedNotes);
+			Melody motive = new Melody(notePositions, 0);
 			melodies.add(motive);
 		}
 		return melodies;
+	}
+
+	public List<NotePos> concatNotesWithSamePitch(List<NotePos> notePositions) {
+		List<NotePos> notesToRemove = new ArrayList<>();
+		int size = notePositions.size() - 1;
+		for (int i = 0; i < size; i++) {
+			NotePos note = notePositions.get(i);
+			NotePos nextNote = notePositions.get(i + 1);
+			int j = 1;
+			while (note.samePitch(nextNote)) {
+				note.setLength(note.getLength() + nextNote.getLength());
+				notesToRemove.add(nextNote);
+				if ((i + j) < size) {
+					j++;
+					nextNote = notePositions.get(i + j);
+				}else {
+					i = notePositions.indexOf(nextNote) - 1;
+					break;
+				}
+			}
+		}
+		notePositions.removeAll(notesToRemove);
+		return notePositions;
 	}
 	
 }

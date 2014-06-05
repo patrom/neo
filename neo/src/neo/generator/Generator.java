@@ -72,7 +72,6 @@ public class Generator {
 			}
 			Harmony harmony = new Harmony(rhythmGeneratorTemplate[i], length, 
 					notePositions, new UniformPitchSpace(notePositions, octaveHighestNote));
-			harmony.translateToPitchSpace();
 			harmonies.add(harmony);		
 		}
 		return new Motive(harmonies);

@@ -51,6 +51,7 @@ import neo.evaluation.MusicProperties;
 import neo.midi.Play;
 import neo.nsga.operator.crossover.OnePointCrossover;
 import neo.nsga.operator.mutation.OneNoteMutation;
+import neo.nsga.operator.mutation.PitchSpaceMutation;
 import neo.score.ScoreUtilities;
 
 
@@ -82,27 +83,16 @@ public class NSGAII_Main implements JMC{
       Operator oneNoteMutation = new OneNoteMutation(inputProps.getScale());
       oneNoteMutation.setParameter("probabilityOneNote",1.0);
     
-//    mutation = new SwitchVoiceMutationAtonal(inputProps.getRanges());
-//    mutation.setParameter("probabilitySwitchVoice",0.0);
-//    mutation.setParameter("distributionIndex",20.0);  
-//    Mutation mutation2 = new ShiftNoteMutationAtonal2();
-//    mutation2.setParameter("probabilityShiftNote",0.4);
-//    Mutation mutation3 = new ShiftPartitionMutationAtonal();
-//    mutation3.setParameter("probabilityShiftPartition",0.2);
-//    Mutation mutation5 = new InsertRestMutation();
-//    mutation5.setParameter("probabilityInsertRest",0.0);
-    
-    
+      Operator pitchSpaceMutation = new PitchSpaceMutation();
+      pitchSpaceMutation.setParameter("probabilityPitchSpace",1.0);
+
     // Selection Operator 
     Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament2") ;                           
 
     // Add the operators to the algorithm
     algorithm.addOperator("crossover",crossover);
     algorithm.addOperator("oneNoteMutation", oneNoteMutation);
-//    algorithm.addOperator("mutation2",mutation2);
-//    algorithm.addOperator("mutation3",mutation3);
-//    algorithm.addOperator("mutation4",mutation4);
-//    algorithm.addOperator("mutation5",mutation5);
+    algorithm.addOperator("pitchSpaceMutation",pitchSpaceMutation);
     algorithm.addOperator("selection",selection);
 
     // Execute the Algorithm
@@ -177,7 +167,6 @@ public class NSGAII_Main implements JMC{
 	private static void printHarmonies(List<Harmony> harmonies) {
 		harmonies.forEach(h ->  System.out.print(h.getChord().getChordType() + ", "));
 		harmonies.forEach(h ->  System.out.println(h.getChord().getPitchClassMultiSet() + ", "));
-		harmonies.forEach(h ->  System.out.println(h.getChord().getPitchClassSet() + ", "));
 		harmonies.forEach(h ->  System.out.println(h.getNotes() + ", "));
 		System.out.println();
 	}

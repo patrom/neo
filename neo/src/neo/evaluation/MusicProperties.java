@@ -13,7 +13,7 @@ public class MusicProperties {
 	
 	private int harmonyBeatDivider = 12;
 	private float tempo;
-	private int[] rhythmGeneratorTemplate = {0,12,18,24};
+	private int[] rhythmGeneratorTemplate = {0, 12,18, 24, 36, 48};//last is not included!
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength = 6;
 	private int chordSize = 3;
@@ -28,11 +28,15 @@ public class MusicProperties {
 		rhythmWeightValues.put(12, 1.0);
 		rhythmWeightValues.put(18, 0.5);
 		rhythmWeightValues.put(24, 1.0);
+		rhythmWeightValues.put(30, 0.5);
+		rhythmWeightValues.put(36, 1.0);
+		rhythmWeightValues.put(42, 0.5);
+		rhythmWeightValues.put(48, 1.0);
 		
-		ranges.add(getInstrument(0, 48, 60));
-		ranges.add(getInstrument(1, 54, 70));
-		ranges.add(getInstrument(2, 60, 74));
-		ranges.add(getInstrument(3, 65, 80));
+//		ranges.add(getInstrument(0, 48, 60));
+//		ranges.add(getInstrument(1, 54, 70));
+//		ranges.add(getInstrument(2, 60, 74));
+//		ranges.add(getInstrument(3, 65, 80));
 	}
 	
 	//harmony

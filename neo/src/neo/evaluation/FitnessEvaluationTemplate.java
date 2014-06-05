@@ -62,7 +62,7 @@ public class FitnessEvaluationTemplate {
 		this.motive = motive;
 		this.numerator = properties.getNumerator();
 		harmonicObjective = new HarmonicObjective(properties, motive);
-		melodicObjective = new MelodicObjective(motive);
+		melodicObjective = new MelodicObjective(properties, motive);
 		voiceLeadingObjective = new VoiceLeadingObjective(properties, motive);
 		
 		try {

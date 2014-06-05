@@ -99,8 +99,8 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 			return false;
 	}
 
-	public boolean samePitch(NotePos notePositions) {
-		return this.getPitch() == notePositions.getPitch();
+	public boolean samePitch(NotePos note) {
+		return this.getPitch() == note.getPitch();
 	}
 
 	public double getWeight() {
