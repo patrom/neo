@@ -1,4 +1,6 @@
-package test.neo.evaluation;
+package neo.evaluation;
+
+import static neo.data.harmony.HarmonyBuilder.harmony;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,17 +8,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import neo.AbstractTest;
 import neo.data.Motive;
-import neo.data.harmony.Examples;
 import neo.data.harmony.Harmony;
-import neo.evaluation.FitnessEvaluationTemplate;
-import neo.evaluation.MusicProperties;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import test.neo.AbstractTest;
 
 public class FitnessEvaluationTest extends AbstractTest{
 
@@ -25,6 +23,7 @@ public class FitnessEvaluationTest extends AbstractTest{
 	private FitnessEvaluationTemplate fitnessEvaluation;
 	private MusicProperties musicProperties;
 	private Map<Integer, Double> rhythmWeightValues;
+	private Motive motive;
 
 	@Before
 	public void setUp(){
@@ -39,17 +38,19 @@ public class FitnessEvaluationTest extends AbstractTest{
 		rhythmWeightValues.put(30, 0.5);
 		musicProperties.setRhythmWeightValues(rhythmWeightValues);
 		List<Harmony> harmonies = new ArrayList<>();
-		harmonies.add(Examples.getChord(0,6, 0,4,7));
-		harmonies.add(Examples.getChord(6,6, 1,4,6));
-		harmonies.add(Examples.getChord(12,12, 11,2,7));
-		harmonies.add(Examples.getChord(24,12, 0,4,9));
-		fitnessEvaluation = new FitnessEvaluationTemplate(musicProperties, new Motive(harmonies));
+		harmonies.add(harmony().pos(0).len(6).notes(0,4,7).build());
+		harmonies.add(harmony().pos(6).len(6).notes(1,4,6).build());
+		harmonies.add(harmony().pos(12).len(12).notes(11,2,7).build());
+		harmonies.add(harmony().pos(24).len(12).notes(0,4,9).build());
+		motive = new Motive(harmonies);
+		fitnessEvaluation = new FitnessEvaluationTemplate(musicProperties, motive);
 	}
 	
 	@After
 	public void objectivesInfo() {
 		LOGGER.info(objectives.toString());
 	}
+	
 	
 	@Test
 	public void evaluationTest() {

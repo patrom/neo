@@ -18,6 +18,7 @@ public class Harmony {
 	private PitchSpaceStrategy pitchSpaceStrategy;
 	private Chord chord;
 	private int length;
+	private double positionWeight;
 	
 	public Harmony(int position, int length, List<NotePos> notes, PitchSpaceStrategy pitchSpaceStrategy) {
 		this.position = position;
@@ -80,7 +81,17 @@ public class Harmony {
 		}else{
 			this.pitchSpaceStrategy = new UniformPitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClass());
 		}
-		
+	}
+
+	public double getPositionWeight() {
+		return positionWeight;
+	}
+
+	public void setPositionWeight(double positionWeight) {
+		for (NotePos notePos : notes) {
+			notePos.setPositionWeight(positionWeight);
+		}
+		this.positionWeight = positionWeight;
 	}
 	
 }

@@ -31,7 +31,7 @@ public class MusicProperties {
 		rhythmWeightValues.put(30, 0.5);
 		rhythmWeightValues.put(36, 1.0);
 		rhythmWeightValues.put(42, 0.5);
-		rhythmWeightValues.put(48, 1.0);
+		rhythmWeightValues.put(48, 0.0);//Not included - Weight should be 0!
 		
 //		ranges.add(getInstrument(0, 48, 60));
 //		ranges.add(getInstrument(1, 54, 70));
@@ -240,6 +240,9 @@ public class MusicProperties {
 	}
 	public void setOctaveHighestPitchClass(int octaveHighestPitchClass) {
 		this.octaveHighestPitchClass = octaveHighestPitchClass;
+	}
+	public void setScale(Scale scale) {
+		this.scale = scale;
 	}
 
 	

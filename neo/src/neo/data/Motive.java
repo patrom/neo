@@ -28,7 +28,25 @@ public class Motive {
 		return extractMelodies();
 	}
 	
-	private List<Melody> extractMelodies() {
+	private List<Melody> extractMelodies(){
+		melodies.clear();
+		List<NotePos> allNotes = new ArrayList<>();
+		for (Harmony list : harmonies) {
+			for (NotePos notePos : list.getNotes()) {
+				allNotes.add(notePos);
+			}
+		}
+		Map<Integer, List<NotePos>> melodyMap = allNotes.stream().collect(Collectors.groupingBy(n -> n.getVoice()));
+		for (Entry<Integer, List<NotePos>> entry: melodyMap.entrySet()) {
+			List<NotePos> notes = entry.getValue();
+			Melody melody = new Melody(notes, 0);
+			melodies.add(melody);
+		}
+		return melodies;
+	}
+	
+	private List<Melody> extractMelodies_concat(List<Harmony> harmonies) {
+		melodies.clear();
 		List<NotePos> allNotes = new ArrayList<>();
 		for (Harmony list : harmonies) {
 			for (NotePos notePos : list.getNotes()) {
@@ -47,8 +65,8 @@ public class Motive {
 				}
 			}
 			List<NotePos> notePositions = concatNotesWithSamePitch(clonedNotes);
-			Melody motive = new Melody(notePositions, 0);
-			melodies.add(motive);
+			Melody melody = new Melody(notePositions, 0);
+			melodies.add(melody);
 		}
 		return melodies;
 	}

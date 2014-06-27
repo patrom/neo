@@ -1,20 +1,16 @@
-package neo.score;
+package neo.print;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import neo.data.melody.Melody;
-import neo.data.note.NotePos;
-import neo.evaluation.MusicProperties;
 import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Rest;
 import jm.music.data.Score;
+import neo.data.melody.Melody;
+import neo.data.note.NotePos;
 
 public class ScoreUtilities implements JMC{
 

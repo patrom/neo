@@ -1,4 +1,4 @@
-package test.neo.data.harmony;
+package neo.data.harmony;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;

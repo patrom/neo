@@ -1,4 +1,4 @@
-package test.neo.data;
+package neo.data;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;

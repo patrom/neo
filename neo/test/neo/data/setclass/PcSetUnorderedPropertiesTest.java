@@ -1,15 +1,14 @@
-package test.neo.data.setclass;
+package neo.data.setclass;
 
 import java.util.List;
 import java.util.Map;
 
+import neo.AbstractTest;
 import neo.data.note.NotePos;
 import neo.data.setclass.PcSetUnorderedProperties;
 import neo.midi.MidiParser;
 
 import org.junit.Test;
-
-import test.neo.AbstractTest;
 
 public class PcSetUnorderedPropertiesTest extends AbstractTest{
 

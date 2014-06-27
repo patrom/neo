@@ -1,15 +1,14 @@
-package test.neo.midi;
+package neo.midi;
 
 import java.util.List;
 import java.util.Map;
 
+import neo.AbstractTest;
 import neo.data.harmony.Harmony;
 import neo.data.note.NotePos;
 import neo.midi.MidiParser;
 
 import org.junit.Test;
-
-import test.neo.AbstractTest;
 
 public class MidiParserTest extends AbstractTest {
 

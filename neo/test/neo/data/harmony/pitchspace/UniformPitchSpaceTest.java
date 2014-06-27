@@ -1,4 +1,4 @@
-package test.neo.data.harmony.pitchspace;
+package neo.data.harmony.pitchspace;
 
 import static junit.framework.Assert.assertEquals;
 

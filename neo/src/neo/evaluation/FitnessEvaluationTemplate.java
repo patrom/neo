@@ -1,43 +1,23 @@
 package neo.evaluation;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NavigableMap;
-import java.util.Optional;
-import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.stream.Collectors;
 
 import jm.music.data.Note;
 import neo.data.Motive;
-import neo.data.harmony.Examples;
 import neo.data.harmony.Harmony;
-import neo.data.melody.Melody;
 import neo.data.note.NotePos;
+import neo.log.LogConfig;
 import neo.objective.InnerMetricWeight;
 import neo.objective.Objective;
-import neo.objective.harmony.Chord;
 import neo.objective.harmony.HarmonicObjective;
-import neo.objective.melody.MelodicFunctions;
 import neo.objective.melody.MelodicObjective;
-import neo.objective.voiceleading.VoiceLeading;
 import neo.objective.voiceleading.VoiceLeadingObjective;
-import neo.objective.voiceleading.VoiceLeadingSize;
-import neo.score.LogConfig;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
 public class FitnessEvaluationTemplate {
 
@@ -57,6 +37,7 @@ public class FitnessEvaluationTemplate {
 	private Objective melodicObjective;
 	private Objective voiceLeadingObjective;
 	private Motive motive;
+	private MusicProperties musicProperties;
 
 	public FitnessEvaluationTemplate(MusicProperties properties, Motive motive) {
 		this.motive = motive;
@@ -64,13 +45,9 @@ public class FitnessEvaluationTemplate {
 		harmonicObjective = new HarmonicObjective(properties, motive);
 		melodicObjective = new MelodicObjective(properties, motive);
 		voiceLeadingObjective = new VoiceLeadingObjective(properties, motive);
+		this.musicProperties = properties;
 		
-		try {
-			LogConfig.configureLogger(Level.SEVERE);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		LogConfig.configureLogger(Level.SEVERE);
 	}
 	
 	public FitnessObjectiveValues evaluate() {
@@ -81,18 +58,15 @@ public class FitnessEvaluationTemplate {
 
 	private FitnessObjectiveValues evaluateObjectives() {
 		//harmony
-		double harmonyMean = evaluateHarmony();
+		double harmonyMean = harmonicObjective.evaluate();
 		LOGGER.info("mean harmonicValues: " + harmonyMean);
 
 		//voice leading
-		double voiceLeading = evaluateVL();
+		double voiceLeading = voiceLeadingObjective.evaluate();
 		LOGGER.fine("max voiceLeadingSize: " + voiceLeading);
 		
-//		double melodicValue = evaluateMelody();
-//		if (Double.isNaN(melodicValue)) {
-//			melodicValue = Double.MAX_VALUE;
-//		}
-//		LOGGER.fine("melodicValue = " + melodicValue);
+		double melodicValue = melodicObjective.evaluate();
+		LOGGER.fine("melodicValue = " + melodicValue);
 		
 //		double rhythmicValue = evaluateRhythm(sentences, numerator);
 //		LOGGER.fine("rhythmicValue = " + rhythmicValue);
@@ -102,7 +76,7 @@ public class FitnessEvaluationTemplate {
 		
 		FitnessObjectiveValues fitnessObjectives = new FitnessObjectiveValues();
 		fitnessObjectives.setHarmony(harmonyMean);
-//		fitnessObjectives.setMelody(melodicValue);
+		fitnessObjectives.setMelody(melodicValue);
 		fitnessObjectives.setVoiceleading(voiceLeading);
 //		objectives[3] = rhythmicValue;
 //		objectives[4] = 1 - tonalityValue;
@@ -114,7 +88,7 @@ public class FitnessEvaluationTemplate {
 	}
 
 	private void calculateNotePositionValues() {
-		calculateBeatValues();//change to apply rhythmic template;
+		updateBeatValues();//change to apply rhythmic template;
 		calculateInnerMetricValues();
 	}
 
@@ -124,24 +98,7 @@ public class FitnessEvaluationTemplate {
 //		LOGGER.fine("Inner metric map: " + map.toString());
 	}
 	
-	private void calculateBeatValues() {
-		List<Harmony> harmonies = motive.getHarmonies();
-		switch (numerator) {//4/4 = 4 ; 2/4 = 2 ; 3/4 = 3 ; 6/8 = 6
-		case 2:
-			applyDynamicTemplate(harmonies, 6, true);
-			break;
-		case 3:
-			applyDynamicTemplate(harmonies, 12, false);	
-			break;
-		case 4:
-			applyDynamicTemplate(harmonies, 12, true);
-			break;
-		case 6:
-			applyDynamicTemplate(harmonies, 6, false);
-			break;
-		default:
-			break;
-		}
+	protected void updateBeatValues() {
 	}
 
 	private void applyDynamicTemplate(List<Harmony> noteList, int beat, boolean even) {
@@ -219,18 +176,6 @@ public class FitnessEvaluationTemplate {
 		return map;
 	}
 	
-	private double evaluateHarmony() {
-		return harmonicObjective.evaluate();
-	}
-
-	private double evaluateVL(){
-		return voiceLeadingObjective.evaluate();
-	}
-	
-	private double evaluateMelody() {
-		return melodicObjective.evaluate();
-	}
-		
 	
 //	private double evaluateRhythm(List<MusicalStructure> sentences, int numerator) {
 //		double total = 0;

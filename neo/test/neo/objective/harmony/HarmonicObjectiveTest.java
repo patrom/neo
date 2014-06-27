@@ -1,5 +1,6 @@
-package test.neo.objective;
+package neo.objective.harmony;
 
+import static neo.data.harmony.HarmonyBuilder.harmony;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -8,12 +9,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import neo.data.Motive;
-import neo.data.harmony.Examples;
 import neo.data.harmony.Harmony;
 import neo.evaluation.MusicProperties;
 import neo.objective.Objective;
-import neo.objective.harmony.ChordType;
-import neo.objective.harmony.HarmonicObjective;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,21 +30,21 @@ public class HarmonicObjectiveTest{
 		rhythmWeightValues.put(0, 1.0);
 		rhythmWeightValues.put(6, 0.5);
 		rhythmWeightValues.put(12, 1.0);
-		rhythmWeightValues.put(18, 0.5);
+		rhythmWeightValues.put(18, 0.0);
 		musicProperties.setRhythmWeightValues(rhythmWeightValues);
 	}
 
 	@Test
 	public void testEvaluate() {
 		List<Harmony> harmonies = new ArrayList<>();
-		harmonies.add(Examples.getChord(0,6, 0,4,7));
-		harmonies.add(Examples.getChord(6,6, 1,4,6));
-		harmonies.add(Examples.getChord(12,12, 11,2,7));
+		harmonies.add(harmony().pos(0).len(6).notes(0,4,7).weight(1.0).build());
+		harmonies.add(harmony().pos(6).len(6).notes(1,4,6).weight(0.5).build());
+		harmonies.add(harmony().pos(12).len(12).notes(11,2,7).weight(1.0).build());
 		harmonicObjective = new HarmonicObjective(musicProperties, new Motive(harmonies));
 		double harmonicValue = harmonicObjective.evaluate();
 		System.out.println(harmonicValue);
-		double expectedValue = ((2 * ChordType.MAJOR.getDissonance() * rhythmWeightValues.get(0)) + (ChordType.MAJOR.getDissonance() * rhythmWeightValues.get(6)) 
-				+ (ChordType.CH3.getDissonance() * rhythmWeightValues.get(18)))/rhythmWeightValues.size();
+		double expectedValue = ((ChordType.MAJOR.getDissonance() * rhythmWeightValues.get(0)) + (ChordType.MAJOR.getDissonance() * rhythmWeightValues.get(12)) 
+				+ (ChordType.CH3.getDissonance() * rhythmWeightValues.get(6)))/3;
 		assertEquals("Wrong harmonic value of chords", expectedValue, harmonicValue, 0);
 	}
 

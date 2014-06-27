@@ -45,7 +45,7 @@
 		<artifactId>commons-math</artifactId>
 		<version>2.2</version>
 	</dependency>
-      <dependency>
+     <dependency>
 		<groupId>JMusic</groupId>
 		<artifactId>JMusic</artifactId>
 		<version>1.6.3</version>
@@ -59,6 +59,7 @@
 		<groupId>JFuzzyLogic</groupId>
 		<artifactId>JFuzzyLogic</artifactId>
 		<version>2.0.9</version>
-	</dependency>    
+	</dependency>     
   </dependencies>
+  
 </project>
