@@ -5,26 +5,31 @@ import java.util.List;
 
 public class VoiceLeadingSize {
 
-	private List<Integer> source = new ArrayList<Integer>();
-	private List<Integer> target = new ArrayList<Integer>();
+	private List<Integer> source = new ArrayList<>();
+	private List<Integer> target = new ArrayList<>();
 	private int size;
 	private int mod = 12;
 	
 	public List<Integer> getSource() {
 		return source;
 	}
+	
 	public void addAllToSource(List<Integer> source) {
 		this.source.addAll(source);
 	}
+	
 	public List<Integer> getTarget() {
 		return target;
 	}
+	
 	public void addAllToTarget(List<Integer> target) {
 		this.target.addAll(target);
 	}
+	
 	public int getSize() {
 		return size;
 	}
+	
 	public void setSize(int size) {
 		this.size = size;
 	}
@@ -79,5 +84,4 @@ public class VoiceLeadingSize {
     	 return ((c % mod) + mod) % mod; 
     }  
      
-	
 }

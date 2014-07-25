@@ -13,6 +13,7 @@ import neo.data.Motive;
 import neo.data.harmony.Harmony;
 import neo.data.note.NotePos;
 import neo.log.LogConfig;
+import neo.midi.MidiConverter;
 import neo.objective.InnerMetricWeight;
 import neo.objective.Objective;
 import neo.objective.harmony.HarmonicObjective;
@@ -88,7 +89,6 @@ public class FitnessEvaluationTemplate {
 	}
 
 	private void calculateNotePositionValues() {
-		updateBeatValues();//change to apply rhythmic template;
 		calculateInnerMetricValues();
 	}
 
@@ -96,9 +96,6 @@ public class FitnessEvaluationTemplate {
 //		List<Integer> positions = noteList.stream().mapToInt(n -> n.getPosition()).collect(Collectors.toList());
 //		Map<Integer, Double> map = applyInnerMetricWeight(sentences);
 //		LOGGER.fine("Inner metric map: " + map.toString());
-	}
-	
-	protected void updateBeatValues() {
 	}
 
 	private void applyDynamicTemplate(List<Harmony> noteList, int beat, boolean even) {
@@ -133,49 +130,6 @@ public class FitnessEvaluationTemplate {
 			}
 		}
 	}
-	
-	
-//	private Map<Integer, Double> applyInnerMetricWeight(List<NoteList> noteList) {
-//		Map<Integer, Double> melodiesMap = new TreeMap<Integer, Double>();
-//		for (NoteList list : noteList) {
-//			List<NotePos> notes = list.getNotes();
-//			Map<Integer, Double> map = getInnerMetricMap(sentence);
-////			LOGGER.fine(map);
-//			if (!map.isEmpty()) {
-//				Set<Integer> onsets = map.keySet();
-//				for (Integer onset : onsets) {
-//					for (NotePos note : notes) {
-//						if (note.getPosition() == onset) {
-//							double value = map.get(onset);
-//							note.setInnerMetricWeight(value);
-//							break;
-//						}
-//					}
-//					if (melodiesMap.containsKey(onset)) {
-//						double value = melodiesMap.get(onset);
-//						double newValue = value + map.get(onset);
-//						melodiesMap.put(onset, newValue);
-//					} else {
-//						melodiesMap.put(onset, map.get(onset));
-//					}
-//				}
-//			}
-//		}
-//		return melodiesMap;
-//	}
-	
-	public Map<Integer, Double> getInnerMetricMap(List<Integer> positions, int length){
-		Integer[] onSet = InnerMetricWeight.extractPositions(positions, length);
-		NavigableMap<Integer, Double> map1 = InnerMetricWeight.getNormalizedInnerMetricWeight(onSet);
-		Map<Integer, Double> m = map1.subMap(length, length * 2);
-		Set<Integer> keys = m.keySet();
-		Map<Integer, Double> map = new TreeMap<Integer, Double>();
-		for (Integer key : keys) {
-			map.put(key - length + positions.get(0), m.get(key));
-		}
-		return map;
-	}
-	
 	
 //	private double evaluateRhythm(List<MusicalStructure> sentences, int numerator) {
 //		double total = 0;

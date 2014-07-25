@@ -71,14 +71,6 @@ public class Interval  {
 	public static final Interval OCTAAF = intervalMap.get(12);
 	public static final Interval GROTER_DAN_OCTAAF = intervalMap.get(13);
 	
-	public static void main(String[] args) {
-		Interval interval = Interval.getEnumInterval(1);
-		System.out.println(interval.getHarmonicValue());
-		Interval i = intervalMap.get(1);
-		i.setHarmonicValue(2.0);
-		System.out.println(interval.getHarmonicValue());
-	}
-	
 	public void setInterval(int interval) {
 		this.interval = interval;
 	}

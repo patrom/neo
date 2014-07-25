@@ -23,7 +23,7 @@ public class Play {
 	public static void playMidiFilesOnKontaktFor(String path, List<Instrument> instruments, float tempo) throws IOException, InvalidMidiDataException {
 		List<File> midiFiles = Files.list(new File(path).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
-			List<Melody> motives = MidiParser.readMidi(midiFile);
+			List<Melody> motives = MidiParser.readMidi(midiFile).getMelodies();
 			playOnKontakt(motives, instruments, tempo);
 		}
 	}

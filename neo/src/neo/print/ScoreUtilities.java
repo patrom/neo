@@ -2,6 +2,7 @@ package neo.print;
 
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import jm.JMC;
 import jm.music.data.Note;
@@ -13,6 +14,8 @@ import neo.data.melody.Melody;
 import neo.data.note.NotePos;
 
 public class ScoreUtilities implements JMC{
+	
+	private static Logger LOGGER = Logger.getLogger(ScoreUtilities.class.getName());
 
 	private static final double ATOMIC_VALUE = 12;
 	private static Random random = new Random();
@@ -48,11 +51,11 @@ public class ScoreUtilities implements JMC{
 		return r;
 	}
 	
-	public static Score createScoreMotives(List<Melody> motives){
+	public static Score createScoreMelodies(List<Melody> melodies){
 		Score score = new Score();
-		Part[] scoreParts = new Part[motives.size()];
+		Part[] scoreParts = new Part[melodies.size()];
 		int voice = 0;
-		for (Melody motive : motives) {
+		for (Melody motive : melodies) {
 			List<NotePos> notePosistions = motive.getNotes();
 			Phrase phrase = new Phrase();
 			int lastVoice = 0;
@@ -80,7 +83,7 @@ public class ScoreUtilities implements JMC{
 			Part part = new Part(phrase);
 			scoreParts[voice] = part;
 			if (voice != lastVoice) {
-				System.out.println("something wrong with voices");
+				LOGGER.warning("something wrong with voices");
 			}
 			voice++;	
 		}

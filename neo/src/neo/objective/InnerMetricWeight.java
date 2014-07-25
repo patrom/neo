@@ -9,10 +9,13 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import jm.music.data.Note;
 import jm.music.data.Phrase;
+import neo.data.melody.Melody;
 import neo.data.note.NotePos;
+import neo.objective.voiceleading.VoiceLeadingObjective;
 
 import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
 
@@ -20,14 +23,14 @@ import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
 
 public class InnerMetricWeight {
 	
+	private static Logger LOGGER = Logger.getLogger(InnerMetricWeight.class.getName());
+	
 	private static final int BEAT_FACTOR = 2;//1/8 = 2 - 1/16 = 4
 	private static final int REPEAT = 3;
 	private static final double PULSE = 0.25;//1/8 = 0.5 - 1/16 = 0.25
 	private static final double POWER = 2.0;
 	private static final int CORRELATION_LENGTH = 32; //fixed length: 4 bars of 1/8 notes!!
 	private static final int MINIMUM_SIZE = 3; //size of local meter 
-	
-
 
 	public static void main2(String[] args) {
 
@@ -42,18 +45,19 @@ public class InnerMetricWeight {
 //		double[] rhythmPattern = RhythmicFunctions.createRandomRhythmPattern2(4);
 		double[] rhythmPattern = test.getRhythmArray();
 		int originalLength = rhythmPattern.length;
-		System.out.println(Arrays.toString(rhythmPattern));
+		LOGGER.info(Arrays.toString(rhythmPattern));
 		
 //		RhythmicFunctions.playRhythm(rhythmPattern);
 //		rhythmPattern = RhythmicFunctions.repeatPattern(rhythmPattern, REPEAT);
-		Integer[] onSetArr = extractOnset(rhythmPattern ,PULSE);
-		System.out.println(Arrays.toString(onSetArr));
+		InnerMetricWeight innerMetricWeight = new InnerMetricWeight();
+		Integer[] onSetArr = innerMetricWeight.extractOnset(rhythmPattern ,PULSE);
+		LOGGER.info(Arrays.toString(onSetArr));
 //		List<Integer> onSet = new ArrayList<Integer>();
 //		int[] onSet = new int[10];
 //		Integer[] onSetArr = {0, 3, 6, 7, 8, 9, 10, 11, 12, 13, 15, 18, 19, 21, 22};
-		List<List<Integer>> localMeters = getLocalMeters(onSetArr);
-		System.out.println(localMeters);
-		Map<Integer, Double> map = getInnerMetricWeight(localMeters, onSetArr);
+		List<List<Integer>> localMeters = innerMetricWeight.getLocalMeters(onSetArr);
+		LOGGER.info(localMeters.toString());
+		Map<Integer, Double> map =  innerMetricWeight.getInnerMetricWeight(localMeters, onSetArr);
 //		Set<Integer> keys = map.keySet();
 //		for (Integer key : keys) {
 //			System.out.print(key + ":");
@@ -62,13 +66,12 @@ public class InnerMetricWeight {
 //		double l = getLength(rhythmPattern);
 //		System.out.println("length:" + l);
 //		System.out.println(Math.ceil(l));
-		double[] innerMetricWeightVector = createCorrelationVector(map , getLength(rhythmPattern));
+		double[] innerMetricWeightVector =  innerMetricWeight.createCorrelationVector(map , getLength(rhythmPattern));
 		System.out.println(Arrays.toString(innerMetricWeightVector));
 //		int start = (int) ((getLength(rhythmPattern)/ REPEAT) * BEAT_FACTOR);
 //		int end = (start * 2) ;
 //		double[] innerMetricWeightVector = Arrays.copyOfRange(tempInnerMetricWeightVector, start, end);
-//		System.out.println(Arrays.toString(innerMetricWeightVector));
-		System.out.println();
+//		LOGGER.info(Arrays.toString(innerMetricWeightVector));
 			
 		double[] twoBarWeightVector = new double[16];
 		twoBarWeightVector[0] = 100.0;
@@ -137,9 +140,68 @@ public class InnerMetricWeight {
 		double correlation = new PearsonsCorrelation().correlation(corrVector,innerMetricWeightVector);
 		System.out.println("correlation " + correlation);
 //		System.out.println("max: " + getMaxValue(innerMetricWeightVector));
-		double[] normalizedVector = normalize(innerMetricWeightVector, getMaxValue(innerMetricWeightVector), originalLength);
+		double[] normalizedVector = innerMetricWeight.normalize(innerMetricWeightVector,  innerMetricWeight.getMaxValue(innerMetricWeightVector), originalLength);
 		System.out.println(Arrays.toString(normalizedVector));
 //		RhythmicFunctions.playRhythmWithDynamic(rhythmPattern, convertToDynamics(normalizedVector));
+	}
+	
+	
+	public Map<Integer, Double> applyInnerMetricWeight(Melody melody) {
+		Map<Integer, Double> melodiesMap = new TreeMap<Integer, Double>();
+		List<NotePos> notes = melody.getNotes();
+		Map<Integer, Double> map = getInnerMetricMap(notes);
+		if (!map.isEmpty()) {
+			Set<Integer> onsets = map.keySet();
+			for (Integer onset : onsets) {
+				for (NotePos note : notes) {
+					if (note.getPosition() == onset) {
+						double value = map.get(onset);
+						note.setInnerMetricWeight(value);
+						break;
+					}
+				}
+				if (melodiesMap.containsKey(onset)) {
+					double value = melodiesMap.get(onset);
+					double newValue = value + map.get(onset);
+					melodiesMap.put(onset, newValue);
+				} else {
+					melodiesMap.put(onset, map.get(onset));
+				}
+			}
+		}
+		return melodiesMap;
+	}
+	
+	protected Map<Integer, Double> getInnerMetricMap(List<NotePos> notes){
+		double[] notePositions = new double[notes.size()];
+		int length = 0;
+		for (int i = 0; i < notes.size(); i++) {
+			NotePos note = notes.get(i);
+			notePositions[i] = note.getPosition();
+			length = length + note.getLength();
+		}
+		Integer[] onSet = extractOnset(notePositions, length);
+		NavigableMap<Integer, Double> map1 = getNormalizedInnerMetricWeight(onSet);
+		Map<Integer, Double> m = map1.subMap(length, length * 2);
+		Set<Integer> keys = m.keySet();
+		Map<Integer, Double> map = new TreeMap<Integer, Double>();
+		for (Integer key : keys) {
+//			map.put(key - length + sentence.getPosition(), m.get(key));
+			map.put(key - length, m.get(key));
+		}
+		return map;
+	}
+
+	protected Map<Integer, Double> getInnerMetricMap(List<Integer> positions, int length){
+		Integer[] onSet = extractPositions(positions, length);
+		NavigableMap<Integer, Double> map1 = getNormalizedInnerMetricWeight(onSet);
+		Map<Integer, Double> m = map1.subMap(length, length * 2);
+		Set<Integer> keys = m.keySet();
+		Map<Integer, Double> map = new TreeMap<Integer, Double>();
+		for (Integer key : keys) {
+			map.put(key - length + positions.get(0), m.get(key));
+		}
+		return map;
 	}
 	
 	public static int[] convertToDynamics(double[] vector){
@@ -150,7 +212,7 @@ public class InnerMetricWeight {
 		return dynamics;
 	}
 	
-	public static double[] normalize(double[] vector, double maxValue, int length){
+	protected double[] normalize(double[] vector, double maxValue, int length){
 		double[] normalizedVector = new double[length];
 		int j = 0 ;
 		for (int i = 0; i < vector.length; i++) {
@@ -162,7 +224,7 @@ public class InnerMetricWeight {
 		return normalizedVector;
 	}
 	
-	public static double[] normalize(Collection<Double> values){
+	protected double[] normalize(Collection<Double> values){
 		double maxValue = Collections.max(values);
 		int l = values.size();
 		double[] normalizedVector = new double[l];
@@ -174,7 +236,7 @@ public class InnerMetricWeight {
 		return normalizedVector;
 	}
 	
-	public static double getMaxValue(double[] numbers){  
+	protected double getMaxValue(double[] numbers){  
 	    double maxValue = numbers[0];  
 	    for(int i=1;i<numbers.length;i++){  
 	        if(numbers[i] > maxValue){  
@@ -184,7 +246,7 @@ public class InnerMetricWeight {
 	    return maxValue;  
 	}  
 	
-	public static List<List<Integer>> getLocalMeters(Integer[] onSet){
+	protected List<List<Integer>> getLocalMeters(Integer[] onSet){
 		List<Integer> onSetList = Arrays.asList(onSet);
 		List<List<Integer>> localMeters = new ArrayList<List<Integer>>();
 //		int[] distanceArr = {1,2,3,4,5,6,7,8,9,10};// pulse = 0.5 of 0.25
@@ -223,7 +285,7 @@ public class InnerMetricWeight {
 		return localMeters;
 	}
 	
-	public static Map<Integer, Double> getInnerMetricWeight(List<List<Integer>> localMeters, Integer[] onSet){
+	protected Map<Integer, Double> getInnerMetricWeight(List<List<Integer>> localMeters, Integer[] onSet){
 		Map<Integer, Double> map = new TreeMap<Integer, Double>();
 		for (int i = 0; i < onSet.length; i++) {
 			for (List<Integer> localMeter : localMeters) {
@@ -255,7 +317,7 @@ public class InnerMetricWeight {
 		return map;
 	}
 	
-	public static Map<Integer, Double> getNormalizedInnerMetricWeight(double[] rhythmPattern, double pulse){
+	protected Map<Integer, Double> getNormalizedInnerMetricWeight(double[] rhythmPattern, double pulse){
 		Integer[] onSet = extractOnset(rhythmPattern, pulse);
 		List<List<Integer>> localMeters = getLocalMeters(onSet);
 		Map<Integer, Double> map = new TreeMap<Integer, Double>();
@@ -282,7 +344,7 @@ public class InnerMetricWeight {
 		}
 	}
 	
-	public static Integer[] extractOnset(double[] rhythmPattern, double pulse){
+	protected Integer[] extractOnset(double[] rhythmPattern, double pulse){
 		Integer[] arr = new Integer[rhythmPattern.length];
 		arr[0] = 0;
 		double onSet = 0;
@@ -296,7 +358,7 @@ public class InnerMetricWeight {
 		return arr;
 	}
 	
-	public static double[] createCorrelationVector(Map<Integer, Double> map, double length){
+	protected double[] createCorrelationVector(Map<Integer, Double> map, double length){
 		double[] innerMetricWeightVector = new double[(int) (length * BEAT_FACTOR)];//1/8 = 2 - 1/16 = 4
 		Set<Integer> keys = map.keySet();
 		for (Integer key : keys) {
@@ -305,7 +367,7 @@ public class InnerMetricWeight {
 		return innerMetricWeightVector;
 	}
 	
-	public static double getLength(double[] rhythmPattern){
+	protected static double getLength(double[] rhythmPattern){
 		double total = 0;
 		for (double d : rhythmPattern) {
 			total = total + d;
@@ -313,7 +375,7 @@ public class InnerMetricWeight {
 		return total;
 	}
 
-	public static Map<Integer, Double> getNormalizedInnerMetricWeight(List<NotePos> notes) {
+	protected Map<Integer, Double> getNormalizedInnerMetricWeight(List<NotePos> notes) {
 		Integer[] onSet = extractOnset(notes);
 		List<List<Integer>> localMeters = getLocalMeters(onSet);
 		Map<Integer, Double> map = new TreeMap<Integer, Double>();
@@ -340,7 +402,7 @@ public class InnerMetricWeight {
 		}
 	}
 
-	private static Integer[] extractOnset(List<NotePos> notes) {
+	private Integer[] extractOnset(List<NotePos> notes) {
 		int length = notes.size();
 		Integer[] arr = new Integer[length];
 		arr[0] = 0;
@@ -350,7 +412,7 @@ public class InnerMetricWeight {
 		return extendArray(arr);
 	}
 	
-	private static Integer[] extendArray(Integer[] rhythmArray) {
+	private Integer[] extendArray(Integer[] rhythmArray) {
 		int length = rhythmArray.length * 3;
 		Integer[] rArray = new Integer[length];
 		for (int i = 0; i < length; i++) {
@@ -359,7 +421,7 @@ public class InnerMetricWeight {
 		return rArray;
 	}
 	
-	public static Integer[] extractOnset(List<NotePos> notes, int structureLength) {
+	protected Integer[] extractOnset(List<NotePos> notes, int structureLength) {
 		int length = notes.size();
 		Integer[] arr = new Integer[length * 3];
 //		arr[0] = 0;
@@ -372,7 +434,7 @@ public class InnerMetricWeight {
 		return arr;
 	}
 	
-	public static Integer[] extractPositions(List<Integer> positions, int length) {
+	protected Integer[] extractPositions(List<Integer> positions, int length) {
 		Integer[] arr = new Integer[length * 3];
 		for (int i = 0; i < length ; i++) {
 			int position = positions.get(i);
@@ -383,7 +445,7 @@ public class InnerMetricWeight {
 		return arr;
 	}
 	
-	public static NavigableMap<Integer, Double> getNormalizedInnerMetricWeight(Integer[] onSet) {
+	protected NavigableMap<Integer, Double> getNormalizedInnerMetricWeight(Integer[] onSet) {
 		List<List<Integer>> localMeters = getLocalMeters(onSet);
 		NavigableMap<Integer, Double> map = new TreeMap<Integer, Double>();
 		for (int i = 0; i < onSet.length; i++) {
@@ -409,7 +471,7 @@ public class InnerMetricWeight {
 		}
 	}
 	
-	private static NavigableMap<Integer, Double> normalizeNavigableMap(NavigableMap<Integer, Double> map){
+	private NavigableMap<Integer, Double> normalizeNavigableMap(NavigableMap<Integer, Double> map){
 		double maxValue = Collections.max(map.values());
 		Set<Integer> keys = map.keySet();
 		for (Integer key : keys) {

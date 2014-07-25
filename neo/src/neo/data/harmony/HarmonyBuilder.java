@@ -6,7 +6,6 @@ import java.util.List;
 import neo.data.harmony.pitchspace.PitchSpaceStrategy;
 import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.note.NotePos;
-import neo.objective.harmony.Chord;
 
 public class HarmonyBuilder {
 	
@@ -39,7 +38,7 @@ public class HarmonyBuilder {
 		return this;
 	}
 	
-	public HarmonyBuilder weight(double positionWeight){
+	public HarmonyBuilder positionWeight(double positionWeight){
 		this.positionWeight = positionWeight;
 		return this;
 	}

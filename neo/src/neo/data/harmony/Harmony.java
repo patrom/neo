@@ -9,7 +9,6 @@ import neo.data.harmony.pitchspace.PitchSpaceStrategy;
 import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.note.NotePos;
 import neo.data.note.Scale;
-import neo.objective.harmony.Chord;
 
 public class Harmony {
 	
@@ -76,10 +75,18 @@ public class Harmony {
 	}
 	
 	public void mutatePitchSpaceStrategy(){
-		if (pitchSpaceStrategy instanceof UniformPitchSpace) {
-			this.pitchSpaceStrategy = new BassOctavePitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClass());
-		}else{
-			this.pitchSpaceStrategy = new UniformPitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClass());
+		int i = PseudoRandom.randInt(0, 1);
+		switch (i) {
+		case 0:
+			if (!(pitchSpaceStrategy instanceof UniformPitchSpace)) {
+				this.pitchSpaceStrategy = new UniformPitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClass());
+			}
+			break;
+		case 1:
+			if (!(pitchSpaceStrategy instanceof BassOctavePitchSpace)) {
+				this.pitchSpaceStrategy = new BassOctavePitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClass());
+			}
+			break;
 		}
 	}
 
@@ -94,4 +101,9 @@ public class Harmony {
 		this.positionWeight = positionWeight;
 	}
 	
+	public void transpose(int t){
+		notes.stream().forEach(note -> note.setPitchClass((note.getPitchClass() + t) % 12));
+		toChord();
+	}
+
 }

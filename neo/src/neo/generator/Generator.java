@@ -3,6 +3,7 @@ package neo.generator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
@@ -15,6 +16,7 @@ import neo.data.harmony.Harmony;
 import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.note.NotePos;
 import neo.data.note.Scale;
+import neo.evaluation.FitnessEvaluationTemplate;
 import neo.evaluation.MusicProperties;
 import neo.instrument.KontaktLibPiano;
 import neo.instrument.MidiDevice;
@@ -22,6 +24,8 @@ import neo.midi.MidiDevicesUtil;
 import neo.print.ScoreUtilities;
 
 public class Generator {
+	
+	private static Logger LOGGER = Logger.getLogger(Generator.class.getName());
 	
 	private Scale scale;
 	private int[] rhythmGeneratorTemplate;
@@ -96,11 +100,11 @@ public class Generator {
 		Generator generator = new Generator(props);
 		Motive motive = generator.generateMotive();
 		List<Harmony> harmonies = motive.getHarmonies();
-		harmonies.forEach(h ->  System.out.print(h.getChord().getChordType() + ", "));
-		harmonies.forEach(h ->  System.out.println(h.getChord().getPitchClassMultiSet() + ", "));
-		harmonies.forEach(h ->  System.out.println(h.getChord().getPitchClassSet() + ", "));
-		harmonies.forEach(h ->  System.out.println(h.getNotes() + ", "));
-		Score score = ScoreUtilities.createScoreMotives(motive.getMelodies());
+		harmonies.forEach(h ->  LOGGER.info(h.getChord().getChordType() + ", "));
+		harmonies.forEach(h -> 	LOGGER.info(h.getChord().getPitchClassMultiSet() + ", "));
+		harmonies.forEach(h ->  LOGGER.info(h.getChord().getPitchClassSet() + ", "));
+		harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
+		Score score = ScoreUtilities.createScoreMelodies(motive.getMelodies());
 		View.notate(score);
 		Write.midi(score, "midi/test.mid");
 		

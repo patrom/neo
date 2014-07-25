@@ -23,16 +23,16 @@ import neo.instrument.Instrument;
 
 public class MidiDevicesUtil {
 
-	private static final int RESOLUTION = 12;
 	private static Logger LOGGER = Logger.getLogger(MidiDevicesUtil.class.getName());
 
+	private static final int RESOLUTION = 12;
 	
 	public static void playOnDevice(Sequence sequence, float tempo, neo.instrument.MidiDevice kontact) {
 		LOGGER.info("tempo:" + tempo);
 		MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
 		for (int i = 0; i < infos.length; i++) {
 			try {
-				System.out.println(infos[i]);
+				LOGGER.info(infos[i].toString());
 //				if (infos[i].getName().equals("Real Time Sequencer")) {
 				if (infos[i].getName().equals(kontact.getName())) {
 					final MidiDevice device = MidiSystem

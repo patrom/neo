@@ -1,4 +1,4 @@
-package neo.objective.harmony;
+package neo.data.harmony;
 
 import java.util.Set;
 

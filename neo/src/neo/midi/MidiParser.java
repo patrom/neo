@@ -3,17 +3,14 @@ package neo.midi;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
@@ -21,126 +18,47 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
-import neo.data.harmony.Harmony;
-import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.melody.Melody;
 import neo.data.note.NotePos;
-import neo.instrument.KontaktLibAltViolin;
-import neo.instrument.KontaktLibCello;
-import neo.instrument.KontaktLibViolin;
-import neo.instrument.MidiDevice;
 
 public class MidiParser {
 
 	private static Logger LOGGER = Logger.getLogger(MidiParser.class.getName());
+	
+	private static final int RESOLUTION = 12;
 	public static final int TRACK_TIMESIGNATURE = 0x58;
 	private static Random random = new Random();
 
 	public static final int NOTE_ON = 0x90;
 	public static final int NOTE_OFF = 0x80;
 	
-	public static void main(String[] args) throws InvalidMidiDataException, IOException {
-		List<neo.instrument.Instrument> ranges = new ArrayList<>();
-		ranges.add(new KontaktLibViolin(0, 1));
-		ranges.add(new KontaktLibViolin(1, 2));
-		ranges.add(new KontaktLibAltViolin(2, 2));
-		ranges.add(new KontaktLibCello(3, 3));
-		List<Melody> motives = readMidi(MidiParser.class.getResource("/Bach-choral227deel1.mid").getPath());
-		
-		Sequence seq = MidiDevicesUtil.createSequence(motives, ranges);
-		float tempo = randomTempoFloat();
-		MidiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTACT);
-	}
-
-	public static List<Harmony> extractHarmony(List<Melody> motives, int octave){
-		Map<Integer, List<NotePos>> chords = extractNoteMap(motives);
-		List<Harmony> list = new ArrayList<>();
-		for (Entry<Integer, List<NotePos>> ch : chords.entrySet()) {
-			Harmony noteList = new Harmony(ch.getKey(),ch.getValue().get(0).getLength()
-					, ch.getValue(), new UniformPitchSpace(ch.getValue(),octave));
-			list.add(noteList);
-		}
-		return list;
-	}
-
-	public static Map<Integer, List<NotePos>> extractNoteMap(List<Melody> motives) {
-		Map<Integer, List<NotePos>> chords = new TreeMap<>();
-		Set<Integer> positions = new TreeSet<>();
-		for (Melody motive : motives) {
-			List<NotePos> notes = motive.getNotes();
-			for (NotePos notePos : notes) {
-				positions.add(notePos.getPosition());
-			}
-		}
-		int voice = 0;
-		for (Melody motive : motives) {
-			List<NotePos> notes = motive.getNotes();
-			int melodyLength = notes.size() - 1;
-			Iterator<Integer> iterator = positions.iterator();
-			Integer position = iterator.next();
-			for (int i = 0; i < melodyLength; i++) {
-				NotePos firstNote = notes.get(i);
-				NotePos secondNote = notes.get(i + 1);			
-				while (position < secondNote.getPosition()) {
-					addNoteToChordMap(chords, firstNote, voice);
-					position = iterator.next();
-				}
-			}
-			NotePos lastNote = notes.get(melodyLength);
-			addNoteToChordMap(chords, lastNote, voice);
-			voice++;
-		}
-		return chords;
-	}
-
-	private static void addNoteToChordMap(Map<Integer, List<NotePos>> chords, NotePos note,
-			 int voice) {
-		int position = note.getPosition();
-		List<NotePos> chord = null;
-		if (chords.containsKey(position)) {
-			chord = chords.get(position);
-		} else {
-			chord = new ArrayList<>();
-		}
-		NotePos notePos = new NotePos(note.getPitchClass(), voice , position, note.getLength());
-		chord.add(notePos);
-		chords.put(position, chord);
-	}
 	
-	
-	public static List<Melody> readMidi(String path) throws InvalidMidiDataException, IOException{
+	public static MidiInfo readMidi(String path) throws InvalidMidiDataException, IOException{
 		File file = new File(path);
 		return readMidi(file);
 	}
 
-	public static List<Melody> readMidi(File midiFile)
+	public static MidiInfo readMidi(File midiFile)
 			throws InvalidMidiDataException, IOException {
 		Sequence sequence = MidiSystem.getSequence(midiFile);
 		LOGGER.finer("Ticks: " + sequence.getResolution());
 		LOGGER.finer("PPQ: " + sequence.PPQ);
 		LOGGER.finer("DivisionType: " + sequence.getDivisionType());
-		int trackNumber = 0;
-		int voice = 0;
-		int size = sequence.getTracks().length;
-		voice = size - 1;
-		int resolution = 12;
+		Track[] tracks = sequence.getTracks();
+		int voice = tracks.length - 1;
 		Map<Integer, Melody> map = new TreeMap<Integer, Melody>();
-
-		for (int j = 0; j < size; j++) {
-			Track track = sequence.getTracks()[j];
-			List<NotePos> notes = new ArrayList<NotePos>();
-			trackNumber++;
-			LOGGER.finer("Track " + trackNumber + ": size = " + track.size());
+		MidiInfo midiInfo = new MidiInfo();
+		for (int j = 0; j < tracks.length; j++) {
+			Track track = tracks[j];
+			List<NotePos> notes = new ArrayList<>();
 			for (int i = 0; i < track.size(); i++) {
 				MidiEvent event = track.get(i);
 				MidiMessage message = event.getMessage();
-
 				if (message instanceof ShortMessage) {
-
 					LOGGER.finer("Voice:" + voice);
 					long ticks = Math
 							.round(((double) event.getTick() / (double) sequence
-									.getResolution()) * resolution);
+									.getResolution()) * RESOLUTION);
 					ShortMessage sm = (ShortMessage) message;
 
 					// Er zijn twee manieren om een note-off commando te
@@ -155,18 +73,8 @@ public class MidiParser {
 						LOGGER.finer("on: " + ticks + " ");
 						LOGGER.finer("@" + event.getTick() + " ");
 						LOGGER.finer("Pitch: " + sm.getData1() + " ");
-						NotePos jNote = new NotePos();
-						int key = sm.getData1();
-						jNote.setPitch(key);
-						jNote.setVoice(voice);
-						jNote.setPosition((int) ticks);
-
-						int velocity = sm.getData2();
-						jNote.setDynamic(velocity);
-
-						if (jNote != null) {
-							notes.add(jNote);
-						}
+						NotePos jNote = createNote(voice, ticks, sm);
+						notes.add(jNote);
 					}
 					if (sm.getCommand() == ShortMessage.NOTE_OFF
 							|| (sm.getCommand() == ShortMessage.NOTE_ON && sm
@@ -187,21 +95,41 @@ public class MidiParser {
 							}
 						}
 					}
+				} else if (message instanceof MetaMessage){
+					decodeMessage((MetaMessage) message, midiInfo);
 				}
 			}
 
 			if (!notes.isEmpty()) {
-				NotePos firstNote = notes.get(0);
-				NotePos lastNote = notes.get(notes.size() - 1);
-				int length = lastNote.getPosition() + lastNote.getLength()
-						- firstNote.getPosition();
-				Melody motive = new Melody(notes, length);
-				map.put(voice, motive);
+				Melody melody = createMelody(notes);
+				map.put(voice, melody);
 			}
 			voice--;
 		}
-		List<Melody> motives = new ArrayList<Melody>(map.values());
-		return motives;
+		List<Melody> melodies = new ArrayList<Melody>(map.values());
+		midiInfo.setMelodies(melodies);
+		return midiInfo;
+	}
+
+	private static Melody createMelody(List<NotePos> notes) {
+		NotePos firstNote = notes.get(0);
+		NotePos lastNote = notes.get(notes.size() - 1);
+		int length = lastNote.getPosition() + lastNote.getLength()
+				- firstNote.getPosition();
+		Melody melody = new Melody(notes, length);
+		return melody;
+	}
+
+	private static NotePos createNote(int voice, long ticks, ShortMessage sm) {
+		NotePos jNote = new NotePos();
+		int key = sm.getData1();
+		jNote.setPitch(key);
+		jNote.setPitchClass(key % 12);
+		jNote.setVoice(voice);
+		jNote.setPosition((int) ticks);
+		int velocity = sm.getData2();
+		jNote.setDynamic(velocity);
+		return jNote;
 	}
 	
 	/**
@@ -218,5 +146,85 @@ public class MidiParser {
 		//tempo between 50 - 150
 		return r;
 	}
+	
+	private static String decodeMessage(MetaMessage message, MidiInfo midiInfo){
+		byte[]	abData = message.getData();
+		String	strMessage = null;
+		switch (message.getType()){
+		case 0:
+		        int	nSequenceNumber;
+		        if (abData.length == 0)
+			    nSequenceNumber = 0;
+		        else
+			    nSequenceNumber = ((abData[0] & 0xFF) << 8) | (abData[1] & 0xFF);
+			strMessage = "Sequence Number: " + nSequenceNumber;
+			break;
+		case 1:
+			String	strText = new String(abData);
+			strMessage = "Text Event: " + strText;
+			break;
+		case 3:
+			String	strTrackName = new String(abData);
+			strMessage = "Sequence/Track Name: " +  strTrackName;
+			break;
+		case 4:
+			String	strInstrumentName = new String(abData);
+			strMessage = "Instrument Name: " + strInstrumentName;
+			break;
+		case 5:
+			String	strLyrics = new String(abData);
+			if (strLyrics.equals("\r\n"))
+			    strLyrics = "\\n";
+			strMessage = "Lyric: " + strLyrics;
+			break;
+		case 6:
+			String	strMarkerText = new String(abData);
+			strMessage = "Marker: " + strMarkerText;
+			break;
+		case 7:
+			String	strCuePointText = new String(abData);
+			strMessage = "Cue Point: " + strCuePointText;
+			break;
+		case 0x20:
+			int	nChannelPrefix = abData[0] & 0xFF;
+			strMessage = "MIDI Channel Prefix: " + nChannelPrefix;
+			break;
+		case 0x2F:
+			strMessage = "End of Track";
+			break;
+		case 0x51:
+			int	nTempo = ((abData[0] & 0xFF) << 16)
+					| ((abData[1] & 0xFF) << 8)
+					| (abData[2] & 0xFF);           // tempo in microseconds per beat
+			float bpm = convertTempo(nTempo);
+			// truncate it to 2 digits after dot
+			bpm = (float) (Math.round(bpm*100.0f)/100.0f);
+			midiInfo.setTempo(bpm);
+			break;
+		case 0x54:
+			strMessage = "SMTPE Offset: "
+				+ (abData[0] & 0xFF) + ":"
+				+ (abData[1] & 0xFF) + ":"
+				+ (abData[2] & 0xFF) + "."
+				+ (abData[3] & 0xFF) + "."
+				+ (abData[4] & 0xFF);
+			break;
+		case 0x58:
+			String timeSignature = (abData[0] & 0xFF) + "/" + (1 << (abData[1] & 0xFF));
+			midiInfo.setTimeSignature(timeSignature);
+			break;
+		}
+		return strMessage;
+	}
+
+	
+	// convert from microseconds per quarter note to beats per minute and vice versa
+	private static float convertTempo(float value) {
+		if (value <= 0) {
+			value = 0.1f;
+		}
+		return 60000000.0f / value;
+	}
+
 
 }

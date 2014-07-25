@@ -3,8 +3,6 @@ package neo.data.harmony;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;
 import junit.framework.Assert;
-import neo.objective.harmony.Chord;
-import neo.objective.harmony.ChordType;
 
 import org.junit.Before;
 import org.junit.Test;

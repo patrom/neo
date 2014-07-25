@@ -2,6 +2,7 @@ package neo.print;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.sound.midi.InvalidMidiDataException;
 
@@ -20,6 +21,7 @@ import neo.nsga.MusicVariable;
 
 public class Display {
 
+	private static Logger LOGGER = Logger.getLogger(Display.class.getName());
 	 
 	 public static void view(SolutionSet solutionsList) throws JMException, InvalidMidiDataException{
 		  Iterator<Solution> iterator = solutionsList.iterator();
@@ -68,16 +70,14 @@ public class Display {
 	  }
 	  
 		private static void printHarmonies(List<Harmony> harmonies) {
-			harmonies.forEach(h ->  System.out.print(h.getChord().getChordType() + ", "));
-			harmonies.forEach(h ->  System.out.println(h.getChord().getPitchClassMultiSet() + ", "));
-			harmonies.forEach(h ->  System.out.println(h.getNotes() + ", "));
-			System.out.println();
+			harmonies.forEach(h ->  LOGGER.info(h.getChord().getChordType() + ", "));
+			harmonies.forEach(h ->  LOGGER.info(h.getChord().getPitchClassMultiSet() + ", "));
+			harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
 		}
 
 		private static void viewScore(List<Melody> melodies, int i) {
-			melodies.forEach(h ->  System.out.println(h.getNotes() + ", "));
-			System.out.println();
-			Score score = ScoreUtilities.createScoreMotives(melodies);
+			melodies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
+			Score score = ScoreUtilities.createScoreMelodies(melodies);
 			if (i <=8) {
 				score.setTitle("test " + (i));
 				Write.midi(score, "test" + (i) + ".mid");	
@@ -87,7 +87,7 @@ public class Display {
 
 //		private static void printVextab(List<Harmony> harmonies) {
 //			String vexTab = ScoreUtilities.createVexTab(harmonies, inputProps);
-//			System.out.println(vexTab);
+//			LOGGER.info(vexTab);
 //		}
 		
 		private static void changeLengths(List<Harmony> harmonies) {

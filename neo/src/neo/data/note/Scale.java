@@ -32,7 +32,6 @@ public class Scale {
 	private int[] scale;
 	
 	public Scale(int[] scale) {
-		super();
 		this.scale = scale;
 	}
 
@@ -41,7 +40,7 @@ public class Scale {
 	    return scale[index];
 	}
 	
-	public  int transpose(int pitchClass, int steps){
+	public int transposePitchClass(int pitchClass, int steps){
 		for (int i = 0; i < scale.length; i++) {
 			if (pitchClass  == scale[i]) {
 				int index = (i + steps)% scale.length;

@@ -20,128 +20,6 @@ import org.apache.commons.lang.ArrayUtils;
 public class MelodicFunctions {
 	
 	private static Logger LOGGER = Logger.getLogger(MelodicFunctions.class.getName());
-
-	public static void main(String[] args) throws NoteListException, QuantisationException {
-
-//		Phrase phrase = new Phrase();
-//		phrase.add(new Note(60,1.0));
-//		phrase.add(new Note(62,0.25));
-//		phrase.add(new Note(64,1.0));
-//		phrase.add(new Note(62,0.25));
-//		phrase.add(new Note(60,0.25));
-//		phrase.add(new Note(68,1.0));
-////		phrase.add(new Note(70,0.25));
-////		phrase.add(new Note(73,1.0));
-////		phrase.add(new Note(70,0.25));
-////		phrase.add(new Note(80,1.0));
-////		phrase.addRest(new Rest(1.0));
-////		phrase.add(new Note(62,1.0));
-////		phrase.add(new Note(70,1.0));
-////		phrase.add(new Note(70,0.75));
-////		phrase.add(new Note(60,1.0));
-////		phrase.add(new Note(72,1.0));
-////		phrase.add(new Note(E2,1.0));
-//		List<NoteInfo> noteInfoList = getNoteInfo(phrase);
-//		for (NoteInfo noteInfo : noteInfoList) {
-//			System.out.println(noteInfo);
-//		}
-//		List<RhythmInfo> list = getRhythmInfo(phrase);
-//		for (RhythmInfo rhythmInfo : list) {
-//			System.out.println(rhythmInfo);
-//		}
-//		Interval.accents(phrase);
-//		Note[] notes = phrase.getNoteArray();
-//		for (Note note : notes) {
-//			System.out.print(note.getNote() + ", ");
-//		}
-//		List<Integer> valueChanges = getDifferentValueChanges(phrase);
-//		for (Integer integer : valueChanges) {
-//			System.out.print(integer + ", ");
-//		}
-//		System.out.println();
-//		double noteDensity = PhraseAnalysis.noteDensity(phrase, 0.25);
-//		System.out.println("noteDensity: " + noteDensity);
-//		double melodicDirectionStability = PhraseAnalysis.melodicDirectionStability(phrase);
-//		System.out.println("melodicDirectionStability: " + melodicDirectionStability);
-//		double pitchVariety = PhraseAnalysis.pitchVariety(phrase);
-//		System.out.println("pitchVariety: " + pitchVariety);
-//		double rhythmRange = PhraseAnalysis.rhythmRange(phrase);
-//		System.out.println("rhythmRange: " + rhythmRange);
-//		double rhythmicVariety = PhraseAnalysis.rhythmicVariety(phrase);
-//		System.out.println("rhythmicVariety: " + rhythmicVariety);
-//		double leapCompensation = PhraseAnalysis.leapCompensation(phrase);
-//		System.out.println("leapCompensation: " + leapCompensation);
-////		phrase.add(new Note(72,1.0));
-//////		phrase.add(new Note(AS4,1.0));
-////		phrase.add(new Note(61,1.0));
-////		phrase.add(new Note(72,1.0));
-//		double dev = getintervalStandardDeviation(phrase);
-//		System.out.println("melodic variation = " + dev);
-//		double intervalVariation = getIntervalVariation(phrase);
-//		System.out.println("intervalVariation  = " + intervalVariation);
-//		double val = getMelodicValue(phrase);
-//		System.out.println("val :" + val);
-//		double contour = getMelodicContour(phrase);
-//		System.out.println("contour :" + Math.abs(contour));
-//		Note tonalNote = getTonalNote(phrase);
-//		System.out.println("tonal note: " + tonalNote.getNote());
-		
-
-
-//		Note[] melody = TestMelody.melodyWebern();
-//		Note[] melody = TestMelody.melodyDiffRhythms();
-	
-
-//		System.out.println("weights:" + Arrays.toString(weights));
-//		DescriptiveStatistics stats = new DescriptiveStatistics(weights);
-//		System.out.println(stats.getMean());
-//		Phrase phrase = new Phrase(melody);
-//		List<Integer> valueCh = getValueChanges(phrase);
-//		for (Integer integer : valueCh) {
-//			System.out.print(integer + ",");
-//		}
-//		System.out.println();
-//		
-//	
-//		
-//		Integer[] pitches = new Integer[melody.length];
-//		for (int i = 0; i < melody.length; i++) {
-//			pitches[i] = melody[i].getPitch();
-//		}
-//		System.out.println("melodic val:" + getMelodicValue(phrase));
-//		List<Double> v = melodicWindow(pitches, 4);
-//		double[] mel = Interval.listToArray(v);
-//		System.out.println("melody: " + Arrays.toString(mel));
-//		stats = new DescriptiveStatistics(mel);
-//		System.out.println(1 - stats.getGeometricMean());
-//		List<Integer> valueChanges = getValueChangesGeneric(pitches);
-//		for (Integer integer : valueChanges) {
-//			System.out.print(integer + ",");
-//		}
-//		System.out.println();
-//		
-//		double val = countNewValueChanges(pitches);
-//		double zero = countZeroValueChanges(pitches);
-//		System.out.println("val pitches: " + val);
-//		System.out.println("zero pitches: " + zero);
-//		
-//		Double[] rhythms = new Double[melody.length];
-//		for (int i = 0; i < melody.length; i++) {
-//			rhythms[i] = melody[i].getRhythmValue();
-//		}
-//		List<Integer> valueChangesRhythms = getValueChangesGeneric(rhythms);
-//		for (Integer integer : valueChangesRhythms) {
-//			System.out.print(integer + ",");
-//		}
-//		System.out.println();
-//		double val2 = countNewValueChanges(rhythms);
-//		double zero2 = countZeroValueChanges(rhythms);
-//		System.out.println("val: " + val2);
-//		System.out.println("Zero: " + zero2);
-//		Phrase melody = generateMelodyProbability(8, 60, 4 , Scale.MAJOR_SCALE);	
-//		View.notate(phrase);	
-	}
-	
 	
 	public static List<Double> getMelodicWeights2(List<NotePos> melody, int windowSize){
 		int size = melody.size();
@@ -168,7 +46,6 @@ public class MelodicFunctions {
 	private static double computeMelodicValueWindow(NotePos[] melody ) {
 		List<Double> values = new ArrayList<Double>();
 		for (int j = 0; j < melody.length - 1; j++) {
-//			for (int i = j + 1; i < melody.length; i++) {
 				NotePos note = melody[0];
 				NotePos nextNote = melody[j + 1];
 
@@ -182,69 +59,10 @@ public class MelodicFunctions {
 				
 				double intervalValue = (interval.getMelodicValue() * 0.6) + (interval.getMelodicValue() * rhythmicWeight * 0.4);
 				values.add(intervalValue); 		
-//			}
 		}
-//		double[] v = Interval.listToArray(values);
-//		LOGGER.finest(Arrays.toString(values));
-//		DescriptiveStatistics statistics = new DescriptiveStatistics(v);
-//		return statistics.getMean();//Geometric mean???
 		return (values.isEmpty())?0.0:Collections.min(values);
 	}
 	
-	
-	
-//	public static List<RhythmInfo> getRhythmInfo(Phrase phrase){
-//		Note[] notes = phrase.getNoteArray();
-//		List<RhythmInfo> infoList = new ArrayList<RhythmInfo>();
-//		int numerator = phrase.getNumerator();
-//		if (numerator == 0) {
-//			numerator = 4;
-//		}
-//		double beatCounter = 0.0;
-//		for (Note note : notes) {
-//			RhythmInfo info = new RhythmInfo();
-//			info.setRhythmValue(note.getRhythmValue());
-//			info.setPosition(beatCounter);
-//			double positionInBar = beatCounter%numerator;
-////			if (positionInBar < 1.0) {
-////				positionInBar = positionInBar + numerator;
-////			}
-//			info.setPostitionInBar(positionInBar);
-//			beatCounter = beatCounter + note.getRhythmValue();
-//			infoList.add(info);
-//		}
-//		return infoList;
-//		
-//	}
-	
-//	public static Note getTonalNote(Phrase phrase){
-//		Map<Note, Double> map = getTonalValue(phrase);
-//		Set<Note> keys = map.keySet();
-//		double highestValue = 0;
-//		Note tonalNote = null;
-//		for (Note note : keys) {
-//			double value = map.get(note);
-//			if (value > highestValue) {
-//				highestValue = value;
-//				tonalNote = note;
-//			}
-////			System.out.println(note.getNote() + " :" + value);
-//		}
-//		return tonalNote;
-//	}
-	
-//	public static double getintervalStandardDeviation(Phrase phrase){
-//		Note[] melody = phrase.getNoteArray();
-//		double[] melodicWeights = new double[melody.length - 1];
-//		for (int i = 0; i < melody.length - 1; i++) {
-//			int difference = (melody[i + 1].getPitch() - melody[i].getPitch())%12;
-//			Interval interval = Interval.getEnumInterval(difference);
-//			melodicWeights[i] = interval.getMelodicValue();
-//		}
-//		double standardDeviation = Interval.getStandardDeviation(melodicWeights);
-//		return standardDeviation;
-//	}
-//	
 	public static double getIntervalVariation(Phrase phrase){
 		Note[] melody = phrase.getNoteArray();
 		Set<Interval> intervalSet = new HashSet<Interval>();
@@ -265,11 +83,11 @@ public class MelodicFunctions {
 		for (int i = 0; i < melody.length - 1; i++) {
 			int difference = (melody[i + 1].getPitch() - melody[i].getPitch())%12;
 			Interval interval = Interval.getEnumInterval(difference);
-			System.out.print(interval + ": "+  interval.getMelodicValue() + "," );
+			LOGGER.info(interval + ": "+  interval.getMelodicValue() + "," );
 			sum = sum + interval.getMelodicValue();
 			count++;
 		}
-		System.out.println("count :" + count);
+		LOGGER.info("count :" + count);
 		return sum/count;
 	}
 	
@@ -279,23 +97,13 @@ public class MelodicFunctions {
 		for (int i = 0; i < melody.length - 1; i++) {
 			int difference = (melody[i + 1].getPitch() - melody[i].getPitch())%12;
 			Interval interval = Interval.getEnumInterval(difference);
-//			System.out.print(interval + ": "+  interval.getMelodicValue() + "," );
+//			LOGGER.info(interval + ": "+  interval.getMelodicValue() + "," );
 			sum = sum + interval.getMelodicValue();
 			count++;
 		}
-//		System.out.println("count :" + count);
+//		LOGGER.info("count :" + count);
 		return sum/count;
 	}
-	
-//	public static double[] getMelodicWeights(NotePos[] melody){
-//		double[] melodicWeights = new double[melody.length - 1];
-//		for (int i = 0; i < melody.length - 1; i++) {
-//			int difference = (melody[i + 1].getNote().getPitch() - melody[i].getNote().getPitch())%12;
-//			Interval interval = Interval.getEnumInterval(difference);
-//			melodicWeights[i] = interval.getMelodicValue();
-//		}
-//		return melodicWeights;
-//	}
 	
 	public static double[] getMelodicWeights(NotePos[] melody, int allowIntervalsBelowValue){
 		List<Double> list = new ArrayList<Double>();
@@ -357,31 +165,13 @@ public class MelodicFunctions {
 		int count = 0;
 		for (int i = 0; i < melody.length - 1; i++) {
 			int difference = (melody[i + 1].getPitch() - melody[i].getPitch())%12;
-			System.out.print("difference : "+  difference + "," );
+			LOGGER.info("difference : "+  difference + "," );
 			sum = sum + difference;
 			count++;
 		}
-//		System.out.println("count :" + count);
+//		LOGGER.info("count :" + count);
 		return sum;
 	}
-	
-//	public static Map<Note, Double> getTonalValue(Phrase phrase){
-//		Note[] melody = phrase.getNoteArray();
-//		Map<Note, Double> tonalMap = new TreeMap<Note,Double>(new NoteComparator());
-//		double totalValue = 0;
-//		for (Note note : melody) {
-//			double value = note.getRhythmValue()/melody.length;
-//			int pitch = note.getPitch()%12;
-//			Note n = new Note(pitch, value);
-//			if(tonalMap.containsKey(n)){
-//				totalValue = tonalMap.get(n);
-//				tonalMap.put(n, totalValue + value);
-//			}else{
-//				tonalMap.put(n, value);
-//			}		
-//		}
-//		return tonalMap;
-//	}
 	
 	public static List<Integer> getValueChanges(Phrase phrase){
 		Note[] melody = phrase.getNoteArray();
@@ -479,23 +269,6 @@ public class MelodicFunctions {
 		}
 	}
 	
-//	public static Phrase generateMelodyProbability(int length, int offset, int firstPitchClass, int[] scale){
-//		Note[] notes = new Note[length];
-//		Note note = new Note(firstPitchClass + offset, 1.0);
-//		notes[0] = note;
-//		int temp = firstPitchClass;
-//		for (int i = 1; i < notes.length; i++) {
-//			int pc2 = Scale.pickPitchProbability(temp, scale);
-//			double r = RhythmicFunctions.getRhythmProbability();
-//			Note note2 = new Note(pc2 + offset, r);
-//			notes[i] = note2;
-//			temp = pc2;
-//		}
-//		Phrase phrase = new Phrase();
-//		phrase.addNoteList(notes);
-//		return phrase;
-//	}
-	
 	public static <T> double countZeroValueChanges(T[] array){
 		List<Integer> valueChanges = getValueChangesGeneric(array);
 		double newValues = 0;
@@ -504,9 +277,7 @@ public class MelodicFunctions {
 				newValues++;
 			}
 		}
-//		System.out.println(newValues + "/" + array.length);
 		return newValues/array.length;
-		
 	}
 	
 	public static <T> double countNewValueChanges(T[] array){
@@ -517,10 +288,7 @@ public class MelodicFunctions {
 				newValues++;
 			}
 		}
-//		System.out.println(newValues + "/" + array.length);
 		return newValues/array.length;
-		
 	}
-
 
 }

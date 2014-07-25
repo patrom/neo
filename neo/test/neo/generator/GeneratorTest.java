@@ -48,9 +48,9 @@ public class GeneratorTest {
 	
 	@Test
 	public void calculateBeatValuesTest() {
-		Harmony harmony = harmony().pos(0).len(6).notes(0,4,7).build();
+		Harmony harmony = harmony().pos(0).len(18).notes(0,4,7).build();
 		double weight = generator.calculatePositionWeight(harmony);
-		assertEquals(1.0, weight, 0);
+		assertEquals(2.5, weight, 0);
 	}
 
 }

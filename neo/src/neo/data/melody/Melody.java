@@ -12,8 +12,8 @@ public class Melody {
 	private List<NotePos> notePositions = new ArrayList<NotePos>();
 	private int length;
 
-	public Melody() {
-		notePositions = new ArrayList<NotePos>();
+	public Melody(List<NotePos> notePositions) {
+		this.notePositions.addAll(notePositions);
 	}
 	
 	public Melody(List<NotePos> notePositions, int length) {
@@ -38,6 +38,10 @@ public class Melody {
 	public void addNote(NotePos notePos) {
 		notePositions.add(notePos);
 		Collections.sort(notePositions);
+	}
+
+	public int getLength() {
+		return length;
 	}
 
 }

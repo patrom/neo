@@ -1,6 +1,9 @@
 package neo.objective.voiceleading;
 
 import java.util.Collection;
+import java.util.logging.Logger;
+
+import neo.nsga.NSGAII;
 
 import com.google.common.collect.ArrayTable;
 import com.google.common.collect.HashBasedTable;
@@ -10,6 +13,9 @@ import com.google.common.collect.Table;
 import com.google.common.collect.TreeMultiset;
 
 public class VoiceLeading {
+	
+	private static Logger LOGGER = Logger.getLogger(VoiceLeading.class.getName());
+	
 	private static int mod = 12;
 	private static int optimalSize = 9999;
 
@@ -35,10 +41,9 @@ public class VoiceLeading {
 //			}
 			
 			VoiceLeadingSize minimalVoiceLeadingSize = caculateSize(sourceSet, targetSet);
-			System.out.print(minimalVoiceLeadingSize.getVlSource());
-			System.out.print(minimalVoiceLeadingSize.getVlTarget());
-			System.out.print(minimalVoiceLeadingSize.getSize());
-			System.out.println();
+			LOGGER.info(minimalVoiceLeadingSize.getVlSource().toString());
+			LOGGER.info(minimalVoiceLeadingSize.getVlTarget().toString());
+			LOGGER.info(String.valueOf(minimalVoiceLeadingSize.getSize()));
 			
 //		}
 		
@@ -229,7 +234,7 @@ public class VoiceLeading {
 	}
 	
 	
-	public static Table<Integer, Integer, Integer> createTMatrix(
+	private static Table<Integer, Integer, Integer> createTMatrix(
 			Multiset<Integer> chordA, Multiset<Integer> chordB) {
 		Table<Integer, Integer, Integer> TMatrix = HashBasedTable.create();
 		

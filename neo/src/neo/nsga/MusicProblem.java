@@ -1,5 +1,7 @@
 package neo.nsga;
 
+import java.util.logging.Logger;
+
 import jmetal.base.Problem;
 import jmetal.base.Solution;
 import jmetal.base.Variable;
@@ -13,6 +15,8 @@ import net.sourceforge.jFuzzyLogic.membership.Value;
 
 public class MusicProblem extends Problem {
 
+	private static Logger LOGGER = Logger.getLogger(MusicProblem.class.getName());
+	
 	private MusicProperties properties;
 
 	private MembershipFunction melodyMembershipFunction;
@@ -44,14 +48,6 @@ public class MusicProblem extends Problem {
 	    this.melodyMembershipFunction = new MembershipFunctionTriangular(new Value(0.0), new Value(inputProps.getMelodyConsDissValue()) , new Value(1.0));
 	    this.harmonyMembershipFunction = new MembershipFunctionTriangular(new Value(0.0), new Value(inputProps.getHarmonyConsDissValue()) , new Value(1.0));
 	    this.rhythmMembershipFunction = new MembershipFunctionTriangular(new Value(0.0), new Value(inputProps.getRhythmConsDissValue()) , new Value(1.0));
-	    
-//	    if (solutionType.equals("music"))
-//	    	solutionType_ = new MusicSolutionAtonalType(this, inputProps.getMelodyLength(), inputProps.getScale()
-//	    			, inputProps.getRhythmProfile(), inputProps.getPopulationStrategy(), inputProps.getRanges(), inputProps.getMelodyLength() * 12) ;
-//	    else {
-//	    	System.out.println("Error: solution type " + solutionType + " invalid") ;
-//	    	System.exit(-1) ;
-//	    }
 	  }
 
 	@Override

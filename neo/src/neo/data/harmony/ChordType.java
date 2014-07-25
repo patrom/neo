@@ -1,4 +1,4 @@
-package neo.objective.harmony;
+package neo.data.harmony;
 
 public enum ChordType {
 

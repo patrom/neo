@@ -104,7 +104,7 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 	}
 
 	public double getWeight() {
-		return weight;
+		return positionWeight;
 	}
 
 	public void setWeight(double weight) {

@@ -8,6 +8,7 @@ package neo.nsga;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import jmetal.base.Algorithm;
 import jmetal.base.Operator;
@@ -24,6 +25,8 @@ import jmetal.util.Ranking;
  */
 public class NSGAII extends Algorithm {
 
+	private static Logger LOGGER = Logger.getLogger(NSGAII.class.getName());
+	
   /**
    * stores the problem  to solve
    */
@@ -173,7 +176,7 @@ public class NSGAII extends Algorithm {
 //      SolutionSet paretoFront = ranking.getSubfront(0);
       List<Solution> frontSolutions = copyList(population);
       boolean changed = hasPopulationChanged(copySolutions, frontSolutions);
-      System.out.println("Population changed: " + changed + ", evaluations: " + evaluations + ", change count:" + changeCount);
+      LOGGER.info("Population changed: " + changed + ", evaluations: " + evaluations + ", change count:" + changeCount);
       if (changed) {
 			changeCount = 0;
 		} else {
