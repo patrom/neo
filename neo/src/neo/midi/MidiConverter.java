@@ -51,11 +51,11 @@ public class MidiConverter {
 	
 	public static void updatePositionNotes(List<Melody> melodies, String timeSignature){
 		Map<Integer, Double> weights = null;
-		if (timeSignature.equals("4/4") || timeSignature.equals("2/4")) {
+		if (timeSignature.equals("4/4") || timeSignature.equals("2/4") || timeSignature.equals("2/2")) {
 			weights = fourFourOrTwoFourRhythmWeightValues;
 		} else if (timeSignature.equals("3/4")) {
 			weights = fourThreeRhythmWeightValues;
-		} else if (timeSignature.equals("6/8")) {
+		} else if (timeSignature.equals("6/8") || timeSignature.equals("6/4")) {
 			weights = SixEightRhythmWeightValues;
 		} else {
 			throw new IllegalArgumentException("Weights time signature not implemented :" + timeSignature);
@@ -74,13 +74,13 @@ public class MidiConverter {
 
 	public static List<Harmony> extractHarmony(List<Melody> melodies, int octave){
 		Map<Integer, List<NotePos>> chords = extractNoteMap(melodies);
-		List<Harmony> list = new ArrayList<>();
+		List<Harmony> harmonies = new ArrayList<>();
 		for (Entry<Integer, List<NotePos>> ch : chords.entrySet()) {
-			Harmony noteList = new Harmony(ch.getKey(),ch.getValue().get(0).getLength()
+			Harmony harmony = new Harmony(ch.getKey(),ch.getValue().get(0).getLength()
 					, ch.getValue(), new UniformPitchSpace(ch.getValue(),octave));
-			list.add(noteList);
+			harmonies.add(harmony);
 		}
-		return list;
+		return harmonies;
 	}
 
 	public static Map<Integer, List<NotePos>> extractNoteMap(List<Melody> melodies) {

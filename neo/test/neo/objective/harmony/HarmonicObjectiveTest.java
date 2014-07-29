@@ -34,7 +34,7 @@ public class HarmonicObjectiveTest extends AbstractTest{
 		double harmonicValue = harmonicObjective.evaluate();
 		LOGGER.info("harmonicValue : " + harmonicValue);
 		double expectedValue = ((ChordType.MAJOR.getDissonance() * 1.0) + (ChordType.MAJOR.getDissonance() * 1.0) 
-				+ (ChordType.CH3.getDissonance() * 0.5))/3;
+				+ (ChordType.CH3.getDissonance() * 0.5))/2.5;
 		assertEquals("Wrong harmonic value of chords", expectedValue, harmonicValue, 0);
 	}
 

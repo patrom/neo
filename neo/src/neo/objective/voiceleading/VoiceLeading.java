@@ -108,7 +108,7 @@ public class VoiceLeading {
 			target = addFirstPitchClass(target);
 			return calculateVoiceLeadingSize(target, source);
 		} else {
-			System.out.println("non common tones");
+			LOGGER.finest("non common tones");
 			source = addFirstPitchClass(source);
 			target = addFirstPitchClass(target);
 			VoiceLeadingSize voiceLeadingSize = calculateVoiceLeadingSize(target, source);

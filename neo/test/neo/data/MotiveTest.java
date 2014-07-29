@@ -25,11 +25,6 @@ public class MotiveTest {
 	}
 
 	@Test
-	public void testGetMelodies() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testConcatNotesWithSamePitchEnd() {
 		List<NotePos> notes = new ArrayList<>();
 		NotePos note = new NotePos(0, 0, 0, 6);

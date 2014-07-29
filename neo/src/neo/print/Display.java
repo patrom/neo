@@ -28,6 +28,7 @@ public class Display {
 		  int i = 1;
 		  while (iterator.hasNext()) {
 			MusicSolution solution = (MusicSolution) iterator.next();
+			LOGGER.info(solution.toString());
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 //			List<MusicalStructure> structures = FugaUtilities.addTransposedVoices(sentences, inputProps.getScale(), 8, 12);
 //			sentences.addAll(structures);
@@ -71,8 +72,8 @@ public class Display {
 	  
 		private static void printHarmonies(List<Harmony> harmonies) {
 			harmonies.forEach(h ->  LOGGER.info(h.getChord().getChordType() + ", "));
-			harmonies.forEach(h ->  LOGGER.info(h.getChord().getPitchClassMultiSet() + ", "));
-			harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
+//			harmonies.forEach(h ->  LOGGER.info(h.getChord().getPitchClassMultiSet() + ", "));
+//			harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
 		}
 
 		private static void viewScore(List<Melody> melodies, int i) {

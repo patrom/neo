@@ -4,8 +4,9 @@ public enum ChordType {
 
 	MAJOR(1,3),
 	MINOR(1,3),
-	HALFDIM(0,3),
+	HALFDIM(1,3),
 	AUGM(0,3),
+	DOM(1,3),
 	CH0(0,0),
 	CH1(0,1),
 	CH2(0,2),

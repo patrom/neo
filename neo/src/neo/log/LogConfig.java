@@ -18,7 +18,7 @@ public class LogConfig {
 		Formatter formatter = new Formatter() {
 		      public String format(LogRecord record) {
 		        return record.getLevel() + "  :  "
-//		        	+ record.getSourceMethodName() + "  :  "
+		        	+ record.getSourceMethodName() + "  :  "
 		            + record.getMessage() + "\n";
 		      }
 		    };
@@ -26,14 +26,14 @@ public class LogConfig {
 		topLogger.addHandler(ch);
 		topLogger.setLevel(level);
 		
-		try {
-			FileHandler fileTxt = new FileHandler("Logging.txt");
-			fileTxt.setFormatter(formatter);
-			fileTxt.setLevel(level);
-			topLogger.addHandler(fileTxt);
-		} catch (SecurityException | IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			FileHandler fileTxt = new FileHandler("Logging.txt");
+//			fileTxt.setFormatter(formatter);
+//			fileTxt.setLevel(level);
+//			topLogger.addHandler(fileTxt);
+//		} catch (SecurityException | IOException e) {
+//			e.printStackTrace();
+//		}
 			
 		// suppress the logging output to the console
 	    Handler[] handlers = topLogger.getHandlers();

@@ -1,6 +1,7 @@
 package neo.nsga.operator.mutation;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import jmetal.base.Solution;
 import jmetal.base.operator.mutation.Mutation;
@@ -13,6 +14,8 @@ import neo.nsga.MusicVariable;
 
 public class PitchSpaceMutation extends Mutation {
 	
+	private static Logger LOGGER = Logger.getLogger(OneNoteMutation.class.getName());
+
 	public PitchSpaceMutation() {	
 	} 
 
@@ -29,6 +32,7 @@ public class PitchSpaceMutation extends Mutation {
 			int harmonyIndex = PseudoRandom.randInt(0, harmonies.size() - 1);
 			Harmony harmony = harmonies.get(harmonyIndex);
 			harmony.mutatePitchSpaceStrategy();
+			LOGGER.fine("pitch space mutated");
 		} 
 	}
 

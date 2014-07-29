@@ -62,7 +62,12 @@ public class MusicProblem extends Problem {
 		double harmonyObjective = 1 - (objectives.getHarmony());
 		solution.setObjective(0, harmonyObjective);//harmony
 //		solution.setObjective(0, objectives[0]);//harmony
-//		solution.setObjective(1, objectives.getVoiceleading() - 1);//voice leading size: - 1 because 1 is the optimal value to be minimized!
+		if (objectives.getVoiceleading() < 4) {
+			solution.setObjective(1, 0);
+		} else {
+			solution.setObjective(1, objectives.getVoiceleading());
+		}
+		
 //		double melodyObjective = 1 - melodyMembershipFunction.membership(objectives.getMelody());
 //		solution.setObjective(2, melodyObjective);//melody
 //		double rhythmObjective = 1 - melodyMembershipFunction.membership(objectives[3]);
@@ -85,7 +90,7 @@ public class MusicProblem extends Problem {
 		MusicSolution musicSolution = (MusicSolution) solution;
 //		musicSolution.setHarmony(objectives[0]);
 		musicSolution.setHarmony(harmonyObjective);
-//		musicSolution.setVoiceLeading(objectives.getVoiceleading());
+		musicSolution.setVoiceLeading(objectives.getVoiceleading());
 //		musicSolution.setMelody(objectives.getMelody());
 //		musicSolution.setMelody(melodyObjective);
 //		musicSolution.setRhythm(rhythmObjective);

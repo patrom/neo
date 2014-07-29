@@ -37,18 +37,14 @@ public class FitnessEvaluationTemplate {
 	private Objective harmonicObjective;
 	private Objective melodicObjective;
 	private Objective voiceLeadingObjective;
-	private Motive motive;
-	private MusicProperties musicProperties;
 
 	public FitnessEvaluationTemplate(MusicProperties properties, Motive motive) {
-		this.motive = motive;
 		this.numerator = properties.getNumerator();
 		harmonicObjective = new HarmonicObjective(properties, motive);
 		melodicObjective = new MelodicObjective(properties, motive);
 		voiceLeadingObjective = new VoiceLeadingObjective(properties, motive);
-		this.musicProperties = properties;
 		
-		LogConfig.configureLogger(Level.SEVERE);
+		LogConfig.configureLogger(Level.INFO);
 	}
 	
 	public FitnessObjectiveValues evaluate() {
@@ -60,14 +56,17 @@ public class FitnessEvaluationTemplate {
 	private FitnessObjectiveValues evaluateObjectives() {
 		//harmony
 		double harmonyMean = harmonicObjective.evaluate();
+		if (harmonyMean > 1.0) {
+			System.out.println();
+		}
 		LOGGER.info("mean harmonicValues: " + harmonyMean);
 
 		//voice leading
 		double voiceLeading = voiceLeadingObjective.evaluate();
-		LOGGER.fine("max voiceLeadingSize: " + voiceLeading);
+		LOGGER.info("max voiceLeadingSize: " + voiceLeading);
 		
 		double melodicValue = melodicObjective.evaluate();
-		LOGGER.fine("melodicValue = " + melodicValue);
+		LOGGER.info("melodicValue = " + melodicValue);
 		
 //		double rhythmicValue = evaluateRhythm(sentences, numerator);
 //		LOGGER.fine("rhythmicValue = " + rhythmicValue);
@@ -98,38 +97,38 @@ public class FitnessEvaluationTemplate {
 //		LOGGER.fine("Inner metric map: " + map.toString());
 	}
 
-	private void applyDynamicTemplate(List<Harmony> noteList, int beat, boolean even) {
-		int e = even?2:3;
-		int doubleBeat = beat * e;
-		int maxValue = 0;
-		for (Harmony list : noteList) {
-			int position = list.getPosition();		
-			//add to every note
-			int valueToAdd = rhythmTemplateValue + DEFAULT_NOTE_ON_VALUE;
-			//add to notes on the accented beats
-			if(position % beat == 0){	
-				valueToAdd = valueToAdd + rhythmTemplateValue;
-			}
-			if(position % doubleBeat == 0){	
-				valueToAdd = valueToAdd + rhythmTemplateValue;
-			}
-			for (NotePos note : list.getNotes()) {
-				note.setPositionWeight(valueToAdd);
-			}
-			if (valueToAdd > maxValue) {
-				maxValue = valueToAdd;
-			}
-		}
-		
-		//normalize values
-		for (Harmony list : noteList) {
-			List<NotePos> notes = list.getNotes();
-			for (NotePos note : notes) {
-				double normalizedValue = note.getPositionWeight() / maxValue;
-				note.setPositionWeight(normalizedValue);
-			}
-		}
-	}
+//	private void applyDynamicTemplate(List<Harmony> noteList, int beat, boolean even) {
+//		int e = even?2:3;
+//		int doubleBeat = beat * e;
+//		int maxValue = 0;
+//		for (Harmony list : noteList) {
+//			int position = list.getPosition();		
+//			//add to every note
+//			int valueToAdd = rhythmTemplateValue + DEFAULT_NOTE_ON_VALUE;
+//			//add to notes on the accented beats
+//			if(position % beat == 0){	
+//				valueToAdd = valueToAdd + rhythmTemplateValue;
+//			}
+//			if(position % doubleBeat == 0){	
+//				valueToAdd = valueToAdd + rhythmTemplateValue;
+//			}
+//			for (NotePos note : list.getNotes()) {
+//				note.setPositionWeight(valueToAdd);
+//			}
+//			if (valueToAdd > maxValue) {
+//				maxValue = valueToAdd;
+//			}
+//		}
+//		
+//		//normalize values
+//		for (Harmony list : noteList) {
+//			List<NotePos> notes = list.getNotes();
+//			for (NotePos note : notes) {
+//				double normalizedValue = note.getPositionWeight() / maxValue;
+//				note.setPositionWeight(normalizedValue);
+//			}
+//		}
+//	}
 	
 //	private double evaluateRhythm(List<MusicalStructure> sentences, int numerator) {
 //		double total = 0;

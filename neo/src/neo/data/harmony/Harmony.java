@@ -54,7 +54,7 @@ public class Harmony {
 		return pitchSpaceStrategy;
 	}
 
-	public double getWeight() {
+	public double getChordWeight() {
 		return chord.getWeight();
 	}
 

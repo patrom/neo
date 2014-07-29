@@ -32,14 +32,15 @@ public class MelodicObjective extends Objective {
 //		double totalWeight = weights.values().stream().mapToDouble(v -> v).sum();
 		int maxDistance = 3;
 		double totalMelodySum = 0;
-		for(Melody melody: motive.getMelodies()){
+		List<Melody> melodies = motive.getMelodies();
+		for(Melody melody: melodies){
 			Collection<NotePos> notes =  melody.getNotes();
 //			notes = filterNotesAbove(notes, 0.5);
 //			notes = extractNotesOnLevel(notes, 1);
 			double melodyValue = evaluateMelody(notes, maxDistance);
 			totalMelodySum = totalMelodySum + melodyValue;
 		}
-		return totalMelodySum;
+		return totalMelodySum/melodies.size();
 	}
 	
 	protected List<NotePos> filterNotesWithPositionWeightAbove(Collection<NotePos> notes, double filterValue){
@@ -51,7 +52,7 @@ public class MelodicObjective extends Objective {
 		Map<Double, List<NotePos>> treeMap = new TreeMap<Double, List<NotePos>>(unsortMap);
 		List<NotePos> notePosition = new ArrayList<>();
 		for (List<NotePos> noteList : treeMap.values()) {
-			Optional<NotePos> maxNote = noteList.stream().max(comparing(NotePos::getWeight));
+			Optional<NotePos> maxNote = noteList.stream().max(comparing(NotePos::getWeightedSum));
 			if (maxNote.isPresent()) {
 				notePosition.add(maxNote.get());
 			}

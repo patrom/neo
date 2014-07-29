@@ -1,20 +1,17 @@
 package neo.nsga.operator.mutation;
 
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Logger;
 
-import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.data.note.NotePos;
-import neo.data.note.Scale;
-import neo.midi.MidiDevicesUtil;
-import neo.nsga.MusicVariable;
 import jmetal.base.Solution;
 import jmetal.base.operator.mutation.Mutation;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import jmetal.util.PseudoRandom;
+import neo.data.Motive;
+import neo.data.harmony.Harmony;
+import neo.data.note.Scale;
+import neo.nsga.MusicVariable;
 
 
 public class OneNoteMutation extends Mutation {
@@ -43,7 +40,7 @@ public class OneNoteMutation extends Mutation {
 			int harmonyIndex = PseudoRandom.randInt(0, harmonies.size() - 1);
 			Harmony harmony = harmonies.get(harmonyIndex);
 			harmony.mutateNoteToPreviousPitchFromScale(scale);
-			LOGGER.info("one note mutated");
+			LOGGER.fine("one note mutated");
 		} 
 	}
 

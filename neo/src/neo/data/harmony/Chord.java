@@ -12,7 +12,6 @@ public class Chord {
 	private Multiset<Integer> pitchClassMultiSet = TreeMultiset.create();
 	private ChordType chordType;
 	private int voiceLeadingZone;
-	private double weight;
 	private String setClassName;
 
 	public double getWeight() {
@@ -139,11 +138,13 @@ public class Chord {
 
 	private static ChordType getTriadicChordType(Integer[] chord) {
 		int firstInterval = chord[1] - chord[0];
-		if (firstInterval == 1 || firstInterval == 2) {
+		if (firstInterval == 1) {
 			return ChordType.CH3;
 		}
 		int secondInterval = chord[2] - chord[1];
-		if (firstInterval == 3) {
+		if (firstInterval == 2 && secondInterval == 4 ) {
+			return ChordType.DOM;
+		} else if (firstInterval == 3) {
 			if (secondInterval == 3 || secondInterval == 6) {
 				return ChordType.HALFDIM;
 			} else if (secondInterval == 4) {
@@ -158,6 +159,8 @@ public class Chord {
 				return ChordType.AUGM;
 			} else if (secondInterval == 5) {
 				return ChordType.MINOR;
+			} else if (secondInterval == 6) {
+				return ChordType.DOM;
 			}
 		} else if (firstInterval == 5) {
 			if (secondInterval == 3) {
@@ -165,8 +168,12 @@ public class Chord {
 			} else if (secondInterval == 4) {
 				return ChordType.MAJOR;
 			}
-		} else if (firstInterval == 6 && secondInterval == 3) {
-			return ChordType.HALFDIM;
+		} else if (firstInterval == 6) {
+			if (secondInterval == 3) {
+				return ChordType.HALFDIM;
+			} else if (secondInterval == 2) {
+				return ChordType.DOM;
+			}
 		}
 		return ChordType.CH3;
 	}

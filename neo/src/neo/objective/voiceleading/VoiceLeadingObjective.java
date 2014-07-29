@@ -37,8 +37,8 @@ public class VoiceLeadingObjective extends Objective {
 		}
 		Chord[] chords = new Chord[bestChordMap.size()];
 		chords = bestChordMap.values().toArray(chords);
-		bestChordMap.forEach((p,ch) -> LOGGER.info(p + ": " + ch.getChordType()));
-		int totalSize = 0;
+		bestChordMap.forEach((p,ch) -> LOGGER.finest(p + ": " + ch.getChordType()));
+		double totalSize = 0;
 		for(int i = 0; i < chords.length - 1; i++){
 			VoiceLeadingSize minimalVoiceLeadingSize = VoiceLeading.caculateSize(chords[i].getPitchClassMultiSet(), chords[i + 1].getPitchClassMultiSet());
 			totalSize = totalSize + minimalVoiceLeadingSize.getSize();

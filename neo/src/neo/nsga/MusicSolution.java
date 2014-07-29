@@ -81,13 +81,7 @@ public class MusicSolution extends Solution {
 	@Override
 	public String toString() {
 		return "MusicSolution [harmony=" + harmony + ", melody=" + melody
-				+ ", voiceLeading=" + voiceLeading + ", rhythm=" + rhythm
-				+ ", tonality=" + tonality + ", "
-				+ " Constraints: LowestInterval=" + constraintLowestInterval 
-				+ ", Rhythm=" + constraintRhythm 
-				+ ", Repetition=" + constraintRepetition 
-				+ ", overall Violation=" + getOverallConstraintViolation()
-				+ ", number Violations=" + getNumberOfViolatedConstraint()+ "]";
+				+ ", voiceLeading=" + voiceLeading +  ", tonality=" + tonality +  "]";
 	}
 
 	@Override

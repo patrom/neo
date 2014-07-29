@@ -50,15 +50,16 @@ public class MusicVariable extends Variable {
 				notePosition.setDuration(notePositions.get(i).getDuration());
 				notePosition.setVoice(notePositions.get(i).getVoice());
 				notePosition.setInnerMetricWeight(notePositions.get(i).getInnerMetricWeight());
-				notePosition.setPositionWeight(notePositions.get(i).getPositionWeight());
+//				notePosition.setPositionWeight(notePositions.get(i).getPositionWeight());set with harmony
 				notePosition.setRhythmValue(notePositions.get(i).getRhythmValue());
-				notePosition.setWeight(notePositions.get(i).getWeight());
+				notePosition.setWeight(notePositions.get(i).getWeightedSum());
 				notePosition.setDynamic(notePositions.get(i).getDynamic());
 				newNotePositions.add(notePosition);
 			}
 			PitchSpaceStrategy pitchSpaceStrategy = harmony.getPitchSpaceStrategy();
 			PitchSpaceStrategy newPitchSpaceStrategy = clonePitchClassStrategy(newNotePositions, pitchSpaceStrategy);
 			Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), newNotePositions, newPitchSpaceStrategy);
+			copyHarmony.setPositionWeight(harmony.getPositionWeight());
 			harmonies.add(copyHarmony);
 		}
 		this.motive = new Motive(harmonies);

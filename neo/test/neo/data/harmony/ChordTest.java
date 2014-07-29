@@ -19,7 +19,7 @@ public class ChordTest {
 		chord.addPitchClass(11);
 		chord.addPitchClass(4);
 		chord.addPitchClass(5);
-		assertEquals("Chord type wrong",  ChordType.CH3, chord.getChordType());
+		assertEquals("Chord type wrong", ChordType.CH3, chord.getChordType());
 	}
 	
 	@Test
@@ -28,7 +28,7 @@ public class ChordTest {
 		chord.addPitchClass(11);
 		chord.addPitchClass(2);
 		chord.addPitchClass(7);
-		assertEquals("Chord type wrong",  ChordType.MAJOR, chord.getChordType());
+		assertEquals("Chord type wrong", ChordType.MAJOR, chord.getChordType());
 	}
 	
 	@Test
@@ -37,7 +37,25 @@ public class ChordTest {
 		chord.addPitchClass(11);
 		chord.addPitchClass(4);
 		chord.addPitchClass(7);
-		assertEquals("Chord type wrong",  ChordType.MINOR, chord.getChordType());
+		assertEquals("Chord type wrong", ChordType.MINOR, chord.getChordType());
+	}
+	
+	@Test
+	public void testCH3Type() {
+		Chord chord = new Chord();
+		chord.addPitchClass(2);
+		chord.addPitchClass(0);
+		chord.addPitchClass(9);
+		assertEquals("Chord type wrong", ChordType.CH3, chord.getChordType());
+	}
+	
+	@Test
+	public void testDOMType() {
+		Chord chord = new Chord();
+		chord.addPitchClass(11);
+		chord.addPitchClass(7);
+		chord.addPitchClass(5);
+		assertEquals("Chord type wrong", ChordType.DOM, chord.getChordType());
 	}
 
 }

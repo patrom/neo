@@ -24,7 +24,7 @@ public class PcSetUnorderedPropertiesTest extends AbstractTest{
 	
 	@Before
 	public void setUp() throws InvalidMidiDataException, IOException {
-		midiInfo = MidiParser.readMidi(MidiParserTest.class.getResource("/melodies/Midi142.mid").getPath());
+		midiInfo = MidiParser.readMidi(MidiParserTest.class.getResource("/melodies/Wagner-Tristan.mid").getPath());
 		melodies = midiInfo.getMelodies();
 	}
 	
