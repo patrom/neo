@@ -103,7 +103,7 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 		return this.getPitch() == note.getPitch();
 	}
 
-	public double getWeight() {
+	public double getWeightedSum() {
 		return positionWeight;
 	}
 
