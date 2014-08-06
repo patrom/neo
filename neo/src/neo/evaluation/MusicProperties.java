@@ -1,9 +1,14 @@
 package neo.evaluation;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import neo.data.note.Scale;
 import neo.instrument.Instrument;
@@ -17,7 +22,7 @@ public class MusicProperties {
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength = 6;
 	private int chordSize = 3;
-	private int octaveHighestPitchClass = 5;
+	private Integer[] octaveHighestPitchClassRange = {5,6};
 	
 	//tonality
 	private Scale scale = new Scale(Scale.MAJOR_SCALE);
@@ -235,11 +240,11 @@ public class MusicProperties {
 	public void setChordSize(int chordSize) {
 		this.chordSize = chordSize;
 	}
-	public int getOctaveHighestPitchClass() {
-		return octaveHighestPitchClass;
+	public Integer[] getOctaveHighestPitchClass() {
+		return octaveHighestPitchClassRange;
 	}
-	public void setOctaveHighestPitchClass(int octaveHighestPitchClass) {
-		this.octaveHighestPitchClass = octaveHighestPitchClass;
+	public void setOctaveHighestPitchClass(Integer[] octaveHighestPitchClass) {
+		this.octaveHighestPitchClassRange = octaveHighestPitchClass;
 	}
 	public void setScale(Scale scale) {
 		this.scale = scale;

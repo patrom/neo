@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 import javax.sound.midi.InvalidMidiDataException;
 
+import jm.music.data.Score;
+import jm.util.View;
 import neo.AbstractTest;
 import neo.data.melody.Melody;
 import neo.data.note.NotePos;
@@ -17,6 +19,7 @@ import neo.evaluation.MusicProperties;
 import neo.midi.MidiConverter;
 import neo.midi.MidiInfo;
 import neo.midi.MidiParser;
+import neo.print.ScoreUtilities;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,11 +46,13 @@ public class MelodiesTest extends AbstractTest{
 			for (Melody melody : melodies) {
 				List<NotePos> notes = melody.getNotes();
 				MelodicObjective melodicObjective = new MelodicObjective(musicProperties, null);
-				double value = melodicObjective.evaluateMelody(notes, 1);
+				double value = melodicObjective.evaluateMelody(notes, 3);
 				LOGGER.info("Intervals : " + value);
 				value = melodicObjective.evaluateTriadicValueMelody(notes);
 				LOGGER.info("Triadic value: " + value);
-				
+//				Score score = ScoreUtilities.createScoreMelodies(melodies);
+//				View.notate(score);
+//				jm.util.Play.midi(score, false);
 			}
 		}
 	}

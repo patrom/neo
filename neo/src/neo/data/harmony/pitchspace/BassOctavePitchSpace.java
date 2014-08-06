@@ -6,8 +6,8 @@ import neo.data.note.NotePos;
 
 public class BassOctavePitchSpace extends PitchSpaceStrategy {
 
-	public BassOctavePitchSpace(List<NotePos> notes, int octaveHighestPitchClass) {
-		super(notes, octaveHighestPitchClass);
+	public BassOctavePitchSpace(List<NotePos> notes, Integer[] octaveHighestPitchClasses) {
+		super(notes, octaveHighestPitchClasses);
 	}
 
 	@Override

@@ -1,17 +1,10 @@
 package neo.data.harmony;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
-import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class ChordTest {
-
-	@Before
-	public void setUp() throws Exception {
-	}
 
 	@Test
 	public void testTriadType() {

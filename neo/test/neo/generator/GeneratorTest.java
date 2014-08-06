@@ -1,10 +1,13 @@
 package neo.generator;
 
+import static java.util.stream.Collectors.toSet;
 import static neo.data.harmony.HarmonyBuilder.harmony;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.IntStream;
 
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
@@ -23,7 +26,7 @@ public class GeneratorTest {
 	@Before
 	public void setup() {
 		chordSize = 4;
-		int octave = 6;
+		Integer[] octave = {5};
 		int[] rhythmGeneratorTemplate = {0,12,18,24};
 		MusicProperties props = new MusicProperties();
 		props.setScale(new Scale(Scale.MAJOR_SCALE));

@@ -1,9 +1,13 @@
 package neo.generator;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
@@ -32,7 +36,7 @@ public class Generator {
 	private Map<Integer, Double> rhythmWeightValues;
 	private int minimumLength;
 	private int chordSize;
-	private int octaveHighestNote;
+	private Integer[] octaveHighestNote;
 	
 	public Generator(MusicProperties properties) {
 		this.scale = properties.getScale();
@@ -90,7 +94,7 @@ public class Generator {
 	
 	public static void main(String[] args) throws InvalidMidiDataException {
 		int chordSize = 4;
-		int octave = 6;
+		Integer[] octave = {5};
 		int[] rhythmGeneratorTemplate = {0,12,18,24};
 		MusicProperties props = new MusicProperties();
 		props.setScale(new Scale(Scale.MAJOR_SCALE));

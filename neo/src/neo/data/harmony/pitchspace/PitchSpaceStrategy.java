@@ -1,18 +1,23 @@
 package neo.data.harmony.pitchspace;
 
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
+import jmetal.util.PseudoRandom;
 import neo.data.note.NotePos;
 
 public abstract class PitchSpaceStrategy {
 
 	protected List<NotePos> notes;
+	protected Integer[] octaveHighestPitchClassRange;
 	protected int octaveHighestPitchClass;
 	protected int size;
 	
-	public PitchSpaceStrategy(List<NotePos> notes, int octaveHighestPitchClass) {
+	public PitchSpaceStrategy(List<NotePos> notes, Integer[] octaveHighestPitchClasses) {
 		this.notes = notes;
-		this.octaveHighestPitchClass = octaveHighestPitchClass;
+		this.octaveHighestPitchClass = octaveHighestPitchClasses[0];
+		this.octaveHighestPitchClassRange = octaveHighestPitchClasses;
 		this.size = notes.size();
 	}
 
@@ -21,9 +26,12 @@ public abstract class PitchSpaceStrategy {
 	public int getOctaveHighestPitchClass() {
 		return octaveHighestPitchClass;
 	}
+	
+	public void mutateOctaveHighestPitchClass(){
+		this.octaveHighestPitchClass = PseudoRandom.randInt(octaveHighestPitchClassRange[0], octaveHighestPitchClassRange[octaveHighestPitchClassRange.length - 1]);
+	}
 
 	protected void setPitchClassFirstNote() {
-		int size = notes.size();
 		NotePos firstNote = notes.get(0);
 		firstNote.setPitch(firstNote.getPitchClass() + (12 * octaveHighestPitchClass));
 	}
@@ -41,6 +49,10 @@ public abstract class PitchSpaceStrategy {
 				note.setPitch(prevNote.getPitch() - (prevPc - pc));
 			}
 		}
+	}
+
+	public Integer[] getOctaveHighestPitchClassRange() {
+		return octaveHighestPitchClassRange;
 	}
 
 }

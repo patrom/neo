@@ -25,7 +25,8 @@ public class MidiConverterTest extends AbstractTest {
 
 	@Test
 	public void testExtractNoteList() {
-		List<Harmony> harmonies = MidiConverter.extractHarmony(melodies, 5);
+		Integer[] range = {5};
+		List<Harmony> harmonies = MidiConverter.extractHarmony(melodies, range);
 		harmonies.forEach(n -> LOGGER.info(n.getPosition() + ": " + n.getNotes()));
 	}
 

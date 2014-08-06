@@ -6,7 +6,7 @@ import neo.data.note.NotePos;
 
 public class UniformPitchSpace extends PitchSpaceStrategy {
 
-	public UniformPitchSpace(List<NotePos> notes, int octaveHighestPitchClass) {
+	public UniformPitchSpace(List<NotePos> notes, Integer[] octaveHighestPitchClass) {
 		super(notes, octaveHighestPitchClass);
 	}
 

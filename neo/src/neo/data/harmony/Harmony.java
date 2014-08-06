@@ -2,10 +2,12 @@ package neo.data.harmony;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import jmetal.util.PseudoRandom;
 import neo.data.harmony.pitchspace.BassOctavePitchSpace;
 import neo.data.harmony.pitchspace.PitchSpaceStrategy;
+import neo.data.harmony.pitchspace.TopOctavePitchSpace;
 import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.note.NotePos;
 import neo.data.note.Scale;
@@ -75,16 +77,22 @@ public class Harmony {
 	}
 	
 	public void mutatePitchSpaceStrategy(){
-		int i = PseudoRandom.randInt(0, 1);
+		pitchSpaceStrategy.mutateOctaveHighestPitchClass();
+		int i = PseudoRandom.randInt(0, 2);
 		switch (i) {
 		case 0:
 			if (!(pitchSpaceStrategy instanceof UniformPitchSpace)) {
-				this.pitchSpaceStrategy = new UniformPitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClass());
+				this.pitchSpaceStrategy = new UniformPitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClassRange());
 			}
 			break;
 		case 1:
 			if (!(pitchSpaceStrategy instanceof BassOctavePitchSpace)) {
-				this.pitchSpaceStrategy = new BassOctavePitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClass());
+				this.pitchSpaceStrategy = new BassOctavePitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClassRange());
+			}
+			break;
+		case 2:
+			if (!(pitchSpaceStrategy instanceof TopOctavePitchSpace)) {
+				this.pitchSpaceStrategy = new TopOctavePitchSpace(notes, pitchSpaceStrategy.getOctaveHighestPitchClassRange());
 			}
 			break;
 		}

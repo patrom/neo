@@ -72,12 +72,12 @@ public class MidiConverter {
 		}
 	}
 
-	public static List<Harmony> extractHarmony(List<Melody> melodies, int octave){
+	public static List<Harmony> extractHarmony(List<Melody> melodies, Integer[] range){
 		Map<Integer, List<NotePos>> chords = extractNoteMap(melodies);
 		List<Harmony> harmonies = new ArrayList<>();
 		for (Entry<Integer, List<NotePos>> ch : chords.entrySet()) {
 			Harmony harmony = new Harmony(ch.getKey(),ch.getValue().get(0).getLength()
-					, ch.getValue(), new UniformPitchSpace(ch.getValue(),octave));
+					, ch.getValue(), new UniformPitchSpace(ch.getValue(), range));
 			harmonies.add(harmony);
 		}
 		return harmonies;

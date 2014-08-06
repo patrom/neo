@@ -42,6 +42,13 @@ public class VoiceLeadingTest extends AbstractTest{
 		compareVoiceLeading(majorHarmonySource, majorHarmonyTarget);
 	}
 	
+	@Test
+	public void testInterval4ToMajorVoiceLeading() {
+		Harmony interval4Source = harmony().notes(1,5).build();
+		Harmony majorHarmonyTarget = harmony().notes(0,4,7).build();
+		compareVoiceLeading(interval4Source, majorHarmonyTarget);
+	}
+	
 	private void compareVoiceLeading(Harmony source, Harmony target) {
 		Multiset<Integer> sourceSet = source.getChord().getPitchClassMultiSet();
 		for (int i = 0; i < 12; i++) {

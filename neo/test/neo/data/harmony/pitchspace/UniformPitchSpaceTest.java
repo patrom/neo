@@ -16,6 +16,7 @@ public class UniformPitchSpaceTest {
 	
 	private PitchSpaceStrategy uniformPitchStrategy;
 	private List<NotePos> notes = new ArrayList<>();
+	private Integer[] range = {6};
 
 	@Test
 	public void testTranslateToPitchSpaceNoCrossing() {
@@ -23,7 +24,7 @@ public class UniformPitchSpaceTest {
 		notes.add(new NotePos(2, 1, 0, 12));
 		notes.add(new NotePos(3, 2, 0, 12));
 		notes.add(new NotePos(4, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, 6);
+		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 40);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 51);
@@ -37,7 +38,7 @@ public class UniformPitchSpaceTest {
 		notes.add(new NotePos(3, 1, 0, 12));
 		notes.add(new NotePos(2, 2, 0, 12));
 		notes.add(new NotePos(4, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, 6);
+		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 52);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 62);
@@ -51,7 +52,7 @@ public class UniformPitchSpaceTest {
 		notes.add(new NotePos(2, 1, 0, 12));
 		notes.add(new NotePos(4, 2, 0, 12));
 		notes.add(new NotePos(3, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, 6);
+		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 52);
@@ -65,7 +66,7 @@ public class UniformPitchSpaceTest {
 		notes.add(new NotePos(2, 1, 0, 12));
 		notes.add(new NotePos(4, 2, 0, 12));
 		notes.add(new NotePos(1, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, 6);
+		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 61);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 64);
@@ -79,7 +80,7 @@ public class UniformPitchSpaceTest {
 		notes.add(new NotePos(2, 1, 0, 12));
 		notes.add(new NotePos(2, 2, 0, 12));
 		notes.add(new NotePos(3, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, 6);
+		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 62);
@@ -93,7 +94,7 @@ public class UniformPitchSpaceTest {
 		notes.add(new NotePos(3, 1, 0, 12));
 		notes.add(new NotePos(2, 2, 0, 12));
 		notes.add(new NotePos(3, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, 6);
+		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 62);

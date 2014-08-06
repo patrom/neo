@@ -44,7 +44,8 @@ public class HarmonyBuilder {
 	}
 	
 	public Harmony build(){
-		Harmony harmony = new Harmony(position, length, notes, new UniformPitchSpace(notes, 6));
+		Integer[] range = {6};
+		Harmony harmony = new Harmony(position, length, notes, new UniformPitchSpace(notes, range));
 		harmony.setPositionWeight(positionWeight);
 		return harmony;
 	}

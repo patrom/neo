@@ -21,8 +21,6 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 	private double positionWeight;
 	private double innerMetricWeight;
 
-	private double weight;
-	
 	private int octave;
 	private int pitchClass;
 	private int voice;
@@ -105,10 +103,6 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 
 	public double getWeightedSum() {
 		return positionWeight;
-	}
-
-	public void setWeight(double weight) {
-		this.weight = weight;
 	}
 
 	public int getOctave() {

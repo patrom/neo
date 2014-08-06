@@ -52,7 +52,6 @@ public class MusicVariable extends Variable {
 				notePosition.setInnerMetricWeight(notePositions.get(i).getInnerMetricWeight());
 //				notePosition.setPositionWeight(notePositions.get(i).getPositionWeight());set with harmony
 				notePosition.setRhythmValue(notePositions.get(i).getRhythmValue());
-				notePosition.setWeight(notePositions.get(i).getWeightedSum());
 				notePosition.setDynamic(notePositions.get(i).getDynamic());
 				newNotePositions.add(notePosition);
 			}
@@ -71,8 +70,8 @@ public class MusicVariable extends Variable {
 		PitchSpaceStrategy newPitchSpaceStrategy = null;
 		try {
 			Class pitchSpaceStrategyClass = Class.forName(pitchSpaceStrategy.getClass().getName());
-			Constructor<?> constructor = pitchSpaceStrategyClass.getConstructor(List.class, int.class);
-			newPitchSpaceStrategy = (PitchSpaceStrategy) constructor.newInstance(newNotePositions, pitchSpaceStrategy.getOctaveHighestPitchClass());
+			Constructor<?> constructor = pitchSpaceStrategyClass.getConstructor(List.class, Integer[].class);
+			newPitchSpaceStrategy = (PitchSpaceStrategy) constructor.newInstance(newNotePositions, pitchSpaceStrategy.getOctaveHighestPitchClassRange());
 		} catch (InvocationTargetException |IllegalArgumentException |SecurityException | NoSuchMethodException 
 				| ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			LOGGER.severe("PitchSpace type error");

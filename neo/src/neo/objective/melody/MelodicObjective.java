@@ -13,6 +13,7 @@ import java.util.TreeMap;
 
 import neo.data.Motive;
 import neo.data.harmony.Chord;
+import neo.data.harmony.ChordType;
 import neo.data.melody.Melody;
 import neo.data.note.Interval;
 import neo.data.note.NotePos;
@@ -71,10 +72,11 @@ public class MelodicObjective extends Objective {
 				chord.addPitchClass(firstNote.getPitchClass());
 				chord.addPitchClass(secondNote.getPitchClass());
 				chord.addPitchClass(thirdNote.getPitchClass());
-				double dissonance = chord.getChordType().getDissonance();
-				harmonicValue = harmonicValue + dissonance;
+				if (chord.getChordType().equals(ChordType.MAJOR) || chord.getChordType().equals(ChordType.MINOR)) {
+					harmonicValue = harmonicValue + 1.0;
+				}
 		}
-		return harmonicValue/(notePositions.length - 2);
+		return (harmonicValue == 0)? 0:harmonicValue/(notePositions.length - 2);
 	}
 
 	protected double evaluateMelody(Collection<NotePos> notes, int maxDistance) {
