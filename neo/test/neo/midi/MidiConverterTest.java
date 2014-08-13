@@ -8,7 +8,7 @@ import javax.sound.midi.InvalidMidiDataException;
 
 import neo.AbstractTest;
 import neo.data.harmony.Harmony;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class MidiConverterTest extends AbstractTest {
 
 	@Test
 	public void testExtractNoteMap() {
-		Map<Integer, List<NotePos>> chords = MidiConverter.extractNoteMap(melodies);
+		Map<Integer, List<Note>> chords = MidiConverter.extractNoteMap(melodies);
 		chords.forEach((k, n) -> LOGGER.info(k + ": " + n));
 	}
 	

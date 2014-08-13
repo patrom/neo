@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.sound.midi.InvalidMidiDataException;
 
 import neo.AbstractTest;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 import neo.midi.MidiConverter;
 import neo.midi.MidiInfo;
 import neo.midi.MidiParser;
@@ -30,11 +30,11 @@ public class PcSetUnorderedPropertiesTest extends AbstractTest{
 	
 	@Test
 	public void testGetForteName() {
-		Map<Integer, List<NotePos>> chords = MidiConverter.extractNoteMap(melodies);
-		for (List<NotePos> notes : chords.values()) {
+		Map<Integer, List<Note>> chords = MidiConverter.extractNoteMap(melodies);
+		for (List<Note> notes : chords.values()) {
 			int i = 0;
 			int[] set = new int[notes.size()];
-			for (NotePos notePos : notes) {
+			for (Note notePos : notes) {
 				set[i] = notePos.getPitchClass();
 				i++;
 			}

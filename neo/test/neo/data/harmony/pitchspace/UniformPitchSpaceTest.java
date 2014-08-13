@@ -7,7 +7,7 @@ import java.util.List;
 
 import neo.data.harmony.pitchspace.PitchSpaceStrategy;
 import neo.data.harmony.pitchspace.UniformPitchSpace;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,15 +15,15 @@ import org.junit.Test;
 public class UniformPitchSpaceTest {
 	
 	private PitchSpaceStrategy uniformPitchStrategy;
-	private List<NotePos> notes = new ArrayList<>();
+	private List<Note> notes = new ArrayList<>();
 	private Integer[] range = {6};
 
 	@Test
 	public void testTranslateToPitchSpaceNoCrossing() {
-		notes.add(new NotePos(1, 0, 0, 12));
-		notes.add(new NotePos(2, 1, 0, 12));
-		notes.add(new NotePos(3, 2, 0, 12));
-		notes.add(new NotePos(4, 3, 0, 12));
+		notes.add(new Note(1, 0, 0, 12));
+		notes.add(new Note(2, 1, 0, 12));
+		notes.add(new Note(3, 2, 0, 12));
+		notes.add(new Note(4, 3, 0, 12));
 		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 40);
@@ -34,10 +34,10 @@ public class UniformPitchSpaceTest {
 	
 	@Test
 	public void testTranslateToPitchSpaceCrossing() {
-		notes.add(new NotePos(1, 0, 0, 12));
-		notes.add(new NotePos(3, 1, 0, 12));
-		notes.add(new NotePos(2, 2, 0, 12));
-		notes.add(new NotePos(4, 3, 0, 12));
+		notes.add(new Note(1, 0, 0, 12));
+		notes.add(new Note(3, 1, 0, 12));
+		notes.add(new Note(2, 2, 0, 12));
+		notes.add(new Note(4, 3, 0, 12));
 		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 52);
@@ -48,10 +48,10 @@ public class UniformPitchSpaceTest {
 	
 	@Test
 	public void testTranslateToPitchSpaceCrossingBorder() {
-		notes.add(new NotePos(1, 0, 0, 12));
-		notes.add(new NotePos(2, 1, 0, 12));
-		notes.add(new NotePos(4, 2, 0, 12));
-		notes.add(new NotePos(3, 3, 0, 12));
+		notes.add(new Note(1, 0, 0, 12));
+		notes.add(new Note(2, 1, 0, 12));
+		notes.add(new Note(4, 2, 0, 12));
+		notes.add(new Note(3, 3, 0, 12));
 		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);
@@ -62,10 +62,10 @@ public class UniformPitchSpaceTest {
 	
 	@Test
 	public void testTranslateToPitchSpaceCrossingBorderTop() {
-		notes.add(new NotePos(3, 0, 0, 12));
-		notes.add(new NotePos(2, 1, 0, 12));
-		notes.add(new NotePos(4, 2, 0, 12));
-		notes.add(new NotePos(1, 3, 0, 12));
+		notes.add(new Note(3, 0, 0, 12));
+		notes.add(new Note(2, 1, 0, 12));
+		notes.add(new Note(4, 2, 0, 12));
+		notes.add(new Note(1, 3, 0, 12));
 		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 61);
@@ -76,10 +76,10 @@ public class UniformPitchSpaceTest {
 	
 	@Test
 	public void testTranslateToPitchSpaceDoubling() {
-		notes.add(new NotePos(1, 0, 0, 12));
-		notes.add(new NotePos(2, 1, 0, 12));
-		notes.add(new NotePos(2, 2, 0, 12));
-		notes.add(new NotePos(3, 3, 0, 12));
+		notes.add(new Note(1, 0, 0, 12));
+		notes.add(new Note(2, 1, 0, 12));
+		notes.add(new Note(2, 2, 0, 12));
+		notes.add(new Note(3, 3, 0, 12));
 		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);
@@ -90,10 +90,10 @@ public class UniformPitchSpaceTest {
 	
 	@Test
 	public void testTranslateToPitchSpaceDoublingCrossing() {
-		notes.add(new NotePos(1, 0, 0, 12));
-		notes.add(new NotePos(3, 1, 0, 12));
-		notes.add(new NotePos(2, 2, 0, 12));
-		notes.add(new NotePos(3, 3, 0, 12));
+		notes.add(new Note(1, 0, 0, 12));
+		notes.add(new Note(3, 1, 0, 12));
+		notes.add(new Note(2, 2, 0, 12));
+		notes.add(new Note(3, 3, 0, 12));
 		uniformPitchStrategy = new UniformPitchSpace(notes, range);
 		uniformPitchStrategy.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);

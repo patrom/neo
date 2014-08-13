@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 
 public class InnerMetricWeight {
@@ -173,7 +173,7 @@ public class InnerMetricWeight {
 		return total;
 	}
 
-	public static Map<Integer, Double> getNormalizedInnerMetricWeight(List<NotePos> notes, int pulse) {
+	public static Map<Integer, Double> getNormalizedInnerMetricWeight(List<Note> notes, int pulse) {
 		Integer[] onSet = extractOnsetNotes(notes, pulse);
 		List<List<Integer>> localMeters = getLocalMeters(onSet);
 		Map<Integer, Double> map = getInnerMetricWeight(localMeters, onSet);
@@ -184,7 +184,7 @@ public class InnerMetricWeight {
 		}
 	}
 
-	protected static Integer[] extractOnsetNotes(List<NotePos> notes, int pulse) {
+	protected static Integer[] extractOnsetNotes(List<Note> notes, int pulse) {
 		int length = notes.size();
 		Integer[] arr = new Integer[length];
 		arr[0] = 0;
@@ -204,11 +204,11 @@ public class InnerMetricWeight {
 		return rArray;
 	}
 	
-	public static Integer[] extractOnset(List<NotePos> notes, int structureLength) {
+	public static Integer[] extractOnset(List<Note> notes, int structureLength) {
 		int length = notes.size();
 		Integer[] arr = new Integer[length * 3];
 		for (int i = 0; i < length ; i++) {
-			NotePos note = notes.get(i);
+			Note note = notes.get(i);
 			arr[i] = note.getPosition();
 			arr[i + length] = note.getPosition() + structureLength;
 			arr[i + (length * 2)] = note.getPosition() + (structureLength * 2);

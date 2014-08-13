@@ -18,7 +18,7 @@ import javax.sound.midi.Track;
 import javax.sound.midi.Transmitter;
 
 import neo.data.melody.Melody;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 import neo.instrument.Instrument;
 
 public class MidiDevicesUtil {
@@ -86,17 +86,17 @@ public class MidiDevicesUtil {
 		}
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
 		for (int i = 0; i < motiveSize; i++) {
-			List<NotePos> notes = motives.get(i).getNotes();
+			List<Note> notes = motives.get(i).getNotes();
 			createTrack(sequence, notes, instruments.get(i));
 		}
 		return sequence;
 	}
 
-	private static void createTrack(Sequence sequence, List<NotePos> notes, Instrument instrument)
+	private static void createTrack(Sequence sequence, List<Note> notes, Instrument instrument)
 			throws InvalidMidiDataException {
 		Track track = sequence.createTrack();
 		int prevPerfomance = 0;
-		for (NotePos notePos : notes) {
+		for (Note notePos : notes) {
 			int performance = instrument.getPerformanceValue(notePos.getPerformance());
 			if (performance != prevPerfomance) {
 				MidiEvent changeEvent = createInstrumentChange(instrument, performance);
@@ -113,7 +113,7 @@ public class MidiDevicesUtil {
 
 	private static MidiEvent createInstrumentChange(Instrument instrument, int performance) throws InvalidMidiDataException {
 		if (instrument.isKeySwitch()) {
-			NotePos keySwitch = createKeySwitch(performance);
+			Note keySwitch = createKeySwitch(performance);
 			MidiEvent change = createNoteMidiEvent(ShortMessage.NOTE_ON, keySwitch, 30, 0);
 			return change;
 		} else {
@@ -122,8 +122,8 @@ public class MidiDevicesUtil {
 		}
 	}
 
-	private static NotePos createKeySwitch(int performance) {
-		NotePos keySwitch = new NotePos();
+	private static Note createKeySwitch(int performance) {
+		Note keySwitch = new Note();
 		keySwitch.setPitch(performance);
 		keySwitch.setDynamic(80);
 		return keySwitch;
@@ -134,14 +134,14 @@ public class MidiDevicesUtil {
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motives.size());
 		int i = 0;
 		for (Melody motive : motives) {
-			List<NotePos> notes = motive.getNotes();
+			List<Note> notes = motive.getNotes();
 			createTrack(sequence, notes, instruments.get(i));
 			i++;
 		}
 		return sequence;
 	}
 
-	private static MidiEvent createNoteMidiEvent(int cmd, NotePos notePos, int position, int channel)
+	private static MidiEvent createNoteMidiEvent(int cmd, Note notePos, int position, int channel)
 			throws InvalidMidiDataException {
 		ShortMessage note = new ShortMessage();
 		if (notePos.isRest()) {

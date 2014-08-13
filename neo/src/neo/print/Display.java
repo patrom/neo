@@ -15,7 +15,7 @@ import jmetal.util.JMException;
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
 import neo.data.melody.Melody;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 import neo.nsga.MusicSolution;
 import neo.nsga.MusicVariable;
 
@@ -23,11 +23,12 @@ public class Display {
 
 	private static Logger LOGGER = Logger.getLogger(Display.class.getName());
 	 
-	 public static void view(SolutionSet solutionsList) throws JMException, InvalidMidiDataException{
+	 public static void view(SolutionSet solutionsList, double tempo) throws JMException, InvalidMidiDataException{
 		  Iterator<Solution> iterator = solutionsList.iterator();
 		  int i = 1;
-		  while (iterator.hasNext()) {
+		  while (iterator.hasNext() && i < 11) {
 			MusicSolution solution = (MusicSolution) iterator.next();
+			LOGGER.info("Test " + i);
 			LOGGER.info(solution.toString());
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 //			List<MusicalStructure> structures = FugaUtilities.addTransposedVoices(sentences, inputProps.getScale(), 8, 12);
@@ -37,9 +38,11 @@ public class Display {
 //			MusicalStructure structure2 = FugaUtilities.harmonizeMelody(sentences, inputProps.getScale(), 2, 2, inputProps.getMelodyLength() * 12);
 //			sentences.add(structure2);
 //			changeLengths(sentences);
+			motive.getHarmonies().stream().forEach(harmony -> harmony.translateToPitchSpace());
 			printHarmonies(motive.getHarmonies());
 //			printNotes(motive.getHarmonies());
-			viewScore(motive.getMelodies(), i);
+			motive.getMelodies().stream().forEach(melody -> melody.updateMelodies());
+			viewScore(motive.getMelodies(), i, tempo);
 //			printVextab(sentences);
 //			if (inputProps.getTempo() > 0f) {
 //				Play.playOnKontakt(motive.getMelodies(), inputProps.getRanges(), inputProps.getTempo());
@@ -76,14 +79,12 @@ public class Display {
 //			harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
 		}
 
-		private static void viewScore(List<Melody> melodies, int i) {
+		private static void viewScore(List<Melody> melodies, int i, double tempo) {
 			melodies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
-			Score score = ScoreUtilities.createScoreMelodies(melodies);
-			if (i <=8) {
-				score.setTitle("test " + (i));
-				Write.midi(score, "test" + (i) + ".mid");	
-				View.notate(score);	
-			}
+			Score score = ScoreUtilities.createScoreMelodies(melodies, tempo);
+			score.setTitle("test " + (i));
+			Write.midi(score, "test" + (i) + ".mid");	
+			View.notate(score);	
 		}
 
 //		private static void printVextab(List<Harmony> harmonies) {
@@ -93,11 +94,11 @@ public class Display {
 		
 		private static void changeLengths(List<Harmony> harmonies) {
 			for (Harmony harmony : harmonies) {
-				List<NotePos> notes = harmony.getNotes();
+				List<Note> notes = harmony.getNotes();
 				int size = notes.size() - 1;
 				for (int i = 0; i < size; i++) {
-					NotePos firstNote = notes.get(i);
-					NotePos secondNote = notes.get(i + 1);
+					Note firstNote = notes.get(i);
+					Note secondNote = notes.get(i + 1);
 					int diff = secondNote.getPosition() - firstNote.getPosition();
 					firstNote.setLength(diff);
 				}
@@ -106,10 +107,10 @@ public class Display {
 
 		private static void printNotes(List<Harmony> harmonies) {
 			for (Harmony harmony : harmonies) {
-				List<NotePos> notes = harmony.getNotes();
+				List<Note> notes = harmony.getNotes();
 				int length = harmony.getLength();
 				int pos = 0;
-				for (NotePos notePos : notes) {
+				for (Note notePos : notes) {
 					while (pos != notePos.getPosition() && pos <= length) {
 						System.out.print("\t");
 						pos = pos + 6;

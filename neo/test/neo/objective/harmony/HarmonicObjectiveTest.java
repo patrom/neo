@@ -30,7 +30,7 @@ public class HarmonicObjectiveTest extends AbstractTest{
 		harmonies.add(harmony().pos(0).len(6).notes(0,4,7).positionWeight(1.0).build());
 		harmonies.add(harmony().pos(6).len(6).notes(1,4,6).positionWeight(0.5).build());
 		harmonies.add(harmony().pos(12).len(12).notes(11,2,7).positionWeight(1.0).build());
-		harmonicObjective = new HarmonicObjective(musicProperties, new Motive(harmonies));
+		harmonicObjective = new HarmonicObjective(musicProperties, new Motive(harmonies, melodies));
 		double harmonicValue = harmonicObjective.evaluate();
 		LOGGER.info("harmonicValue : " + harmonicValue);
 		double expectedValue = ((ChordType.MAJOR.getDissonance() * 1.0) + (ChordType.MAJOR.getDissonance() * 1.0) 

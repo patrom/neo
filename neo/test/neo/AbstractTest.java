@@ -1,6 +1,7 @@
 package neo;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +21,7 @@ public abstract class AbstractTest {
 	
 	protected static Logger LOGGER = Logger.getLogger(AbstractTest.class.getName());
 	
-	protected List<Melody> melodies;
+	protected List<Melody> melodies = new ArrayList<>();
 	protected FitnessObjectiveValues objectives;
 	protected MusicProperties musicProperties;
 	private LogConfig LogConfig = new LogConfig();

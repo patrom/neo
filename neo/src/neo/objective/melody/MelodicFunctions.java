@@ -8,12 +8,11 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import jm.music.data.Note;
 import jm.music.data.Phrase;
 import jm.music.tools.NoteListException;
 import jm.music.tools.QuantisationException;
 import neo.data.note.Interval;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -21,20 +20,20 @@ public class MelodicFunctions {
 	
 	private static Logger LOGGER = Logger.getLogger(MelodicFunctions.class.getName());
 	
-	public static List<Double> getMelodicWeights2(List<NotePos> melody, int windowSize){
+	public static List<Double> getMelodicWeights2(List<Note> melody, int windowSize){
 		int size = melody.size();
-		NotePos[] notes = new NotePos[size];
+		Note[] notes = new Note[size];
 		for (int i = 0; i < size; i++) {
 			notes[i] = melody.get(i);
 		}
 		return melodicWindow(notes, windowSize);
 	}
 	
-	public static List<Double> melodicWindow(NotePos[] notes, int windowSize){
+	public static List<Double> melodicWindow(Note[] notes, int windowSize){
 		int length = notes.length - windowSize + 1;	
 		List<Double> values = new ArrayList<Double>();
 		for (int i = 0; i < length; i++) {
-			NotePos[] melody = new NotePos[windowSize];
+			Note[] melody = new Note[windowSize];
 			for (int j = 0; j < windowSize; j++) {
 				melody[j] = notes[i + j];
 			}
@@ -43,11 +42,11 @@ public class MelodicFunctions {
 		return values; 
 	}
 
-	private static double computeMelodicValueWindow(NotePos[] melody ) {
+	private static double computeMelodicValueWindow(Note[] melody ) {
 		List<Double> values = new ArrayList<Double>();
 		for (int j = 0; j < melody.length - 1; j++) {
-				NotePos note = melody[0];
-				NotePos nextNote = melody[j + 1];
+				Note note = melody[0];
+				Note nextNote = melody[j + 1];
 
 				int difference = nextNote.getPitch() - note.getPitch();
 				Interval interval = Interval.getEnumInterval(difference);
@@ -63,8 +62,7 @@ public class MelodicFunctions {
 		return (values.isEmpty())?0.0:Collections.min(values);
 	}
 	
-	public static double getIntervalVariation(Phrase phrase){
-		Note[] melody = phrase.getNoteArray();
+	public static double getIntervalVariation(Note[] melody){
 		Set<Interval> intervalSet = new HashSet<Interval>();
 		for (int i = 0; i < melody.length - 1; i++) {
 			int difference = (melody[i + 1].getPitch() - melody[i].getPitch())%12;
@@ -75,23 +73,7 @@ public class MelodicFunctions {
         return (double)intervalSet.size() / (double)intervalCount;
 	}
 
-	
-	public static double getMelodicValue(Phrase phrase){
-		Note[] melody = phrase.getNoteArray();
-		double sum = 0.0;
-		int count = 0;
-		for (int i = 0; i < melody.length - 1; i++) {
-			int difference = (melody[i + 1].getPitch() - melody[i].getPitch())%12;
-			Interval interval = Interval.getEnumInterval(difference);
-			LOGGER.info(interval + ": "+  interval.getMelodicValue() + "," );
-			sum = sum + interval.getMelodicValue();
-			count++;
-		}
-		LOGGER.info("count :" + count);
-		return sum/count;
-	}
-	
-	public static double getMelodicValue(NotePos[] melody){
+	public static double getMelodicValue(Note[] melody){
 		double sum = 0.0;
 		int count = 0;
 		for (int i = 0; i < melody.length - 1; i++) {
@@ -105,7 +87,7 @@ public class MelodicFunctions {
 		return sum/count;
 	}
 	
-	public static double[] getMelodicWeights(NotePos[] melody, int allowIntervalsBelowValue){
+	public static double[] getMelodicWeights(Note[] melody, int allowIntervalsBelowValue){
 		List<Double> list = new ArrayList<Double>();
 		int count = 0;
 		for (int i = 0; i < melody.length - 1; i++) {
@@ -159,8 +141,7 @@ public class MelodicFunctions {
 		return ArrayUtils.toPrimitive(melodicWeights);
 	}
 	
-	public static double getMelodicContour(Phrase phrase){
-		Note[] melody = phrase.getNoteArray();
+	public static double getMelodicContour(Note[] melody){
 		double sum = 0.0;
 		int count = 0;
 		for (int i = 0; i < melody.length - 1; i++) {
@@ -173,8 +154,7 @@ public class MelodicFunctions {
 		return sum;
 	}
 	
-	public static List<Integer> getValueChanges(Phrase phrase){
-		Note[] melody = phrase.getNoteArray();
+	public static List<Integer> getValueChanges(Note[] melody){
 		Map<Integer, Integer> map = new TreeMap<Integer,Integer>();
 		List<Integer> valueChanges = new ArrayList<Integer>();
 		for (Note note : melody) {
@@ -218,8 +198,8 @@ public class MelodicFunctions {
 		}
 	}
 	
-	public static List<Integer> getValueChangesMax(Phrase phrase){
-		List<Integer> valueChanges = getValueChanges(phrase);
+	public static List<Integer> getValueChangesMax(Note[] melody){
+		List<Integer> valueChanges = getValueChanges(melody);
 		List<Integer> newValueChanges = new ArrayList<Integer>();
 		Integer max = Collections.max(valueChanges);
 		for (Integer integer : valueChanges) {
@@ -232,8 +212,7 @@ public class MelodicFunctions {
 		return newValueChanges;
 	}
 	
-	public static List<Integer> getDifferentValueChanges(Phrase phrase){
-		Note[] melody = phrase.getNoteArray();
+	public static List<Integer> getDifferentValueChanges(Note[] melody){
 		Map<Integer, Set<Integer>> map = new TreeMap<Integer,Set<Integer>>();
 		List<Integer> valueChanges = new ArrayList<Integer>();
 		for (Note note : melody) {

@@ -1,47 +1,46 @@
 package neo.data.melody;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 
-public class Melody {
+public class Melody{
 	
-	private List<NotePos> notePositions = new ArrayList<NotePos>();
-	private int length;
+	private int voice;
+	private List<HarmonicMelody> harmonicMelodies;
+	private Comparator<Note> byPosition = (e1, e2) -> Integer.compare(
+            e1.getPosition(), e2.getPosition());
 
-	public Melody(List<NotePos> notePositions) {
-		this.notePositions.addAll(notePositions);
-	}
-	
-	public Melody(List<NotePos> notePositions, int length) {
-		this.notePositions.addAll(notePositions);
-		this.length = length;
-	}
-
-	public List<NotePos> getNotes() {
-		return notePositions;
+	public Melody(List<HarmonicMelody> harmonicMelodies, int voice) {
+		this.harmonicMelodies = harmonicMelodies;
+		this.voice = voice;
 	}
 	
-	public List<NotePos> getNotesWithoutRests() {
-		List<NotePos> positions = new ArrayList<NotePos>();
-		for (NotePos note : notePositions) {
-			if (!note.isRest()) {
-				positions.add(note);
-			}
-		}
-		return positions;
-	}
-	
-	public void addNote(NotePos notePos) {
-		notePositions.add(notePos);
-		Collections.sort(notePositions);
+	public Melody(HarmonicMelody harmonicMelody, int voice) {
+		harmonicMelodies = new ArrayList<>();
+		this.harmonicMelodies.add(harmonicMelody);
+		this.voice = voice;
 	}
 
-	public int getLength() {
-		return length;
+	public List<Note> getNotes() {
+		return harmonicMelodies.stream().flatMap(h -> h.getNotes().stream()).sorted().collect(toList());
+	}
+	
+	public int getVoice() {
+		return voice;
+	}
+
+	public List<HarmonicMelody> getHarmonicMelodies() {
+		return harmonicMelodies;
+	}
+	
+	public void updateMelodies(){
+		harmonicMelodies.stream().forEach(harmonicMelody -> harmonicMelody.updateNotes());
 	}
 
 }

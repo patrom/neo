@@ -13,7 +13,7 @@ import jm.music.data.Score;
 import jm.util.View;
 import neo.AbstractTest;
 import neo.data.melody.Melody;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 import neo.evaluation.FitnessEvaluationTemplate;
 import neo.evaluation.MusicProperties;
 import neo.midi.MidiConverter;
@@ -44,7 +44,7 @@ public class MelodiesTest extends AbstractTest{
 			List<Melody> melodies = midiInfo.getMelodies();
 			MidiConverter.updatePositionNotes(melodies, midiInfo.getTimeSignature());
 			for (Melody melody : melodies) {
-				List<NotePos> notes = melody.getNotes();
+				List<Note> notes = melody.getNotes();
 				MelodicObjective melodicObjective = new MelodicObjective(musicProperties, null);
 				double value = melodicObjective.evaluateMelody(notes, 3);
 				LOGGER.info("Intervals : " + value);

@@ -1,6 +1,7 @@
 package neo.evaluation;
 
 import static java.util.stream.Collectors.toSet;
+import static neo.data.harmony.HarmonyBuilder.harmony;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,10 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import neo.data.harmony.Harmony;
+import neo.data.harmony.HarmonyBuilder;
+import neo.data.note.NoteBuilder;
+import neo.data.note.Note;
 import neo.data.note.Scale;
 import neo.instrument.Instrument;
 
@@ -17,17 +22,32 @@ public class MusicProperties {
 	
 	
 	private int harmonyBeatDivider = 12;
-	private float tempo;
-	private int[] rhythmGeneratorTemplate = {0, 12,18, 24, 36, 48};//last is not included!
+	private float tempo = 60;
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength = 6;
 	private int chordSize = 3;
 	private Integer[] octaveHighestPitchClassRange = {5,6};
+	private List<HarmonyProperties> harmonyProperties = new ArrayList<>();
+	private Map<Integer, List<MelodyProperties>> melodyPropertiesMap = new TreeMap<>();
 	
 	//tonality
 	private Scale scale = new Scale(Scale.MAJOR_SCALE);
 	
 	public MusicProperties() {
+		harmonyProperties.add(new HarmonyProperties(0, 12));
+		harmonyProperties.add(new HarmonyProperties(12, 12));
+		harmonyProperties.add(new HarmonyProperties(24, 12));
+		harmonyProperties.add(new HarmonyProperties(36, 12));
+		
+		List<MelodyProperties> melodyProperties = new ArrayList<>();
+		melodyProperties.add(new MelodyProperties(0, 6));
+		melodyProperties.add(new MelodyProperties(6, 12));
+		melodyProperties.add(new MelodyProperties(18, 6));
+		melodyProperties.add(new MelodyProperties(24, 6));
+		melodyProperties.add(new MelodyProperties(30, 6));
+		melodyProperties.add(new MelodyProperties(36, 12));
+		melodyPropertiesMap.put(2, melodyProperties);
+		
 		rhythmWeightValues.put(0, 1.0);
 		rhythmWeightValues.put(6, 0.5);
 		rhythmWeightValues.put(12, 1.0);
@@ -36,7 +56,6 @@ public class MusicProperties {
 		rhythmWeightValues.put(30, 0.5);
 		rhythmWeightValues.put(36, 1.0);
 		rhythmWeightValues.put(42, 0.5);
-		rhythmWeightValues.put(48, 0.0);//Not included - Weight should be 0!
 		
 //		ranges.add(getInstrument(0, 48, 60));
 //		ranges.add(getInstrument(1, 54, 70));
@@ -216,12 +235,6 @@ public class MusicProperties {
 	public void setTempo(float tempo) {
 		this.tempo = tempo;
 	}
-	public int[] getRhythmGeneratorTemplate() {
-		return rhythmGeneratorTemplate;
-	}
-	public void setRhythmGeneratorTemplate(int[] rhythmGeneratorTemplate) {
-		this.rhythmGeneratorTemplate = rhythmGeneratorTemplate;
-	}
 	public Map<Integer, Double> getRhythmWeightValues() {
 		return rhythmWeightValues;
 	}
@@ -249,6 +262,18 @@ public class MusicProperties {
 	public void setScale(Scale scale) {
 		this.scale = scale;
 	}
-
+	public List<HarmonyProperties> getHarmonyProperties() {
+		return harmonyProperties;
+	}
+	public void setHarmonyProperties(List<HarmonyProperties> harmonyProperties) {
+		this.harmonyProperties = harmonyProperties;
+	}
+	public Map<Integer, List<MelodyProperties>> getMelodyPropertiesMap() {
+		return melodyPropertiesMap;
+	}
+	public void setMelodyPropertiesMap(
+			Map<Integer, List<MelodyProperties>> melodyPropertiesMap) {
+		this.melodyPropertiesMap = melodyPropertiesMap;
+	}
 	
 }

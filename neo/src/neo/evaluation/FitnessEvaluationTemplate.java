@@ -1,20 +1,11 @@
 package neo.evaluation;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jm.music.data.Note;
 import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.data.note.NotePos;
 import neo.log.LogConfig;
-import neo.midi.MidiConverter;
-import neo.objective.InnerMetricWeight;
 import neo.objective.Objective;
 import neo.objective.harmony.HarmonicObjective;
 import neo.objective.melody.MelodicObjective;
@@ -23,23 +14,12 @@ import neo.objective.voiceleading.VoiceLeadingObjective;
 public class FitnessEvaluationTemplate {
 
 	private static Logger LOGGER = Logger.getLogger(FitnessEvaluationTemplate.class.getName());
-	
-	private static final int DYNAMIC_FACTOR = 3;
-	private static final double DYNAMIC = Note.DEFAULT_DYNAMIC;
-	private static final int DEFAULT_NOTE_ON_VALUE = 10;//note on accent
-	private int innerMetricFactor;
-
-	//input parameters
-	private int rhythmTemplateValue;
-
-	private int numerator = 4;
 
 	private Objective harmonicObjective;
 	private Objective melodicObjective;
 	private Objective voiceLeadingObjective;
 
 	public FitnessEvaluationTemplate(MusicProperties properties, Motive motive) {
-		this.numerator = properties.getNumerator();
 		harmonicObjective = new HarmonicObjective(properties, motive);
 		melodicObjective = new MelodicObjective(properties, motive);
 		voiceLeadingObjective = new VoiceLeadingObjective(properties, motive);
@@ -51,7 +31,6 @@ public class FitnessEvaluationTemplate {
 //		calculateNotePositionValues();
 		return evaluateObjectives();
 	}
-
 
 	private FitnessObjectiveValues evaluateObjectives() {
 		//harmony

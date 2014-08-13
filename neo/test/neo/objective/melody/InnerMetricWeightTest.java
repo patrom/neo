@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import neo.data.note.NoteBuilder;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,13 +44,13 @@ public class InnerMetricWeightTest {
 	
 	@Test
 	public void testGetNormalizedInnerMetricWeightNotes() {
-		List<NotePos> notes = createMelody();
+		List<Note> notes = createMelody();
 		Map<Integer, Double> normilazedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(notes, minimumRhythmicValue);
 		LOGGER.info(normilazedMap.toString());
 	}
 
-	private List<NotePos> createMelody() {
-		List<NotePos> notes = new ArrayList<>();
+	private List<Note> createMelody() {
+		List<Note> notes = new ArrayList<>();
 		notes.add(NoteBuilder.note().pos(0).build());
 		notes.add(NoteBuilder.note().pos(6).build());
 		notes.add(NoteBuilder.note().pos(9).build());
@@ -63,7 +63,7 @@ public class InnerMetricWeightTest {
 	
 	@Test
 	public void testExtractOnsetNotes() {
-		List<NotePos> notes = createMelody();
+		List<Note> notes = createMelody();
 		Integer[] onSetArr = InnerMetricWeight.extractOnsetNotes(notes, minimumRhythmicValue);
 		Integer[] expected = {0, 2, 3, 4, 6, 10, 12};
 		assertArrayEquals(expected, onSetArr);

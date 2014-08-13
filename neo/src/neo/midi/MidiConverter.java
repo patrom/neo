@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import neo.data.harmony.Harmony;
 import neo.data.harmony.pitchspace.UniformPitchSpace;
 import neo.data.melody.Melody;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 public class MidiConverter {
 	
@@ -61,8 +61,8 @@ public class MidiConverter {
 			throw new IllegalArgumentException("Weights time signature not implemented :" + timeSignature);
 		}
 		for (Melody melody : melodies) {
-			List<NotePos> notes = melody.getNotes();
-			for (NotePos notePos : notes) {
+			List<Note> notes = melody.getNotes();
+			for (Note notePos : notes) {
 				if (weights.containsKey(notePos.getPosition())) {
 					notePos.setPositionWeight(weights.get(notePos.getPosition()));
 				} else{ //set default value
@@ -73,9 +73,9 @@ public class MidiConverter {
 	}
 
 	public static List<Harmony> extractHarmony(List<Melody> melodies, Integer[] range){
-		Map<Integer, List<NotePos>> chords = extractNoteMap(melodies);
+		Map<Integer, List<Note>> chords = extractNoteMap(melodies);
 		List<Harmony> harmonies = new ArrayList<>();
-		for (Entry<Integer, List<NotePos>> ch : chords.entrySet()) {
+		for (Entry<Integer, List<Note>> ch : chords.entrySet()) {
 			Harmony harmony = new Harmony(ch.getKey(),ch.getValue().get(0).getLength()
 					, ch.getValue(), new UniformPitchSpace(ch.getValue(), range));
 			harmonies.add(harmony);
@@ -83,46 +83,46 @@ public class MidiConverter {
 		return harmonies;
 	}
 
-	public static Map<Integer, List<NotePos>> extractNoteMap(List<Melody> melodies) {
-		Map<Integer, List<NotePos>> chords = new TreeMap<>();
+	public static Map<Integer, List<Note>> extractNoteMap(List<Melody> melodies) {
+		Map<Integer, List<Note>> chords = new TreeMap<>();
 		Set<Integer> positions = new TreeSet<>();
 		for (Melody melody : melodies) {
-			List<NotePos> notes = melody.getNotes();
-			for (NotePos notePos : notes) {
+			List<Note> notes = melody.getNotes();
+			for (Note notePos : notes) {
 				positions.add(notePos.getPosition());
 			}
 		}
 		int voice = 0;
 		for (Melody melody : melodies) {
-			List<NotePos> notes = melody.getNotes();
+			List<Note> notes = melody.getNotes();
 			int melodyLength = notes.size() - 1;
 			Iterator<Integer> iterator = positions.iterator();
 			Integer position = iterator.next();
 			for (int i = 0; i < melodyLength; i++) {
-				NotePos firstNote = notes.get(i);
-				NotePos secondNote = notes.get(i + 1);			
+				Note firstNote = notes.get(i);
+				Note secondNote = notes.get(i + 1);			
 				while (position < secondNote.getPosition()) {
 					addNoteToChordMap(chords, firstNote, voice);
 					position = iterator.next();
 				}
 			}
-			NotePos lastNote = notes.get(melodyLength);
+			Note lastNote = notes.get(melodyLength);
 			addNoteToChordMap(chords, lastNote, voice);
 			voice++;
 		}
 		return chords;
 	}
 
-	private static void addNoteToChordMap(Map<Integer, List<NotePos>> chords, NotePos note,
+	private static void addNoteToChordMap(Map<Integer, List<Note>> chords, Note note,
 			 int voice) {
 		int position = note.getPosition();
-		List<NotePos> chord = null;
+		List<Note> chord = null;
 		if (chords.containsKey(position)) {
 			chord = chords.get(position);
 		} else {
 			chord = new ArrayList<>();
 		}
-		NotePos notePos = new NotePos(note.getPitchClass(), voice , position, note.getLength());
+		Note notePos = new Note(note.getPitchClass(), voice , position, note.getLength());
 		notePos.setPitch(note.getPitch());
 		chord.add(notePos);
 		chords.put(position, chord);

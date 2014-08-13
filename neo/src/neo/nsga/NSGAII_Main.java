@@ -43,7 +43,6 @@ import neo.print.Display;
 
 public class NSGAII_Main implements JMC{
 	private static MusicProperties inputProps = new MusicProperties();
-	private static Random random = new Random();
 
 	public static void main(String [] args) throws JMException, SecurityException, IOException, InvalidMidiDataException, ClassNotFoundException {
 	    Problem problem = new MusicProblem("music", 1, inputProps);
@@ -66,7 +65,7 @@ public class NSGAII_Main implements JMC{
 	//    crossover.setParameter("distributionIndex",20.0);
 	
 	//    Operator mutation = MutationFactory.getMutationOperator("BitFlipMutation");
-	      Operator oneNoteMutation = new OneNoteMutation(inputProps.getScale());
+	      Operator oneNoteMutation = new OneNoteMutation();
 	      oneNoteMutation.setParameter("probabilityOneNote",1.0);
 	    
 	      Operator pitchSpaceMutation = new PitchSpaceMutation();
@@ -86,7 +85,7 @@ public class NSGAII_Main implements JMC{
 	    
 	    // Result messages 
 	    population.printObjectivesToFile("FUN");
-	    Display.view(population);
+	    Display.view(population, inputProps.getTempo());
 	} 
 	
 } 

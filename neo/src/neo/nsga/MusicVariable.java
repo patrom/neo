@@ -11,61 +11,98 @@ import jmetal.util.JMException;
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
 import neo.data.harmony.pitchspace.PitchSpaceStrategy;
-import neo.data.note.NotePos;
+import neo.data.melody.HarmonicMelody;
+import neo.data.melody.Melody;
+import neo.data.note.Note;
 
 public class MusicVariable extends Variable {
 
 	private static Logger LOGGER = Logger.getLogger(MusicVariable.class.getName());
 	private Motive motive;
 	
-	public Motive getMotive() {
-		return motive;
-	}
-	
-	/**
-	 * Offspring cloning!
-	 * @param musicVariable
-	 * @throws JMException
-	 */
 	public MusicVariable(MusicVariable musicVariable) throws JMException {
-		cloneMotives(musicVariable.getMotive());
+		this.motive = cloneMotives(musicVariable.getMotive());
 	}
 
 	public MusicVariable(Motive motive) {
 		this.motive = motive;
 	}
+	
+	public Motive getMotive() {
+		return motive;
+	}
 
-	private void cloneMotives(Motive motive) {
+	protected Motive cloneMotives(Motive motive) {
 		List<Harmony> harmonies = new ArrayList<>();
 		for (Harmony harmony : motive.getHarmonies()) {
-			List<NotePos> notePositions = harmony.getNotes();
-			List<NotePos> newNotePositions = new ArrayList<NotePos>();
-			int l = notePositions.size();
-			for (int i = 0; i < l; i++) {	
-				NotePos notePosition = new NotePos();
-				notePosition.setLength(notePositions.get(i).getLength());
-				notePosition.setPosition(notePositions.get(i).getPosition());
-				notePosition.setPitch(notePositions.get(i).getPitch());
-				notePosition.setPitchClass(notePositions.get(i).getPitchClass());
-				notePosition.setDuration(notePositions.get(i).getDuration());
-				notePosition.setVoice(notePositions.get(i).getVoice());
-				notePosition.setInnerMetricWeight(notePositions.get(i).getInnerMetricWeight());
-//				notePosition.setPositionWeight(notePositions.get(i).getPositionWeight());set with harmony
-				notePosition.setRhythmValue(notePositions.get(i).getRhythmValue());
-				notePosition.setDynamic(notePositions.get(i).getDynamic());
-				newNotePositions.add(notePosition);
-			}
-			PitchSpaceStrategy pitchSpaceStrategy = harmony.getPitchSpaceStrategy();
-			PitchSpaceStrategy newPitchSpaceStrategy = clonePitchClassStrategy(newNotePositions, pitchSpaceStrategy);
-			Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), newNotePositions, newPitchSpaceStrategy);
-			copyHarmony.setPositionWeight(harmony.getPositionWeight());
-			harmonies.add(copyHarmony);
+			harmonies.add(copyHarmony(harmony));
 		}
-		this.motive = new Motive(harmonies);
+		
+		List<Melody> melodies = new ArrayList<>();
+		for (Melody melody : motive.getMelodies()) {
+			List<HarmonicMelody> harmonicMelodies = melody.getHarmonicMelodies();
+			List<HarmonicMelody> newHarmonicMelodies = new ArrayList<>();
+			for (HarmonicMelody harmonicMelody : harmonicMelodies) {
+				Harmony copyHarmony = findHarmoyAtPosition(harmonies, harmonicMelody.getPosition());
+				HarmonicMelody newHarmonicMelody = copyHarmonicMelody(harmonicMelody, copyHarmony);
+				newHarmonicMelodies.add(newHarmonicMelody);
+			}
+			Melody newMelody = new Melody(newHarmonicMelodies, melody.getVoice());
+			melodies.add(newMelody);
+		}
+		harmonies.stream().sorted();
+		Motive newMotive = new Motive(harmonies, melodies);
+		newMotive.setMusicProperties(motive.getMusicProperties());
+		return newMotive;
+	}
+	
+	private Harmony findHarmoyAtPosition(List<Harmony> harmonies, int position){
+		for (Harmony harmony : harmonies) {
+			if (harmony.getPosition() == position) {
+				return harmony;
+			}
+		}
+		throw new IllegalArgumentException("No harmony for position: " + position);
+	}
+
+	private HarmonicMelody copyHarmonicMelody(HarmonicMelody harmonicMelody,
+			Harmony copyHarmony) {
+		List<Note> newNotePositions = copyNotes(harmonicMelody.getNotes());
+		return new HarmonicMelody(newNotePositions, copyHarmony, harmonicMelody.getVoice());
+	}
+	
+	private Harmony copyHarmony(Harmony harmony){
+		List<Note> newNotePositions = copyNotes(harmony.getNotes());
+		PitchSpaceStrategy pitchSpaceStrategy = harmony.getPitchSpaceStrategy();
+		PitchSpaceStrategy newPitchSpaceStrategy = clonePitchClassStrategy(newNotePositions, pitchSpaceStrategy);
+		Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), newNotePositions, newPitchSpaceStrategy);
+		copyHarmony.setPositionWeight(harmony.getPositionWeight());
+		return copyHarmony;
+	}
+
+	private List<Note> copyNotes(List<Note> notePositions) {
+		List<Note> newNotePositions = new ArrayList<Note>();
+		int l = notePositions.size();
+		for (int i = 0; i < l; i++) {	
+			Note notePosition = new Note();
+			Note notePos = notePositions.get(i);
+			notePosition.setLength(notePos.getLength());
+			notePosition.setPosition(notePos.getPosition());
+			notePosition.setPitch(notePos.getPitch());
+			notePosition.setPitchClass(notePos.getPitchClass());
+			notePosition.setDuration(notePos.getDuration());
+			notePosition.setVoice(notePos.getVoice());
+			notePosition.setInnerMetricWeight(notePos.getInnerMetricWeight());
+			notePosition.setRhythmValue(notePos.getRhythmValue());
+			notePosition.setDynamic(notePos.getDynamic());
+			notePosition.setHarmony(notePos.getHarmony());
+			newNotePositions.add(notePosition);
+		}
+		return newNotePositions;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private PitchSpaceStrategy clonePitchClassStrategy(List<NotePos> newNotePositions,
+	private PitchSpaceStrategy clonePitchClassStrategy(List<Note> newNotePositions,
 			PitchSpaceStrategy pitchSpaceStrategy) {
 		PitchSpaceStrategy newPitchSpaceStrategy = null;
 		try {

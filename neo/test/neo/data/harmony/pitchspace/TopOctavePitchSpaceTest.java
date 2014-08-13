@@ -5,21 +5,21 @@ import static junit.framework.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 import org.junit.Test;
 
 public class TopOctavePitchSpaceTest {
 
 	private PitchSpaceStrategy topOctavePitchStrategy;
-	private List<NotePos> notes = new ArrayList<>();
+	private List<Note> notes = new ArrayList<>();
 
 	@Test
 	public void testTranslateToPitchSpace() {
-		notes.add(new NotePos(1, 0, 0, 12));
-		notes.add(new NotePos(2, 1, 0, 12));
-		notes.add(new NotePos(3, 2, 0, 12));
-		notes.add(new NotePos(4, 3, 0, 12));
+		notes.add(new Note(1, 0, 0, 12));
+		notes.add(new Note(2, 1, 0, 12));
+		notes.add(new Note(3, 2, 0, 12));
+		notes.add(new Note(4, 3, 0, 12));
 		Integer[] range = {6};
 		topOctavePitchStrategy = new TopOctavePitchSpace(notes, range);
 		topOctavePitchStrategy.translateToPitchSpace();

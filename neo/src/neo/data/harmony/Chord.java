@@ -8,7 +8,6 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
 
 public class Chord {
-//	private Set<Integer> pitchClassSet = new TreeSet<Integer>();
 	private Multiset<Integer> pitchClassMultiSet = TreeMultiset.create();
 	private ChordType chordType;
 	private int voiceLeadingZone;

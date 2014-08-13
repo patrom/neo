@@ -31,13 +31,21 @@ public class NoteBuilder {
 		return this;
 	}
 	
-	public NotePos build(){
-		NotePos note = new NotePos();
+	public Note build(){
+		Note note = new Note();
 		note.setPitchClass(pitchClass);
 		note.setPosition(position);
 		note.setPositionWeight(positionWeight);
 		note.setLength(length);
 		return note;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public int getLength() {
+		return length;
 	}
 
 }

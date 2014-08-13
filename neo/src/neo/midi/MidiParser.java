@@ -18,8 +18,9 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
+import neo.data.melody.HarmonicMelody;
 import neo.data.melody.Melody;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 public class MidiParser {
 
@@ -50,7 +51,7 @@ public class MidiParser {
 		MidiInfo midiInfo = new MidiInfo();
 		for (int j = 0; j < tracks.length; j++) {
 			Track track = tracks[j];
-			List<NotePos> notes = new ArrayList<>();
+			List<Note> notes = new ArrayList<>();
 			for (int i = 0; i < track.size(); i++) {
 				MidiEvent event = track.get(i);
 				MidiMessage message = event.getMessage();
@@ -73,7 +74,7 @@ public class MidiParser {
 						LOGGER.finer("on: " + ticks + " ");
 						LOGGER.finer("@" + event.getTick() + " ");
 						LOGGER.finer("Pitch: " + sm.getData1() + " ");
-						NotePos jNote = createNote(voice, ticks, sm);
+						Note jNote = createNote(voice, ticks, sm);
 						notes.add(jNote);
 					}
 					if (sm.getCommand() == ShortMessage.NOTE_OFF
@@ -87,7 +88,7 @@ public class MidiParser {
 						for (int k = l - 1; k > -1; k--) {// find note on
 															// belonging to note
 															// off
-							NotePos noteOn = notes.get(k);
+							Note noteOn = notes.get(k);
 							if (noteOn.getPitch() == key) {
 								noteOn.setLength((int) ticks
 										- noteOn.getPosition());
@@ -101,7 +102,7 @@ public class MidiParser {
 			}
 
 			if (!notes.isEmpty()) {
-				Melody melody = createMelody(notes);
+				Melody melody = createMelody(notes, voice);
 				map.put(voice, melody);
 			}
 			voice--;
@@ -111,17 +112,18 @@ public class MidiParser {
 		return midiInfo;
 	}
 
-	private static Melody createMelody(List<NotePos> notes) {
-		NotePos firstNote = notes.get(0);
-		NotePos lastNote = notes.get(notes.size() - 1);
+	private static Melody createMelody(List<Note> notes, int voice) {
+		Note firstNote = notes.get(0);
+		Note lastNote = notes.get(notes.size() - 1);
 		int length = lastNote.getPosition() + lastNote.getLength()
 				- firstNote.getPosition();
-		Melody melody = new Melody(notes, length);
+		HarmonicMelody harmonicMelody = new HarmonicMelody(notes, null, length);
+		Melody melody = new Melody(harmonicMelody, voice);
 		return melody;
 	}
 
-	private static NotePos createNote(int voice, long ticks, ShortMessage sm) {
-		NotePos jNote = new NotePos();
+	private static Note createNote(int voice, long ticks, ShortMessage sm) {
+		Note jNote = new Note();
 		int key = sm.getData1();
 		jNote.setPitch(key);
 		jNote.setPitchClass(key % 12);

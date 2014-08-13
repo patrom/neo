@@ -11,10 +11,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import jm.music.data.Note;
 import jm.music.data.Phrase;
 import neo.data.melody.Melody;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 import neo.objective.voiceleading.VoiceLeadingObjective;
 
 import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
@@ -35,15 +34,13 @@ public class InnerMetricWeight {
 	public static void main2(String[] args) {
 
 		
-//		double[] rhythmPattern = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
+		double[] rhythmPattern = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
 //		double[] rhythmPattern = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0};
 //		double[] rhythmPattern = { 0.5, 1.0, 1.0, 1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 0.5, 0.5,0.5};// syncopated
 //		double[] rhythmPattern = {1.0, 0.5, 1.0, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 //		double[] rhythmPattern = {1.0, 1.0, 0.5,1.0, 0.5, 1.0, 1.0, 0.5,1.0, 0.5,1.0, 1.0, 0.5,1.0, 0.5, 1.0, 1.0, 0.5,1.0, 0.5};
 		Note[] testMelody = null;
-		Phrase test = new Phrase(testMelody);
 //		double[] rhythmPattern = RhythmicFunctions.createRandomRhythmPattern2(4);
-		double[] rhythmPattern = test.getRhythmArray();
 		int originalLength = rhythmPattern.length;
 		LOGGER.info(Arrays.toString(rhythmPattern));
 		
@@ -148,12 +145,12 @@ public class InnerMetricWeight {
 	
 	public Map<Integer, Double> applyInnerMetricWeight(Melody melody) {
 		Map<Integer, Double> melodiesMap = new TreeMap<Integer, Double>();
-		List<NotePos> notes = melody.getNotes();
+		List<Note> notes = melody.getNotes();
 		Map<Integer, Double> map = getInnerMetricMap(notes);
 		if (!map.isEmpty()) {
 			Set<Integer> onsets = map.keySet();
 			for (Integer onset : onsets) {
-				for (NotePos note : notes) {
+				for (Note note : notes) {
 					if (note.getPosition() == onset) {
 						double value = map.get(onset);
 						note.setInnerMetricWeight(value);
@@ -172,11 +169,11 @@ public class InnerMetricWeight {
 		return melodiesMap;
 	}
 	
-	protected Map<Integer, Double> getInnerMetricMap(List<NotePos> notes){
+	protected Map<Integer, Double> getInnerMetricMap(List<Note> notes){
 		double[] notePositions = new double[notes.size()];
 		int length = 0;
 		for (int i = 0; i < notes.size(); i++) {
-			NotePos note = notes.get(i);
+			Note note = notes.get(i);
 			notePositions[i] = note.getPosition();
 			length = length + note.getLength();
 		}
@@ -375,7 +372,7 @@ public class InnerMetricWeight {
 		return total;
 	}
 
-	protected Map<Integer, Double> getNormalizedInnerMetricWeight(List<NotePos> notes) {
+	protected Map<Integer, Double> getNormalizedInnerMetricWeight(List<Note> notes) {
 		Integer[] onSet = extractOnset(notes);
 		List<List<Integer>> localMeters = getLocalMeters(onSet);
 		Map<Integer, Double> map = new TreeMap<Integer, Double>();
@@ -402,7 +399,7 @@ public class InnerMetricWeight {
 		}
 	}
 
-	private Integer[] extractOnset(List<NotePos> notes) {
+	private Integer[] extractOnset(List<Note> notes) {
 		int length = notes.size();
 		Integer[] arr = new Integer[length];
 		arr[0] = 0;
@@ -421,12 +418,12 @@ public class InnerMetricWeight {
 		return rArray;
 	}
 	
-	protected Integer[] extractOnset(List<NotePos> notes, int structureLength) {
+	protected Integer[] extractOnset(List<Note> notes, int structureLength) {
 		int length = notes.size();
 		Integer[] arr = new Integer[length * 3];
 //		arr[0] = 0;
 		for (int i = 0; i < length ; i++) {
-			NotePos note = notes.get(i);
+			Note note = notes.get(i);
 			arr[i] = note.getPosition();
 			arr[i + length] = note.getPosition() + structureLength;
 			arr[i + (length * 2)] = note.getPosition() + (structureLength * 2);

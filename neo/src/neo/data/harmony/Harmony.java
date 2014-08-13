@@ -2,26 +2,25 @@ package neo.data.harmony;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import jmetal.util.PseudoRandom;
 import neo.data.harmony.pitchspace.BassOctavePitchSpace;
 import neo.data.harmony.pitchspace.PitchSpaceStrategy;
 import neo.data.harmony.pitchspace.TopOctavePitchSpace;
 import neo.data.harmony.pitchspace.UniformPitchSpace;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 import neo.data.note.Scale;
 
-public class Harmony {
+public class Harmony implements Comparable<Harmony>{
 	
 	protected int position;
-	protected List<NotePos> notes;
+	protected List<Note> notes;
 	private PitchSpaceStrategy pitchSpaceStrategy;
 	private Chord chord;
 	private int length;
 	private double positionWeight;
 	
-	public Harmony(int position, int length, List<NotePos> notes, PitchSpaceStrategy pitchSpaceStrategy) {
+	public Harmony(int position, int length, List<Note> notes, PitchSpaceStrategy pitchSpaceStrategy) {
 		this.position = position;
 		this.length = length;
 		this.notes = notes;
@@ -33,13 +32,13 @@ public class Harmony {
 		return position;
 	}
 	
-	public List<NotePos> getNotes() {
+	public List<Note> getNotes() {
 		return Collections.unmodifiableList(notes);
 	}
 	
 	private void toChord(){
 		this.chord = new Chord();
-		for (NotePos note : notes) {
+		for (Note note : notes) {
 			chord.addPitchClass(note.getPitchClass());
 		}
 	}
@@ -68,12 +67,13 @@ public class Harmony {
 		return length;
 	}
 	
-	public void mutateNoteToPreviousPitchFromScale(Scale scale){
+	public Note mutateNoteToPreviousPitchFromScale(Scale scale){
 		int noteIndex = PseudoRandom.randInt(0, notes.size() - 1);
-		NotePos note = notes.get(noteIndex);
+		Note note = notes.get(noteIndex);
 		int newPitchClass = scale.pickPreviousPitchFromScale(note.getPitchClass());
 		note.setPitchClass(newPitchClass);
 		toChord();
+		return note;
 	}
 	
 	public void mutatePitchSpaceStrategy(){
@@ -103,7 +103,7 @@ public class Harmony {
 	}
 
 	public void setPositionWeight(double positionWeight) {
-		for (NotePos notePos : notes) {
+		for (Note notePos : notes) {
 			notePos.setPositionWeight(positionWeight);
 		}
 		this.positionWeight = positionWeight;
@@ -112,6 +112,17 @@ public class Harmony {
 	public void transpose(int t){
 		notes.stream().forEach(note -> note.setPitchClass((note.getPitchClass() + t) % 12));
 		toChord();
+	}
+
+	@Override
+	public int compareTo(Harmony harmony) {
+		if (getPosition() < harmony.getPosition()) {
+			return -1;
+		} if (getPosition() > harmony.getPosition()) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 
 }

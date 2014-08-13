@@ -5,14 +5,13 @@ import java.util.List;
 
 import neo.data.harmony.pitchspace.PitchSpaceStrategy;
 import neo.data.harmony.pitchspace.UniformPitchSpace;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 public class HarmonyBuilder {
 	
 	protected int position;
-	protected List<NotePos> notes = new ArrayList<>();
+	protected List<Note> notes = new ArrayList<>();
 	private PitchSpaceStrategy pitchSpaceStrategy;
-	private Chord chord;
 	private int length;
 	private double positionWeight;
 
@@ -32,9 +31,14 @@ public class HarmonyBuilder {
 	
 	public HarmonyBuilder notes(int ... pitchClass){
 		for (int i = 0; i < pitchClass.length; i++) {
-			NotePos notePos = new NotePos(pitchClass[i] , i , position, length);
+			Note notePos = new Note(pitchClass[i] , i , position, length);
 			notes.add(notePos);
 		}
+		return this;
+	}
+	
+	public HarmonyBuilder allNotes(List<Note> notes){
+		this.notes.addAll(notes);
 		return this;
 	}
 	
@@ -43,17 +47,27 @@ public class HarmonyBuilder {
 		return this;
 	}
 	
+	public HarmonyBuilder pitchSpace(PitchSpaceStrategy pitchSpaceStrategy){
+		this.pitchSpaceStrategy = pitchSpaceStrategy;
+		return this;
+	}
+	
 	public Harmony build(){
-		Integer[] range = {6};
-		Harmony harmony = new Harmony(position, length, notes, new UniformPitchSpace(notes, range));
+		if (this.pitchSpaceStrategy == null) {
+			Integer[] range = {6};
+			this.pitchSpaceStrategy = new UniformPitchSpace(notes, range);
+		}
+		Harmony harmony = new Harmony(position, length, notes, pitchSpaceStrategy);
 		harmony.setPositionWeight(positionWeight);
 		return harmony;
 	}
-	
-	public Harmony build(PitchSpaceStrategy pitchSpaceStrategy){
-		Harmony harmony = new Harmony(position,length, notes, pitchSpaceStrategy);
-		harmony.setPositionWeight(positionWeight);
-		return harmony;
+
+	public int getPosition() {
+		return position;
+	}
+
+	public int getLength() {
+		return length;
 	}
 	
 }

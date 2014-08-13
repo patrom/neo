@@ -11,8 +11,10 @@ import neo.AbstractTest;
 import neo.data.Motive;
 import neo.data.harmony.ChordType;
 import neo.data.harmony.Harmony;
+import neo.data.melody.HarmonicMelody;
+import neo.data.melody.Melody;
 import neo.data.note.Interval;
-import neo.data.note.NotePos;
+import neo.data.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,10 +34,18 @@ public class MelodicObjectiveTest extends AbstractTest {
 	
 	@Test
 	public void test_E_C() {
+		List<Note> melodyNotes = new ArrayList<>();
+		melodyNotes.add(note().pc(4).pos(0).len(24).positionWeight(3.0).build());
+		melodyNotes.add(note().pc(0).pos(24).len(24).positionWeight(3.0).build());
+		int voice = 1;
+		HarmonicMelody harmonicMelody = new HarmonicMelody(melodyNotes, null, voice);
+		Melody melody = new Melody(harmonicMelody, voice);
+		melodies.add(melody);
+		
 		harmonies.add(harmony().pos(0).len(24).notes(4).positionWeight(3.0).build());
 		harmonies.add(harmony().pos(24).len(24).notes(0).positionWeight(3.0).build());
 		totalWeight = 6.0;
-		motive = new Motive(harmonies);
+		motive = new Motive(harmonies, melodies);
 		melodicObjective = new MelodicObjective(musicProperties, motive);
 		double melodicValue = melodicObjective.evaluate();
 		LOGGER.info("test_E_C :" + melodicValue);
@@ -49,7 +59,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 		harmonies.add(harmony().pos(12).len(12).notes(2).positionWeight(1.5).build());
 		harmonies.add(harmony().pos(24).len(24).notes(0).positionWeight(3.0).build());
 		totalWeight = 6.0;
-		motive = new Motive(harmonies);
+		motive = new Motive(harmonies, melodies);
 		melodicObjective = new MelodicObjective(musicProperties, motive);
 		double melodicValue = melodicObjective.evaluate();
 		LOGGER.info("test_E_D_C :" + melodicValue);
@@ -64,7 +74,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 		harmonies.add(harmony().pos(18).len(6).notes(2).positionWeight(0.5).build());
 		harmonies.add(harmony().pos(24).len(24).notes(0).positionWeight(3.0).build());
 		totalWeight = 6.0;
-		melodicObjective = new MelodicObjective(musicProperties, new Motive(harmonies));
+		melodicObjective = new MelodicObjective(musicProperties, new Motive(harmonies, melodies));
 		double melodicValue = melodicObjective.evaluate();
 		LOGGER.info("test_E__D_C :" + melodicValue);
 		double expected = ((Interval.GROTE_SECONDE.getMelodicValue() * ((2.5 + 0.5)/totalWeight)) + (Interval.GROTE_SECONDE.getMelodicValue() * ((0.5 + 3)/totalWeight))
@@ -80,7 +90,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 		harmonies.add(harmony().pos(24).len(12).notes(0).positionWeight(1.5).build());
 		harmonies.add(harmony().pos(36).len(12).notes(2).positionWeight(1.5).build());
 		totalWeight = 6.0;
-		melodicObjective = new MelodicObjective(musicProperties, new Motive(harmonies));
+		melodicObjective = new MelodicObjective(musicProperties, new Motive(harmonies, melodies));
 		double melodicValue = melodicObjective.evaluate();
 		LOGGER.info("test_E_D_C_D :" + melodicValue);
 		double expected = ((4 * (Interval.GROTE_SECONDE.getMelodicValue() * ((1.5 + 1.5)/totalWeight))) +  (Interval.UNISONO.getMelodicValue() * ((1.5 + 1.5)/totalWeight))
@@ -95,7 +105,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 		harmonies.add(harmony().pos(24).len(12).notes(4).positionWeight(1.5).build());
 		harmonies.add(harmony().pos(36).len(12).notes(5).positionWeight(1.5).build());
 		totalWeight = 6.0;
-		melodicObjective = new MelodicObjective(musicProperties, new Motive(harmonies));
+		melodicObjective = new MelodicObjective(musicProperties, new Motive(harmonies, melodies));
 		double melodicValue = melodicObjective.evaluate();
 		LOGGER.info("test_C_D_E_F :" + melodicValue);
 		double expected = (((2 * (Interval.GROTE_SECONDE.getMelodicValue() * ((1.5 + 1.5)/totalWeight))) + (Interval.KLEINE_SECONDE.getMelodicValue() * ((1.5 + 1.5)/totalWeight))
@@ -106,7 +116,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 	
 	@Test
 	public void testEvaluateMelody() {
-		List<NotePos> notes = new ArrayList<>();
+		List<Note> notes = new ArrayList<>();
 		notes.add(note().pc(0).pos(0).len(6).positionWeight(1.0).build());
 		notes.add(note().pc(2).pos(6).len(6).positionWeight(0.5).build());
 		notes.add(note().pc(4).pos(12).len(6).positionWeight(1.0).build());
@@ -118,7 +128,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 	
 	@Test
 	public void testExtractNotesOnLevel(){
-		List<NotePos> notes = new ArrayList<>();
+		List<Note> notes = new ArrayList<>();
 		notes.add(note().pc(0).pos(0).len(6).positionWeight(1.0).build());
 		notes.add(note().pc(2).pos(6).len(3).positionWeight(0.5).build());
 		notes.add(note().pc(3).pos(9).len(3).positionWeight(1.0).build());//max finds only 1
@@ -135,7 +145,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 	
 	@Test
 	public void testEvaluateTriadicValueMelody() {
-		List<NotePos> notes = new ArrayList<>();
+		List<Note> notes = new ArrayList<>();
 		notes.add(note().pc(0).pos(0).len(6).positionWeight(1.0).build());
 		notes.add(note().pc(4).pos(6).len(6).positionWeight(0.5).build());
 		notes.add(note().pc(7).pos(12).len(6).positionWeight(1.0).build());

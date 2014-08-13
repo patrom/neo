@@ -1,6 +1,5 @@
 package neo.nsga.operator.mutation;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import jmetal.base.Solution;
@@ -9,23 +8,12 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import jmetal.util.PseudoRandom;
 import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.data.note.Scale;
 import neo.nsga.MusicVariable;
 
 
 public class OneNoteMutation extends Mutation {
 	
 	private static Logger LOGGER = Logger.getLogger(OneNoteMutation.class.getName());
-
-	private Scale scale;
-	
-	public OneNoteMutation() {	
-	} 
-
-	public OneNoteMutation(Scale scale) {
-		this.scale = scale;
-	} 
 
 	/**
 	 * Perform the mutation operation
@@ -36,15 +24,11 @@ public class OneNoteMutation extends Mutation {
 	public void doMutation(double probability, Solution solution) throws JMException {
 		if (PseudoRandom.randDouble() < probability) {
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
-			List<Harmony> harmonies = motive.getHarmonies();
-			int harmonyIndex = PseudoRandom.randInt(0, harmonies.size() - 1);
-			Harmony harmony = harmonies.get(harmonyIndex);
-			harmony.mutateNoteToPreviousPitchFromScale(scale);
+			motive.mutateHarmonyNoteToPreviousPitchFromScale();
 			LOGGER.fine("one note mutated");
 		} 
 	}
 
-	
 	/**
 	 * Executes the operation
 	 * @param object An object containing a solution to mutate

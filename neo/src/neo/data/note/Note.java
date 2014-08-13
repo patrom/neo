@@ -1,9 +1,10 @@
 package neo.data.note;
 
+import neo.data.harmony.Harmony;
 import neo.instrument.Performance;
 
 
-public class NotePos implements Comparable<NotePos>, Cloneable{
+public class Note implements Comparable<Note>, Cloneable{
 
 	/** The pitch value which indicates a rest. */
 	public static final int REST = Integer.MIN_VALUE;
@@ -24,7 +25,7 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 	private int octave;
 	private int pitchClass;
 	private int voice;
-	private int beat;
+	private Harmony harmony;
 	
 	private Performance performance = Performance.LEGATO;
 
@@ -32,10 +33,10 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 		return Math.floor(position / divider);
 	}
 
-	public NotePos() {
+	public Note() {
 	}
 
-	public NotePos(int pitchClass, int voice, int position, int length) {
+	public Note(int pitchClass, int voice, int position, int length) {
 		this.pitchClass = pitchClass;
 		this.voice = voice;
 		this.position = position;
@@ -97,7 +98,7 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 			return false;
 	}
 
-	public boolean samePitch(NotePos note) {
+	public boolean samePitch(Note note) {
 		return this.getPitch() == note.getPitch();
 	}
 
@@ -152,7 +153,7 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 		this.innerMetricWeight = innerMetricWeight;
 	}
 
-	public int compareTo(NotePos note) {
+	public int compareTo(Note note) {
 		if (getPosition() < note.getPosition()) {
 			return -1;
 		} if (getPosition() > note.getPosition()) {
@@ -179,7 +180,7 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NotePos other = (NotePos) obj;
+		Note other = (Note) obj;
 		if (pitchClass != other.pitchClass)
 			return false;
 		if (position != other.position)
@@ -198,6 +199,14 @@ public class NotePos implements Comparable<NotePos>, Cloneable{
 	
 	public void setPerformance(Performance performance) {
 		this.performance = performance;
+	}
+
+	public Harmony getHarmony() {
+		return harmony;
+	}
+
+	public void setHarmony(Harmony harmony) {
+		this.harmony = harmony;
 	}
 
 }

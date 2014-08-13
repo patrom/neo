@@ -11,7 +11,6 @@ import jm.music.data.Phrase;
 import jm.music.data.Rest;
 import jm.music.data.Score;
 import neo.data.melody.Melody;
-import neo.data.note.NotePos;
 
 public class ScoreUtilities implements JMC{
 	
@@ -51,12 +50,12 @@ public class ScoreUtilities implements JMC{
 		return r;
 	}
 	
-	public static Score createScoreMelodies(List<Melody> melodies){
+	public static Score createScoreMelodies(List<Melody> melodies, double tempo){
 		Score score = new Score();
 		Part[] scoreParts = new Part[melodies.size()];
 		int voice = 0;
 		for (Melody motive : melodies) {
-			List<NotePos> notePosistions = motive.getNotes();
+			List<neo.data.note.Note> notePosistions = motive.getNotes();
 			Phrase phrase = new Phrase();
 			int lastVoice = 0;
 			if (!notePosistions.isEmpty()) {
@@ -65,12 +64,12 @@ public class ScoreUtilities implements JMC{
 				int length = notePosistions.size();
 				Note note = null;
 				for (int i = 0; i < length; i++) {
-					NotePos notePos = notePosistions.get(i);
+					neo.data.note.Note notePos = notePosistions.get(i);
 					lastVoice = notePos.getVoice();
 					note = new Note(notePos.getPitch(),(double)notePos.getLength()/ATOMIC_VALUE);
 					phrase.add(note);
 					if ((i + 1) < length) {	
-						NotePos nextNotePos = notePosistions.get(i + 1);
+						neo.data.note.Note nextNotePos = notePosistions.get(i + 1);
 						int gap = (notePos.getPosition()+ notePos.getLength()) - nextNotePos.getPosition();
 						if (gap < 0) {
 							note = new Rest((double)-gap/ATOMIC_VALUE);
@@ -92,9 +91,9 @@ public class ScoreUtilities implements JMC{
 			score.add(scoreParts[i]);
 		}
 		
-		double r = randomTempo();
-		//tempo between 50 - 150
-		score.setTempo(r);
+//		double r = randomTempo();
+//		//tempo between 50 - 150
+		score.setTempo(tempo);
 		return score;
 	}
 	
