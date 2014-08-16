@@ -68,16 +68,16 @@ public class NSGAII_Main implements JMC{
 	      Operator oneNoteMutation = new OneNoteMutation();
 	      oneNoteMutation.setParameter("probabilityOneNote",1.0);
 	    
-	      Operator pitchSpaceMutation = new PitchSpaceMutation();
-	      pitchSpaceMutation.setParameter("probabilityPitchSpace",1.0);
+//	      Operator pitchSpaceMutation = new PitchSpaceMutation();
+//	      pitchSpaceMutation.setParameter("probabilityPitchSpace",1.0);
 	
 	    // Selection Operator 
 	    Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament2") ;                           
 	
 	    // Add the operators to the algorithm
 	    algorithm.addOperator("crossover",crossover);
-	    algorithm.addOperator("oneNoteMutation", oneNoteMutation);
-	    algorithm.addOperator("pitchSpaceMutation",pitchSpaceMutation);
+//	    algorithm.addOperator("oneNoteMutation", oneNoteMutation);
+//	    algorithm.addOperator("pitchSpaceMutation",pitchSpaceMutation);
 	    algorithm.addOperator("selection",selection);
 	
 	    // Execute the Algorithm

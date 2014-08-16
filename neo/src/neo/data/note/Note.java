@@ -25,7 +25,6 @@ public class Note implements Comparable<Note>, Cloneable{
 	private int octave;
 	private int pitchClass;
 	private int voice;
-	private Harmony harmony;
 	
 	private Performance performance = Performance.LEGATO;
 
@@ -41,6 +40,12 @@ public class Note implements Comparable<Note>, Cloneable{
 		this.voice = voice;
 		this.position = position;
 		this.length = length;
+	}
+	
+	public void updateNote(Note note){
+		this.pitchClass = note.getPitchClass();
+		this.pitch = note.getPitch();
+		this.octave = note.getOctave();
 	}
 
 	public int getLength() {
@@ -199,14 +204,6 @@ public class Note implements Comparable<Note>, Cloneable{
 	
 	public void setPerformance(Performance performance) {
 		this.performance = performance;
-	}
-
-	public Harmony getHarmony() {
-		return harmony;
-	}
-
-	public void setHarmony(Harmony harmony) {
-		this.harmony = harmony;
 	}
 
 }

@@ -1,17 +1,18 @@
 package neo.data.harmony.pitchspace;
 
 import static junit.framework.Assert.assertEquals;
+import static neo.data.harmony.HarmonyBuilder.harmony;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import neo.data.harmony.Harmony;
 import neo.data.note.Note;
 
 import org.junit.Test;
 
 public class BassOctavePitchSpaceTest {
 
-	private PitchSpaceStrategy bassOctavePitchStrategy;
 	private List<Note> notes = new ArrayList<>();
 
 	@Test
@@ -21,8 +22,9 @@ public class BassOctavePitchSpaceTest {
 		notes.add(new Note(3, 2, 0, 12));
 		notes.add(new Note(4, 3, 0, 12));
 		Integer[] range = {6};
-		bassOctavePitchStrategy = new BassOctavePitchSpace(notes, range);
-		bassOctavePitchStrategy.translateToPitchSpace();
+		Harmony harmony = harmony().notes(notes).build();
+		harmony.setPitchSpaceStrategy(harmony.new BassOctavePitchSpace(range));
+		harmony.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 28);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 51);
 		assertEquals("pitch not correct", notes.get(1).getPitch(), 62);

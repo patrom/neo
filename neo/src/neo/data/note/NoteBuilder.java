@@ -1,11 +1,16 @@
 package neo.data.note;
 
+import neo.data.harmony.Harmony;
+
 public class NoteBuilder {
 	
 	private int pitchClass;
 	private int position;
 	private int length;
 	private double positionWeight;
+	private int pitch;
+	private int octave;
+	private int voice;
 
 	public static NoteBuilder note(){
 		return new NoteBuilder();
@@ -26,6 +31,21 @@ public class NoteBuilder {
 		return this;
 	}
 	
+	public NoteBuilder pitch(int pitch){
+		this.pitch = pitch;
+		return this;
+	}
+	
+	public NoteBuilder ocatve(int octave){
+		this.octave = octave;
+		return this;
+	}
+	
+	public NoteBuilder voice(int voice){
+		this.voice = voice;
+		return this;
+	}
+	
 	public NoteBuilder positionWeight(Double positionWeight) {
 		this.positionWeight = positionWeight;
 		return this;
@@ -37,6 +57,9 @@ public class NoteBuilder {
 		note.setPosition(position);
 		note.setPositionWeight(positionWeight);
 		note.setLength(length);
+		note.setPitch(pitch);
+		note.setOctave(octave);
+		note.setVoice(voice);
 		return note;
 	}
 
@@ -46,6 +69,10 @@ public class NoteBuilder {
 
 	public int getLength() {
 		return length;
+	}
+
+	public int getVoice() {
+		return voice;
 	}
 
 }

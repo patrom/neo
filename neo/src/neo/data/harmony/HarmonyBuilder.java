@@ -3,17 +3,17 @@ package neo.data.harmony;
 import java.util.ArrayList;
 import java.util.List;
 
-import neo.data.harmony.pitchspace.PitchSpaceStrategy;
-import neo.data.harmony.pitchspace.UniformPitchSpace;
+import neo.data.melody.HarmonicMelody;
+import neo.data.melody.HarmonicMelodyBuilder;
 import neo.data.note.Note;
 
 public class HarmonyBuilder {
 	
 	protected int position;
 	protected List<Note> notes = new ArrayList<>();
-	private PitchSpaceStrategy pitchSpaceStrategy;
 	private int length;
 	private double positionWeight;
+	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 
 	public static HarmonyBuilder harmony(){
 		return new HarmonyBuilder();
@@ -31,14 +31,14 @@ public class HarmonyBuilder {
 	
 	public HarmonyBuilder notes(int ... pitchClass){
 		for (int i = 0; i < pitchClass.length; i++) {
-			Note notePos = new Note(pitchClass[i] , i , position, length);
-			notes.add(notePos);
+			Note note = new Note(pitchClass[i] , i , position, length);
+			notes.add(note);
 		}
 		return this;
 	}
 	
-	public HarmonyBuilder allNotes(List<Note> notes){
-		this.notes.addAll(notes);
+	public HarmonyBuilder notes(List<Note> notes){
+		this.notes = notes;
 		return this;
 	}
 	
@@ -47,19 +47,34 @@ public class HarmonyBuilder {
 		return this;
 	}
 	
-	public HarmonyBuilder pitchSpace(PitchSpaceStrategy pitchSpaceStrategy){
-		this.pitchSpaceStrategy = pitchSpaceStrategy;
+	public HarmonyBuilder melodyBuilders(HarmonicMelody harmonicMelody){
+		this.harmonicMelodies.add(harmonicMelody);
 		return this;
 	}
-	
+
 	public Harmony build(){
-		if (this.pitchSpaceStrategy == null) {
-			Integer[] range = {6};
-			this.pitchSpaceStrategy = new UniformPitchSpace(notes, range);
-		}
-		Harmony harmony = new Harmony(position, length, notes, pitchSpaceStrategy);
+		Harmony harmony = new Harmony(position, length, notes);
+		Integer[] range = {6};
+		harmony.setPitchSpaceStrategy(harmony.new UniformPitchSpace(range));
 		harmony.setPositionWeight(positionWeight);
+		List<HarmonicMelody> temp = new ArrayList<>();
+		for (Note note : notes) {
+			if (harmonicMelodyExists(note)) {
+				harmonicMelodies.stream().filter(harmonicMelody -> harmonicMelody.getVoice() == note.getVoice())
+					.flatMap(harmonicMelody -> harmonicMelody.getNotes().stream()).forEach(n -> n.setPitchClass(note.getPitchClass()));
+			} else {
+				Note newNote = new Note(note.getPitchClass(), note.getVoice(), note.getPosition(), note.getLength());
+				HarmonicMelody harmonicMelody = new HarmonicMelody(newNote, note.getVoice());
+				temp.add(harmonicMelody);
+			}
+		}
+		harmonicMelodies.addAll(temp);
+		harmony.setHarmonicMelodies(harmonicMelodies);
 		return harmony;
+	}
+	
+	private boolean harmonicMelodyExists(Note note){
+		return harmonicMelodies.stream().anyMatch(harmonicMelody -> harmonicMelody.getVoice() == note.getVoice());
 	}
 
 	public int getPosition() {

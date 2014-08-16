@@ -22,8 +22,7 @@ public class MotiveTest {
 	@Before
 	public void setUp(){
 		List<Harmony> harmonies = new ArrayList<>();
-		List<Melody> melodies = new ArrayList<>();
-		motive = new Motive(harmonies, melodies);
+		motive = new Motive(harmonies);
 	}
 
 //	@Test

@@ -1,6 +1,11 @@
 package neo.data;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import jmetal.util.PseudoRandom;
 import neo.data.harmony.Harmony;
@@ -11,12 +16,11 @@ import neo.evaluation.MusicProperties;
 public class Motive {
 
 	private List<Harmony> harmonies;
-	private List<Melody> melodies;
+	private List<Melody> melodies = new ArrayList<>();
 	private MusicProperties musicProperties;
 		
-	public Motive(List<Harmony> harmonies, List<Melody> melodies) {
+	public Motive(List<Harmony> harmonies) {
 		this.harmonies = harmonies;
-		this.melodies = melodies;
 	}
 
 	public List<Harmony> getHarmonies() {
@@ -24,20 +28,22 @@ public class Motive {
 	}
 	
 	public List<Melody> getMelodies() {
-		return melodies;
+		return extractMelodies();
+	}
+	
+	public List<Note> getMelodyForVoice(int voice){
+		return harmonies.stream()
+				.flatMap(harmonicMelody -> harmonicMelody.getHarmonicMelodies().stream())
+				.filter(harmonicMelody -> harmonicMelody.getVoice() == voice)
+				.flatMap(harmonicMelody -> harmonicMelody.getNotes().stream())
+				.sorted()
+				.collect(Collectors.toList());
 	}
 	
 	public void mutateHarmonyNoteToPreviousPitchFromScale(){
 		int harmonyIndex = PseudoRandom.randInt(0, harmonies.size() - 1);
 		Harmony harmony = harmonies.get(harmonyIndex);
-		Note mutatedNote = harmony.mutateNoteToPreviousPitchFromScale(musicProperties.getScale());
-		melodies.stream()
-			.flatMap(melody -> melody.getHarmonicMelodies().stream())
-			.filter(harmMelody -> harmMelody.getPosition() == harmony.getPosition())
-			.flatMap(harmMelody -> harmMelody.getNotes().stream())
-			.filter(note -> note.getVoice() == mutatedNote.getVoice())
-			.forEach(note -> note.setPitchClass(mutatedNote.getPitchClass()));
-		//update only chord tones!!
+		harmony.mutateNoteToPreviousPitchFromScale(musicProperties.getScale());
 	}
 	
 	public void mutateHarmonyPitchSpaceStrategy(){
@@ -48,6 +54,7 @@ public class Motive {
 	
 	public void updatePitches(){
 		harmonies.forEach(harmony -> harmony.translateToPitchSpace());
+//		harmonies.stream().flatMap(harmony -> harmony.getHarmonicMelodies().stream())
 		//update melodies
 	}
 
@@ -59,18 +66,16 @@ public class Motive {
 		return musicProperties;
 	}
 	
-//	private List<Melody> extractMelodies(){
-//		melodies.clear();
-//		harmonies.stream().forEach(harmony -> harmony.translateToPitchSpace());
-//		Map<Integer, List<NotePos>> melodyMap = harmonies.stream().flatMap(harmony -> harmony.getNotes().stream()).collect(groupingBy(note -> note.getVoice()));
-//		for (Entry<Integer, List<NotePos>> entry: melodyMap.entrySet()) {
-//			List<NotePos> notes = entry.getValue();
-//			Melody melody = new Melody(notes);
-//			melodies.add(melody);
-//		}
-//		return melodies;
-//	}
-//	
+	private List<Melody> extractMelodies(){
+		melodies.clear();
+		harmonies.stream().forEach(harmony -> harmony.translateToPitchSpace());
+		for (int i = 0; i < musicProperties.getChordSize(); i++) {
+			Melody melody = new Melody(getMelodyForVoice(i), i);
+			melodies.add(melody);
+		}
+		return melodies;
+	}
+	
 //	private List<Melody> extractMelodies_concat(List<Harmony> harmonies) {
 //		melodies.clear();
 //		List<NotePos> allNotes = new ArrayList<>();

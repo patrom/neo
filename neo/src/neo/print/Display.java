@@ -38,10 +38,10 @@ public class Display {
 //			MusicalStructure structure2 = FugaUtilities.harmonizeMelody(sentences, inputProps.getScale(), 2, 2, inputProps.getMelodyLength() * 12);
 //			sentences.add(structure2);
 //			changeLengths(sentences);
-			motive.getHarmonies().stream().forEach(harmony -> harmony.translateToPitchSpace());
+//			motive.getHarmonies().stream().forEach(harmony -> harmony.translateToPitchSpace());
 			printHarmonies(motive.getHarmonies());
 //			printNotes(motive.getHarmonies());
-			motive.getMelodies().stream().forEach(melody -> melody.updateMelodies());
+//			motive.getMelodies().stream().forEach(melody -> melody.updateMelodies());
 			viewScore(motive.getMelodies(), i, tempo);
 //			printVextab(sentences);
 //			if (inputProps.getTempo() > 0f) {

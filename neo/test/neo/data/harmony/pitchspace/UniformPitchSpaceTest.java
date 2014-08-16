@@ -1,20 +1,18 @@
 package neo.data.harmony.pitchspace;
 
 import static junit.framework.Assert.assertEquals;
+import static neo.data.harmony.HarmonyBuilder.harmony;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import neo.data.harmony.pitchspace.PitchSpaceStrategy;
-import neo.data.harmony.pitchspace.UniformPitchSpace;
+import neo.data.harmony.Harmony;
 import neo.data.note.Note;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class UniformPitchSpaceTest {
 	
-	private PitchSpaceStrategy uniformPitchStrategy;
 	private List<Note> notes = new ArrayList<>();
 	private Integer[] range = {6};
 
@@ -24,8 +22,9 @@ public class UniformPitchSpaceTest {
 		notes.add(new Note(2, 1, 0, 12));
 		notes.add(new Note(3, 2, 0, 12));
 		notes.add(new Note(4, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, range);
-		uniformPitchStrategy.translateToPitchSpace();
+		Harmony harmony = harmony().notes(notes).build();
+		harmony.setPitchSpaceStrategy(harmony.new UniformPitchSpace(range));
+		harmony.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 40);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 51);
 		assertEquals("pitch not correct", notes.get(1).getPitch(), 62);
@@ -38,8 +37,9 @@ public class UniformPitchSpaceTest {
 		notes.add(new Note(3, 1, 0, 12));
 		notes.add(new Note(2, 2, 0, 12));
 		notes.add(new Note(4, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, range);
-		uniformPitchStrategy.translateToPitchSpace();
+		Harmony harmony = harmony().notes(notes).build();
+		harmony.setPitchSpaceStrategy(harmony.new UniformPitchSpace(range));
+		harmony.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 52);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 62);
 		assertEquals("pitch not correct", notes.get(1).getPitch(), 63);
@@ -52,8 +52,9 @@ public class UniformPitchSpaceTest {
 		notes.add(new Note(2, 1, 0, 12));
 		notes.add(new Note(4, 2, 0, 12));
 		notes.add(new Note(3, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, range);
-		uniformPitchStrategy.translateToPitchSpace();
+		Harmony harmony = harmony().notes(notes).build();
+		harmony.setPitchSpaceStrategy(harmony.new UniformPitchSpace(range));
+		harmony.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 52);
 		assertEquals("pitch not correct", notes.get(1).getPitch(), 62);
@@ -66,8 +67,9 @@ public class UniformPitchSpaceTest {
 		notes.add(new Note(2, 1, 0, 12));
 		notes.add(new Note(4, 2, 0, 12));
 		notes.add(new Note(1, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, range);
-		uniformPitchStrategy.translateToPitchSpace();
+		Harmony harmony = harmony().notes(notes).build();
+		harmony.setPitchSpaceStrategy(harmony.new UniformPitchSpace(range));
+		harmony.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 61);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 64);
 		assertEquals("pitch not correct", notes.get(1).getPitch(), 74);
@@ -80,8 +82,9 @@ public class UniformPitchSpaceTest {
 		notes.add(new Note(2, 1, 0, 12));
 		notes.add(new Note(2, 2, 0, 12));
 		notes.add(new Note(3, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, range);
-		uniformPitchStrategy.translateToPitchSpace();
+		Harmony harmony = harmony().notes(notes).build();
+		harmony.setPitchSpaceStrategy(harmony.new UniformPitchSpace(range));
+		harmony.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 62);
 		assertEquals("pitch not correct", notes.get(1).getPitch(), 62);
@@ -94,8 +97,9 @@ public class UniformPitchSpaceTest {
 		notes.add(new Note(3, 1, 0, 12));
 		notes.add(new Note(2, 2, 0, 12));
 		notes.add(new Note(3, 3, 0, 12));
-		uniformPitchStrategy = new UniformPitchSpace(notes, range);
-		uniformPitchStrategy.translateToPitchSpace();
+		Harmony harmony = harmony().notes(notes).build();
+		harmony.setPitchSpaceStrategy(harmony.new UniformPitchSpace(range));
+		harmony.translateToPitchSpace();
 		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);
 		assertEquals("pitch not correct", notes.get(2).getPitch(), 62);
 		assertEquals("pitch not correct", notes.get(1).getPitch(), 63);

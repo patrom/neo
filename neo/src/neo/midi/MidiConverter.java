@@ -1,16 +1,18 @@
 package neo.midi;
 
+import static neo.data.harmony.HarmonyBuilder.harmony;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import neo.data.harmony.Harmony;
-import neo.data.harmony.pitchspace.UniformPitchSpace;
+import neo.data.harmony.HarmonyBuilder;
 import neo.data.melody.Melody;
 import neo.data.note.Note;
 
@@ -76,8 +78,11 @@ public class MidiConverter {
 		Map<Integer, List<Note>> chords = extractNoteMap(melodies);
 		List<Harmony> harmonies = new ArrayList<>();
 		for (Entry<Integer, List<Note>> ch : chords.entrySet()) {
-			Harmony harmony = new Harmony(ch.getKey(),ch.getValue().get(0).getLength()
-					, ch.getValue(), new UniformPitchSpace(ch.getValue(), range));
+			Harmony harmony = harmony()
+				.pos(ch.getKey())
+				.len(ch.getValue().get(0).getLength())
+				.notes(ch.getValue())
+				.build();
 			harmonies.add(harmony);
 		}
 		return harmonies;

@@ -117,8 +117,7 @@ public class MidiParser {
 		Note lastNote = notes.get(notes.size() - 1);
 		int length = lastNote.getPosition() + lastNote.getLength()
 				- firstNote.getPosition();
-		HarmonicMelody harmonicMelody = new HarmonicMelody(notes, null, length);
-		Melody melody = new Melody(harmonicMelody, voice);
+		Melody melody = new Melody(notes, voice);
 		return melody;
 	}
 
