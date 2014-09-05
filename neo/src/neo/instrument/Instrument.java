@@ -15,7 +15,7 @@ public class Instrument {
 	public Instrument() {
 	}
 	
-	public int getPerformanceValue(Performance performance) {
+	public int getPerformanceValue(Articulation performance) {
 		if (isKeySwitch()) {
 			return 24;
 		} else {

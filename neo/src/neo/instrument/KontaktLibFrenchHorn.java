@@ -11,7 +11,7 @@ public class KontaktLibFrenchHorn extends Instrument {
 	}
 
 	@Override
-	public int getPerformanceValue(Performance performance) {
+	public int getPerformanceValue(Articulation performance) {
 		switch (performance) {
 		case LEGATO:
 			return 24;

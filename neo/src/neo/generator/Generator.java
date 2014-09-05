@@ -1,37 +1,27 @@
 package neo.generator;
 
-import static java.util.stream.Collectors.groupingBy;
-import static neo.data.harmony.HarmonyBuilder.harmony;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.Sequence;
 
-import jm.music.data.Score;
-import jm.util.View;
-import jm.util.Write;
-import jmetal.util.PseudoRandom;
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
 import neo.data.harmony.HarmonyBuilder;
 import neo.data.melody.HarmonicMelody;
 import neo.data.melody.Melody;
 import neo.data.note.Note;
-import neo.data.note.NoteBuilder;
 import neo.data.note.Scale;
-import neo.evaluation.HarmonyProperties;
-import neo.evaluation.MelodyProperties;
 import neo.evaluation.MusicProperties;
-import neo.instrument.KontaktLibPiano;
-import neo.instrument.MidiDevice;
-import neo.midi.MidiDevicesUtil;
-import neo.print.ScoreUtilities;
+import neo.objective.melody.InnerMetricWeight;
 
 public class Generator {
 	
@@ -41,8 +31,8 @@ public class Generator {
 	private Map<Integer, Double> rhythmWeightValues;
 	private int minimumLength;
 	private int chordSize;
-	private Integer[] octaveHighestNote;
 	private List<HarmonyBuilder> harmonyBuilders;
+	private List<HarmonicMelody> harmonicMelodies;
 	private MusicProperties musicProperties;
 	
 	public Generator(MusicProperties properties) {
@@ -50,114 +40,93 @@ public class Generator {
 		this.rhythmWeightValues = properties.getRhythmWeightValues();
 		this.minimumLength = properties.getMinimumLength();
 		this.chordSize = properties.getChordSize();
-		this.octaveHighestNote = properties.getOctaveHighestPitchClass();
 		this.harmonyBuilders = properties.getHarmonyBuilders();
 		this.musicProperties = properties;
+		this.harmonicMelodies = properties.getHarmonicMelodies();
 	}
 
 	public Motive generateMotive() {
 		Motive motive = new Motive(generateHarmonies());
 		motive.setMusicProperties(musicProperties);
+		updateInnerMetricWeightMelodies(motive.getMelodies());
+		updateInnerMetricWeightHarmonies(motive.getHarmonies());
 		return motive;
 	}
+
+	private void updateInnerMetricWeightHarmonies(List<Harmony> harmonies) {
+		int[] harmonicRhythm = extractHarmonicRhythm(harmonies);
+		Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(harmonicRhythm, minimumLength);
+		for (Harmony harmony : harmonies) {
+			Integer key = harmony.getPosition()/minimumLength;
+			if (normalizedMap.containsKey(key)) {
+				Double innerMetricValue = normalizedMap.get(key);
+				harmony.setInnerMetricWeight(innerMetricValue);
+			}
+		}
+	}
+
+	private int[] extractHarmonicRhythm(List<Harmony> harmonies) {
+		int[] rhythm = new int[harmonies.size()];
+		for (int i = 0; i < rhythm.length; i++) {
+			Harmony harmony = harmonies.get(i);
+			rhythm[i] = harmony.getPosition();
+		}
+		return rhythm;
+	}
+
+	private void updateInnerMetricWeightMelodies(List<Melody> melodies) {
+		for (Melody melody : melodies) {
+			List<Note> notes = melody.getNotes();
+			Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(notes, minimumLength);
+			for (Note note : notes) {
+				Integer key = note.getPosition()/minimumLength;
+				if (normalizedMap.containsKey(key)) {
+					Double innerMetricValue = normalizedMap.get(key);
+					note.setInnerMetricWeight(innerMetricValue);
+				}
+			}
+		}
+	}
 	
+	private HarmonicMelody getHarmonicMelodyForNote(Note harmonyNote){
+		Optional<HarmonicMelody> optional = harmonicMelodies.stream()
+				.filter(harmonicMelody -> harmonicMelody.getVoice() == harmonyNote.getVoice() && harmonicMelody.getPosition() == harmonyNote.getPosition())
+				.findFirst();
+		if (optional.isPresent()) {
+			return copyHarmonicMelody(optional.get(), harmonyNote);
+		} else {
+			Note newNote = harmonyNote.copy();
+			newNote.setPositionWeight(calculatePositionWeight( harmonyNote.getPosition(),  harmonyNote.getLength()));
+			return new HarmonicMelody(newNote, harmonyNote.getVoice(), harmonyNote.getPosition());
+		}
+	}
+
 	public List<Harmony> generateHarmonies(){
 		List<Harmony> harmonies = new ArrayList<>();
 		for (HarmonyBuilder harmonyBuilder : harmonyBuilders) {
 			List<Integer> chordPitchClasses = generatePitchClasses();
 			List<Note> notes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
+			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(notes);
+			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
 			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
-			Harmony harmony = harmonyBuilder
-					.notes(notes)
-					.positionWeight(totalWeight)
-					.build();
-			harmony.setPitchSpaceStrategy(harmony.new UniformPitchSpace(octaveHighestNote));
+			harmony.setPositionWeight(totalWeight);
 			harmonies.add(harmony);		
 		}
 		return harmonies;
 	}
-	
-	public List<Melody> generateMelodies(List<Harmony> harmonies){
-		List<Melody> melodies = new ArrayList<Melody>();
-		int melodyIndex = 0;
-		for (int voice = 0; voice < harmonies.size(); voice++) {
-			Harmony harmony = harmonies.get(voice);
-			List<Note> melodyNotes = new ArrayList<>();
-			
-			HarmonicMelody harmonicMelody = new HarmonicMelody(melodyNotes, voice);
-			harmony.addHarmonicMelody(harmonicMelody);
+
+	private List<HarmonicMelody> getHarmonicMelodies(List<Note> notes) {
+		List<HarmonicMelody> harmonicMelodies = new ArrayList<HarmonicMelody>();
+		for (Note note : notes) {
+			HarmonicMelody harmonicMelody = getHarmonicMelodyForNote(note);
+			harmonicMelodies.add(harmonicMelody);
 		}
-		
-		
-		
-		
-//		Map<Integer, List<Note>> melodyMap = harmonies.stream()
-//			.flatMap(harmony -> harmony.getNotes().stream())
-//			.collect(groupingBy(note -> note.getVoice()));
-//		for (Entry<Integer, List<Note>> entry: melodyMap.entrySet()) {
-//			int voice = entry.getKey();
-//			List<HarmonicMelody> HarmonicMelodies = new ArrayList<>();
-//			if (melodyPropertiesMap.containsKey(voice)) {
-//				int melodyIndex = 0;
-//				List<MelodyProperties> melodyProperties = melodyPropertiesMap.get(voice);
-//				MelodyProperties melodyProperty =  melodyProperties.get(melodyIndex);
-//				for (Note harmonyNote: entry.getValue()) {
-//					Harmony harmony = harmonyNote.getHarmony();
-//					List<Note> melodyNotes = new ArrayList<>();
-//					while ((melodyProperty.getPosition() - harmonyNote.getPosition()) < harmonyNote.getLength()) {
-//						Note melodyNote = new Note(harmonyNote.getPitchClass(), voice , melodyProperty.getPosition(), melodyProperty.getLength());
-//						melodyNote.setHarmony(harmony);
-//						melodyNotes.add(melodyNote);
-//						melodyIndex++;
-//						if (melodyIndex < melodyProperties.size()) {//last melody note
-//							melodyProperty = melodyProperties.get(melodyIndex);
-//						} else {
-//							break;
-//						}
-//					}
-//					HarmonicMelody harmonicMelody = new HarmonicMelody(melodyNotes, harmony, voice);
-//					HarmonicMelodies.add(harmonicMelody);
-//					harmony.addHarmonicMelody(harmonicMelody);
-//				}
-//			} else {
-//				for (Note harmonyNote: entry.getValue()) {
-//					Harmony harmony = harmonyNote.getHarmony();
-//					Note melodyNote = new Note(harmonyNote.getPitchClass(), voice , harmonyNote.getPosition(), harmonyNote.getLength());
-//					melodyNote.setHarmony(harmony);
-//					HarmonicMelody harmonicMelody = new HarmonicMelody(melodyNote, harmony, voice);
-//					HarmonicMelodies.add(harmonicMelody);
-//					harmony.addHarmonicMelody(harmonicMelody);
-//				}
-//			}
-//			Melody melody = new Melody(HarmonicMelodies, voice);
-//			melodies.add(melody);
-//		}
-		return melodies;
+		return harmonicMelodies;
 	}
 	
-//	public void updateMelodyToHarmony(List<Harmony> harmonies, Melody melody){
-//		int melodyIndex = 0;
-//		List<NotePos> melodyNotes = melody.getNotes();
-//		NotePos melodyNote = melodyNotes.get(melodyIndex);
-//		harmonyLoop:
-//		for (int harmonyIndex = 0; harmonyIndex < harmonies.size(); harmonyIndex++) {
-//			Harmony harmony = harmonies.get(harmonyIndex);
-//			int pc = getHarmonyPitchClassForMelodyNote(melodyNote, harmony);
-//			while ((melodyNote.getPosition() - harmony.getPosition()) < harmony.getLength()) {
-//				melodyNote.setHarmony(harmony);
-//				melodyNote.setPitchClass(pc);
-//				melodyIndex++;
-//				if (melodyIndex < melodyNotes.size()) {//last melody note
-//					melodyNote = melodyNotes.get(melodyIndex);
-//				} else {
-//					break harmonyLoop;
-//				}
-//			}
-//		}
-//	}
-
-
 	private List<Integer> generatePitchClasses() {
+		IntStream.generate(new Scale(Scale.MAJOR_SCALE)::pickRandomFromScale)
+			.limit(chordSize);
 		List<Integer> chordPitchClasses = new ArrayList<>();
 		for (int j = 0; j < chordSize; j++) {
 			int pitchClass = scale.pickRandomFromScale();
@@ -185,6 +154,24 @@ public class Generator {
 		return totalWeight;
 	}
 	
+	private HarmonicMelody copyHarmonicMelody(HarmonicMelody harmonicMelody, Note note) {
+		List<Note> newNotes = copyNotes(harmonicMelody.getMelodyNotes());
+		newNotes.forEach(n -> n.setPitchClass(note.getPitchClass()));
+		return new HarmonicMelody(note.copy(), newNotes, harmonicMelody.getVoice(), harmonicMelody.getPosition());
+	}
+	
+	private List<Note> copyNotes(List<Note> notesToCopy) {
+		List<Note> newNotes = new ArrayList<Note>();
+		int size = notesToCopy.size();
+		for (int i = 0; i < size; i++) {	
+			Note note = notesToCopy.get(i);
+			Note newNote = note.copy();
+			newNote.setPositionWeight(calculatePositionWeight(note.getPosition(), note.getLength()));
+			newNotes.add(newNote);
+		}
+		return newNotes;
+	}
+	
 	public static void main(String[] args) throws InvalidMidiDataException {
 		int chordSize = 3;
 		Integer[] octave = {5};
@@ -199,28 +186,28 @@ public class Generator {
 //		harmonies.forEach(h -> 	LOGGER.info(h.getChord().getPitchClassMultiSet() + ", "));
 //		harmonies.forEach(h ->  LOGGER.info(h.getChord().getPitchClassSet() + ", "));
 		harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
-		harmonies.stream().flatMap(h -> h.getHarmonicMelodies().stream()).filter(h -> h.getVoice() == 0).peek(h -> System.out.println(h.getNotes())).collect(Collectors.toList());
-		harmonies.stream().flatMap(h -> h.getHarmonicMelodies().stream()).filter(h -> h.getVoice() == 1).peek(h -> System.out.println(h.getNotes())).collect(Collectors.toList());
-		harmonies.stream().flatMap(h -> h.getHarmonicMelodies().stream()).filter(h -> h.getVoice() == 2).peek(h -> System.out.println(h.getNotes())).collect(Collectors.toList());
+		harmonies.stream().flatMap(h -> h.getHarmonicMelodies().stream()).filter(h -> h.getVoice() == 0).peek(h -> System.out.println(h.getMelodyNotes())).collect(Collectors.toList());
+		harmonies.stream().flatMap(h -> h.getHarmonicMelodies().stream()).filter(h -> h.getVoice() == 1).peek(h -> System.out.println(h.getMelodyNotes())).collect(Collectors.toList());
+		harmonies.stream().flatMap(h -> h.getHarmonicMelodies().stream()).filter(h -> h.getVoice() == 2).peek(h -> System.out.println(h.getMelodyNotes())).collect(Collectors.toList());
 		//mutate
 		Harmony harmony = harmonies.get(0);
 		Note note = harmony.getNotes().get(1);
 		int oldPC = note.getPitchClass();
 		note.setPitchClass(11);
 		harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
-		harmony.getHarmonicMelodies().stream().flatMap(h -> h.getNotes().stream()).filter(n -> n.getPitchClass() == oldPC)
+		harmony.getHarmonicMelodies().stream().flatMap(h -> h.getMelodyNotes().stream()).filter(n -> n.getPitchClass() == oldPC)
 			.forEach(n -> n.setPitchClass(11));
 		harmony.getHarmonicMelodies().stream()	
-			.peek(h -> System.out.println(h.getNotes())).collect(Collectors.toList());
+			.peek(h -> System.out.println(h.getMelodyNotes())).collect(Collectors.toList());
 		
 		//find Non chord
 		System.out.println(harmony.getNotes());
-		List<Note> hnotes = harmony.getHarmonicMelodies().stream().flatMap(h -> h.getNotes().stream()).filter(n -> !harmony.getPitchClasses().contains(n.getPitchClass()))
+		List<Note> hnotes = harmony.getHarmonicMelodies().stream().flatMap(h -> h.getMelodyNotes().stream()).filter(n -> !harmony.getPitchClasses().contains(n.getPitchClass()))
 			.collect(Collectors.toList());
 		System.out.println(hnotes);
 		
 		// melody
-		List<Note> melody = harmonies.stream().flatMap(h -> h.getHarmonicMelodies().stream()).filter(h -> h.getVoice() == 0).flatMap(h -> h.getNotes().stream()).sorted().collect(Collectors.toList());
+		List<Note> melody = harmonies.stream().flatMap(h -> h.getHarmonicMelodies().stream()).filter(h -> h.getVoice() == 0).flatMap(h -> h.getMelodyNotes().stream()).sorted().collect(Collectors.toList());
 		System.out.println(melody);
 //		Score score = ScoreUtilities.createScoreMelodies(motive.getMelodies(), 60);
 //		View.notate(score);

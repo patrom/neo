@@ -11,8 +11,6 @@ import java.util.List;
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
 import neo.data.melody.HarmonicMelody;
-import neo.data.melody.HarmonicMelodyBuilder;
-import neo.data.melody.Melody;
 import neo.data.note.Note;
 
 import org.junit.Before;
@@ -29,9 +27,9 @@ public class MusicVariableTest {
 		melodyNotes.add(note().pc(0).pos(0).len(12).build());
 		melodyNotes.add(note().pc(2).pos(12).len(12).build());
 		int voice = 1;
-		Harmony harmony = harmony().pos(0).len(24).notes(4, 2).positionWeight(3.0).build();
-//		HarmonicMelody harmonicMelody = harmonicMelody().notes(melodyNotes).voice(voice).build();
-//		harmony.addHarmonicMelody(harmonicMelody);
+		Harmony harmony = harmony().pos(0).len(24).positionWeight(3.0).build();
+		HarmonicMelody harmonicMelody = harmonicMelody().notes(melodyNotes).harmonyNote(note().pc(0).build()).voice(voice).build();
+		harmony.addHarmonicMelody(harmonicMelody);
 		harmonies.add(harmony);
 		motive = new Motive(harmonies);
 	}

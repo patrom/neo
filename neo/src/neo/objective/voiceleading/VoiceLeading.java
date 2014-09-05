@@ -196,15 +196,6 @@ public class VoiceLeading {
 				vlMatrix.set(row, col, voiceLeadingSize);
 			}	
 		}
-		
-//		Collection<VoiceLeadingSize> values = vlMatrix.values();
-//		for (VoiceLeadingSize vs : values) {
-//			System.out.print(vs.getSource());
-//			System.out.print(vs.getTarget());
-//			System.out.print(vs.getSize());
-//			System.out.println();
-//		}
-		
 		return vlMatrix.at(source.length - 1, target.length - 1) ;
 	}
 	
@@ -237,7 +228,6 @@ public class VoiceLeading {
 	private static Table<Integer, Integer, Integer> createTMatrix(
 			Multiset<Integer> chordA, Multiset<Integer> chordB) {
 		Table<Integer, Integer, Integer> TMatrix = HashBasedTable.create();
-		
 		int i = 0, j = 0;
 		for (Integer noteA : chordA) {
 			for (Integer noteB : chordB) {

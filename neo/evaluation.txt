@@ -1,4 +1,7 @@
 How to set evaluation optimized values:
 
 Harmony: set chordtype dissonance value
+
 Voiceleading: voice leading sizes < 3
+
+melody: interval evaluation based on note position

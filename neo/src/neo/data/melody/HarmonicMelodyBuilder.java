@@ -3,33 +3,27 @@ package neo.data.melody;
 import java.util.ArrayList;
 import java.util.List;
 
-import neo.data.harmony.Harmony.PitchSpaceStrategy;
 import neo.data.note.Note;
 
 public class HarmonicMelodyBuilder {
 
-	private int position;
-	private List<Note> notes = new ArrayList<>();
-	private PitchSpaceStrategy pitchSpaceStrategy;
+	private List<Note> melodyNotes = new ArrayList<>();
 	private int voice;
+	private int position;
+	private Note harmonyNote;
 	
 	public static HarmonicMelodyBuilder harmonicMelody(){
 		return new HarmonicMelodyBuilder();
 	}
 	
-	public HarmonicMelodyBuilder pos(int position){
-		this.position = position;
+	public HarmonicMelodyBuilder notes(List<Note> melodyNotes){
+		this.melodyNotes.addAll(melodyNotes);
 		return this;
 	}
 	
-	public HarmonicMelodyBuilder notes(List<Note> notes){
-		this.notes.addAll(notes);
-		return this;
-	}
-	
-	public HarmonicMelodyBuilder notes(Note ... note){
-		for (int i = 0; i < note.length; i++) {
-			notes.add(note[i]);
+	public HarmonicMelodyBuilder notes(Note ... melodyNote){
+		for (int i = 0; i < melodyNote.length; i++) {
+			melodyNotes.add(melodyNote[i]);
 		}
 		return this;
 	}
@@ -39,9 +33,18 @@ public class HarmonicMelodyBuilder {
 		return this;
 	}
 	
+	public HarmonicMelodyBuilder pos(int position){
+		this.position = position;
+		return this;
+	}
+	
+	public HarmonicMelodyBuilder harmonyNote(Note harmonyNote){
+		this.harmonyNote = harmonyNote;
+		return this;
+	}
+	
 	public HarmonicMelody build(){
-		HarmonicMelody harmonicMelody = new HarmonicMelody(notes, voice);
-		return harmonicMelody;
+		return new HarmonicMelody(harmonyNote, melodyNotes, voice, position);
 	}
 	
 }

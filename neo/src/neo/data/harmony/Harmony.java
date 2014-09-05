@@ -1,114 +1,112 @@
 package neo.data.harmony;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jmetal.util.PseudoRandom;
 import neo.data.melody.HarmonicMelody;
+import neo.data.melody.pitchspace.BassOctavePitchSpace;
+import neo.data.melody.pitchspace.MiddleOctavePitchSpace;
+import neo.data.melody.pitchspace.PitchSpace;
+import neo.data.melody.pitchspace.TopOctavePitchSpace;
+import neo.data.melody.pitchspace.UniformPitchSpace;
 import neo.data.note.Note;
 import neo.data.note.Scale;
 
 public class Harmony implements Comparable<Harmony>{
 	
 	protected int position;
-	protected List<Note> notes;
-	private PitchSpaceStrategy pitchSpaceStrategy;
 	private Chord chord;
 	private int length;
 	private double positionWeight;
+	private double innerMetricWeight;
 	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
+	private PitchSpace pitchSpace;
+	private Integer[] range = {5, 6};
 	
-	public Harmony(int position, int length, List<Note> notes) {
+	public Harmony(int position, int length, List<HarmonicMelody> harmonicMelodies) {
 		this.position = position;
 		this.length = length;
-		this.notes = notes;
+		this.harmonicMelodies = harmonicMelodies;
+		this.pitchSpace = new UniformPitchSpace(range);
+		this.pitchSpace.setNotes(getNotes());
 		toChord();
 	}
 	
-	public int getPosition() {
-		return position;
-	}
-	
 	public List<Note> getNotes() {
-		return Collections.unmodifiableList(notes);
+		return harmonicMelodies.stream()
+				.map(harmonicMelodic -> harmonicMelodic.getHarmonyNote())
+				.collect(toList());
 	}
 	
 	public List<Integer> getPitchClasses(){
-		return notes.stream().map(note -> note.getPitchClass()).collect(Collectors.toList());
+		return harmonicMelodies.stream()
+				.map(harmonicMelodic -> harmonicMelodic.getHarmonyNote().getPitchClass())
+				.collect(toList());
 	}
 	
 	private void toChord(){
 		this.chord = new Chord();
-		for (Note note : notes) {
-			chord.addPitchClass(note.getPitchClass());
-		}
-	}
-
-	public double getBeat(int divider) {
-		return Math.floor(position/divider);
+		harmonicMelodies.stream()
+			.map(harmonicMelodic -> harmonicMelodic.getHarmonyNote())
+			.forEach(note -> chord.addPitchClass(note.getPitchClass()));
 	}
 
 	public void translateToPitchSpace() {
-		pitchSpaceStrategy.translateToPitchSpace();
+		pitchSpace.translateToPitchSpace();
+		this.harmonicMelodies.forEach(harmonicMelody -> harmonicMelody.updateMelodyPitchesToHarmonyPitch());
 	}
 
-	public PitchSpaceStrategy getPitchSpaceStrategy() {
-		return pitchSpaceStrategy;
-	}
-
-	public double getChordWeight() {
-		return chord.getWeight();
-	}
-
-	public Chord getChord() {
-		return chord;
-	}
-
-	public int getLength() {
-		return length;
-	}
-	
 	public void mutateNoteToPreviousPitchFromScale(Scale scale){
-		int noteIndex = PseudoRandom.randInt(0, notes.size() - 1);
-		Note note = notes.get(noteIndex);
-		int newPitchClass = scale.pickPreviousPitchFromScale(note.getPitchClass());
-		note.setPitchClass(newPitchClass);
-		note.setPitch((note.getOctave() * 12) + newPitchClass);
+		HarmonicMelody harmonicMelody = getRandomHarmonicMelody();
+		Note harmonyNote = harmonicMelody.getHarmonyNote();
+		int oldPitchClass = harmonyNote.getPitchClass();
+		int newPitchClass = scale.pickPreviousPitchFromScale(oldPitchClass);
+		harmonicMelody.updateMelodyNotes(oldPitchClass, newPitchClass);
+		harmonyNote.setPitchClass(newPitchClass);
 		toChord();
-		updateHarmonicMelodies(note);
 	}
 	
-	protected void updateHarmonicMelodies(Note updateNote){
-//		harmonicMelodies.stream()
-//			.flatMap(harmMelody -> harmMelody.getNotes().stream())
-//			.peek(n -> System.out.print(n.getPitchClass()))
-//			.filter(note -> note.isChordNote() && note.getVoice() == updateNote.getVoice())
-//			.peek(n -> System.out.print(n.getPitchClass()))
-//			.forEach(note -> note.updateNote(updateNote));
+	public void mutateNoteRandom(Scale scale){
+		List<HarmonicMelody> melodies = harmonicMelodies.stream()
+				.filter(harmonicMelody -> harmonicMelody.getMelodyNotes().size() > 1)
+				.collect(toList());
+		if (!melodies.isEmpty()) {
+			HarmonicMelody harmonicMelody = getRandomFromList(melodies);
+			int newPitchClass = scale.pickRandomFromScale();
+			harmonicMelody.updateMelodyNotes(newPitchClass);
+		}
+	}
+
+	private HarmonicMelody getRandomHarmonicMelody() {
+		int index = PseudoRandom.randInt(0, harmonicMelodies.size() - 1);
+		return  harmonicMelodies.get(index);
 	}
 	
-	public void mutatePitchSpaceStrategy(){
-		pitchSpaceStrategy.mutateOctaveHighestPitchClass();
-		int i = PseudoRandom.randInt(0, 2);
+	private <T> T getRandomFromList(List<T> list) {
+		int index = PseudoRandom.randInt(0, list.size() - 1);
+		return list.get(index);
+	}
+	
+	public void mutatePitchSpace(){
+		int i = PseudoRandom.randInt(0, 3);
 		switch (i) {
 		case 0:
-			if (!(pitchSpaceStrategy instanceof UniformPitchSpace)) {
-				this.pitchSpaceStrategy = new UniformPitchSpace(pitchSpaceStrategy.getOctaveHighestPitchClassRange());
-			}
+			this.pitchSpace = new UniformPitchSpace(range);
 			break;
 		case 1:
-			if (!(pitchSpaceStrategy instanceof BassOctavePitchSpace)) {
-				this.pitchSpaceStrategy = new BassOctavePitchSpace(pitchSpaceStrategy.getOctaveHighestPitchClassRange());
-			}
+			this.pitchSpace = new BassOctavePitchSpace(range);
 			break;
 		case 2:
-			if (!(pitchSpaceStrategy instanceof TopOctavePitchSpace)) {
-				this.pitchSpaceStrategy = new TopOctavePitchSpace(pitchSpaceStrategy.getOctaveHighestPitchClassRange());
-			}
+			this.pitchSpace = new TopOctavePitchSpace(range);
+			break;
+		case 3:
+			this.pitchSpace =new  MiddleOctavePitchSpace(range);
 			break;
 		}
+		this.pitchSpace.setNotes(getNotes());
 	}
 
 	public double getPositionWeight() {
@@ -116,14 +114,16 @@ public class Harmony implements Comparable<Harmony>{
 	}
 
 	public void setPositionWeight(double positionWeight) {
-		for (Note notePos : notes) {
-			notePos.setPositionWeight(positionWeight);
-		}
+		harmonicMelodies.stream()
+			.map(harmonicMelodic -> harmonicMelodic.getHarmonyNote())
+			.forEach(note -> note.setPositionWeight(positionWeight));
 		this.positionWeight = positionWeight;
 	}
 	
 	public void transpose(int t){
-		notes.stream().forEach(note -> note.setPitchClass((note.getPitchClass() + t) % 12));
+		harmonicMelodies.stream()
+			.map(harmonicMelodic -> harmonicMelodic.getHarmonyNote())
+			.forEach(note -> note.setPitchClass((note.getPitchClass() + t) % 12));
 		toChord();
 	}
 
@@ -150,107 +150,40 @@ public class Harmony implements Comparable<Harmony>{
 		harmonicMelodies.add(harmonicMelody);
 	}
 	
-	public abstract class PitchSpaceStrategy {
-
-		protected Integer[] octaveHighestPitchClassRange;
-		protected int octaveHighestPitchClass;
-		protected int size;
-
-		public PitchSpaceStrategy(Integer[] octaveHighestPitchClasses) {
-			this.octaveHighestPitchClass = octaveHighestPitchClasses[0];
-			this.octaveHighestPitchClassRange = octaveHighestPitchClasses;
-			this.size = notes.size();
-		}
-
-		public abstract void translateToPitchSpace();
-		
-		public int getOctaveHighestPitchClass() {
-			return octaveHighestPitchClass;
-		}
-		
-		public void mutateOctaveHighestPitchClass(){
-			this.octaveHighestPitchClass = PseudoRandom.randInt(octaveHighestPitchClassRange[0], octaveHighestPitchClassRange[octaveHighestPitchClassRange.length - 1]);
-		}
-
-		protected void setPitchClassFirstNote() {
-			Note firstNote = notes.get(0);
-			firstNote.setPitch(firstNote.getPitchClass() + (12 * octaveHighestPitchClass));
-			firstNote.setOctave(octaveHighestPitchClass);
-		}
-		
-		protected void setUniformPitchSpace(){
-			setPitchClassFirstNote();
-			for (int i = 1; i < size; i++) {
-				Note prevNote = notes.get(i - 1);
-				Note note = notes.get(i);
-				int prevPc = prevNote.getPitchClass();
-				int pc = note.getPitchClass();
-				if (pc > prevPc) {
-					note.setPitch(prevNote.getPitch() - (12 - (pc - prevPc)));
-					note.setOctave(prevNote.getOctave() - 1);
-				} else {
-					note.setPitch(prevNote.getPitch() - (prevPc - pc));
-					note.setOctave(prevNote.getOctave());
-				}
-			}
-		}
-
-		public Integer[] getOctaveHighestPitchClassRange() {
-			return octaveHighestPitchClassRange;
-		}
-
+	public PitchSpace getPitchSpace() {
+		return pitchSpace;
 	}
 	
-	public class UniformPitchSpace extends PitchSpaceStrategy {
-
-		public UniformPitchSpace(Integer[] octaveHighestPitchClasses) {
-			super(octaveHighestPitchClasses);
-		}
-
-		@Override
-		public void translateToPitchSpace() {
-			setUniformPitchSpace();
-		}
-
-	}
-
-	
-	public class BassOctavePitchSpace extends PitchSpaceStrategy {
-
-		public BassOctavePitchSpace(Integer[] octaveHighestPitchClasses) {
-			super(octaveHighestPitchClasses);
-		}
-
-		@Override
-		public void translateToPitchSpace() {
-			setUniformPitchSpace();
-			Note lowestNote = notes.get(size - 1);
-			lowestNote.setPitch(lowestNote.getPitch() - 12);
-			lowestNote.setOctave(lowestNote.getOctave() - 1);
-		}
-
+	public void setPitchSpace(PitchSpace pitchSpace) {
+		this.pitchSpace = pitchSpace;
 	}
 	
-	public class TopOctavePitchSpace extends PitchSpaceStrategy {
-
-		public TopOctavePitchSpace(Integer[] octaveHighestPitchClasses) {
-			super(octaveHighestPitchClasses);
-		}
-
-		@Override
-		public void translateToPitchSpace() {
-			setUniformPitchSpace();
-			for (int i = 1; i < size; i++) {
-				Note note = notes.get(i);
-				note.setPitch(note.getPitch() - 12);
-				note.setOctave(note.getOctave() - 1);
-			}
-		}
-
+	public int getPosition() {
+		return position;
+	}
+	
+	public double getBeat(int divider) {
+		return Math.floor(position/divider);
 	}
 
-	public void setPitchSpaceStrategy(PitchSpaceStrategy pitchSpaceStrategy) {
-		this.pitchSpaceStrategy = pitchSpaceStrategy;
+	public double getChordWeight() {
+		return chord.getWeight();
+	}
+
+	public Chord getChord() {
+		return chord;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public double getInnerMetricWeight() {
+		return innerMetricWeight;
+	}
+
+	public void setInnerMetricWeight(double innerMetricWeight) {
+		this.innerMetricWeight = innerMetricWeight;
 	}
 	
 }

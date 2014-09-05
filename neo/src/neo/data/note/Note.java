@@ -1,7 +1,6 @@
 package neo.data.note;
 
-import neo.data.harmony.Harmony;
-import neo.instrument.Performance;
+import neo.instrument.Articulation;
 
 
 public class Note implements Comparable<Note>, Cloneable{
@@ -26,7 +25,7 @@ public class Note implements Comparable<Note>, Cloneable{
 	private int pitchClass;
 	private int voice;
 	
-	private Performance performance = Performance.LEGATO;
+	private Articulation performance = Articulation.LEGATO;
 
 	public double getBeat(int divider) {
 		return Math.floor(position / divider);
@@ -198,12 +197,28 @@ public class Note implements Comparable<Note>, Cloneable{
 		return super.clone();
 	}
 
-	public Performance getPerformance() {
+	public Articulation getPerformance() {
 		return performance;
 	}
 	
-	public void setPerformance(Performance performance) {
+	public void setPerformance(Articulation performance) {
 		this.performance = performance;
+	}
+	
+	public Note copy(){
+		Note newNote = new Note();
+		newNote.setLength(this.getLength());
+		newNote.setPosition(this.getPosition());
+		newNote.setPitch(this.getPitch());
+		newNote.setPitchClass(this.getPitchClass());
+		newNote.setDuration(this.getDuration());
+		newNote.setVoice(this.getVoice());
+		newNote.setInnerMetricWeight(this.getInnerMetricWeight());
+		newNote.setRhythmValue(this.getRhythmValue());
+		newNote.setDynamic(this.getDynamic());
+		newNote.setOctave(this.getOctave());
+		newNote.setPositionWeight(this.getPositionWeight());
+		return newNote;
 	}
 
 }

@@ -125,13 +125,13 @@ public class InnerMetricWeight {
 		Set<Integer> keys = map.keySet();
 		for (Integer key : keys) {
 			double value = map.get(key);
-			double normalizedValue = Math.round((value / maxValue) * 100);
+			double normalizedValue = Math.round(value / maxValue);
 			map.put(key, normalizedValue);
 		}
 		return map;
 	}
 	
-	public static Map<Integer, Double> getNormalizedInnerMetricWeight(double[] rhythmPattern, double pulse){
+	public static Map<Integer, Double> getNormalizedInnerMetricWeight(int[] rhythmPattern, int pulse){
 		Integer[] onSet = extractOnset(rhythmPattern, pulse);
 		List<List<Integer>> localMeters = getLocalMeters(onSet);
 		Map<Integer, Double> map = getInnerMetricWeight(localMeters, onSet);
@@ -142,18 +142,29 @@ public class InnerMetricWeight {
 		}
 	}
 	
-	public static Integer[] extractOnset(double[] rhythmPattern, double pulse){
+	public static Integer[] extractOnset(int[] rhythmPattern, int pulse){
 		Integer[] arr = new Integer[rhythmPattern.length];
 		arr[0] = 0;
 		double onSet = 0;
 		for (int i = 0; i < rhythmPattern.length; i++) {
-			double rhythm = rhythmPattern[i];
-			onSet = onSet + rhythm / pulse;
-			if (i + 1 != rhythmPattern.length) {//don't add last
-				arr[i + 1] = (int) onSet;
-			}
+//			double rhythm = rhythmPattern[i];
+//			onSet = onSet + rhythm / pulse;
+//			if (i + 1 != rhythmPattern.length) {//don't add last
+//				arr[i + 1] = (int) onSet;
+//			}
+			arr[i] = rhythmPattern[i] / pulse;
 		}
 		return arr;
+	}
+	
+	protected static Integer[] extractOnsetNotes(List<Note> notes, int pulse) {
+		Integer[] arr = new Integer[notes.size()];
+		arr[0] = 0;
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = notes.get(i).getPosition() / pulse;
+		}
+		return arr;
+//		return extendArray(arr);
 	}
 	
 	public static double[] createCorrelationVector(Map<Integer, Double> map, double length){
@@ -184,17 +195,6 @@ public class InnerMetricWeight {
 		}
 	}
 
-	protected static Integer[] extractOnsetNotes(List<Note> notes, int pulse) {
-		int length = notes.size();
-		Integer[] arr = new Integer[length];
-		arr[0] = 0;
-		for (int i = 0; i < length; i++) {
-			arr[i] = notes.get(i).getPosition() / pulse;
-		}
-		return arr;
-//		return extendArray(arr);
-	}
-	
 	private static Integer[] extendArray(Integer[] rhythmArray) {
 		int length = rhythmArray.length * 3;
 		Integer[] rArray = new Integer[length];

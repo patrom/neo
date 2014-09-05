@@ -1,6 +1,6 @@
 package neo.instrument;
 
-public enum Performance {
+public enum Articulation {
 	
 	LEGATO,
 	MARCATO,

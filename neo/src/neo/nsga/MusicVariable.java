@@ -3,7 +3,6 @@ package neo.nsga;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,7 +11,7 @@ import jmetal.util.JMException;
 import neo.data.Motive;
 import neo.data.harmony.Harmony;
 import neo.data.melody.HarmonicMelody;
-import neo.data.melody.Melody;
+import neo.data.melody.pitchspace.PitchSpace;
 import neo.data.note.Note;
 
 public class MusicVariable extends Variable {
@@ -44,20 +43,21 @@ public class MusicVariable extends Variable {
 	}
 	
 	private HarmonicMelody copyHarmonicMelody(HarmonicMelody harmonicMelody) {
-		List<Note> newNotes = copyNotes(harmonicMelody.getNotes());
-		return new HarmonicMelody(newNotes, harmonicMelody.getVoice());
+		List<Note> melodyNotes = copyNotes(harmonicMelody.getMelodyNotes());
+		Note harmonyNote = harmonicMelody.getHarmonyNote().copy();
+		return new HarmonicMelody(harmonyNote, melodyNotes, harmonicMelody.getVoice(), harmonicMelody.getPosition());
 	}
 	
 	private Harmony copyHarmony(Harmony harmony){
-		List<Note> newNotes = copyNotes(harmony.getNotes());
-		Harmony.PitchSpaceStrategy pitchSpaceStrategy = harmony.getPitchSpaceStrategy();
-		Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), newNotes);
+		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 		for (HarmonicMelody harmonicMelody : harmony.getHarmonicMelodies()) {
 			HarmonicMelody newHarmonicMelody = copyHarmonicMelody(harmonicMelody);
-			copyHarmony.addHarmonicMelody(newHarmonicMelody);
+			harmonicMelodies.add(newHarmonicMelody);
 		}
-		Harmony.PitchSpaceStrategy newPitchSpaceStrategy = clonePitchClassStrategy(copyHarmony, pitchSpaceStrategy);
-		copyHarmony.setPitchSpaceStrategy(newPitchSpaceStrategy);
+		Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), harmonicMelodies);
+		PitchSpace newPitchSpace = clonePitchClass(harmony.getPitchSpace());
+		newPitchSpace.setNotes(copyHarmony.getNotes());
+		copyHarmony.setPitchSpace(newPitchSpace);
 		copyHarmony.setPositionWeight(harmony.getPositionWeight());
 		return copyHarmony;
 	}
@@ -66,34 +66,23 @@ public class MusicVariable extends Variable {
 		List<Note> newNotes = new ArrayList<Note>();
 		int l = notePositions.size();
 		for (int i = 0; i < l; i++) {	
-			Note newNote = new Note();
 			Note note = notePositions.get(i);
-			newNote.setLength(note.getLength());
-			newNote.setPosition(note.getPosition());
-			newNote.setPitch(note.getPitch());
-			newNote.setPitchClass(note.getPitchClass());
-			newNote.setDuration(note.getDuration());
-			newNote.setVoice(note.getVoice());
-			newNote.setInnerMetricWeight(note.getInnerMetricWeight());
-			newNote.setRhythmValue(note.getRhythmValue());
-			newNote.setDynamic(note.getDynamic());
-			newNote.setOctave(note.getOctave());
+			Note newNote = note.copy();
 			newNotes.add(newNote);
 		}
 		return newNotes;
 	}
-
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Harmony.PitchSpaceStrategy clonePitchClassStrategy(
-			Harmony harmony, Harmony.PitchSpaceStrategy pitchSpaceStrategy) {
-		Harmony.PitchSpaceStrategy newPitchSpaceStrategy = null;
+	private PitchSpace clonePitchClass(PitchSpace pitchSpace) {
+		PitchSpace newPitchSpaceStrategy = null;
 		try {
-			Class<?> innerClass = Class.forName(pitchSpaceStrategy.getClass().getName());
-			Constructor<?> ctor = innerClass.getDeclaredConstructor(Harmony.class, Integer[].class);
-			newPitchSpaceStrategy = (Harmony.PitchSpaceStrategy) ctor.newInstance(harmony, pitchSpaceStrategy.getOctaveHighestPitchClassRange());
+			Class pitchSpaceStrategyClass = Class.forName(pitchSpace.getClass().getName());
+			Constructor<PitchSpace> constructor = pitchSpaceStrategyClass.getConstructor(Integer[].class);
+			newPitchSpaceStrategy = constructor.newInstance((Object)pitchSpace.getOctaveHighestPitchClassRange());
 		} catch (InvocationTargetException |IllegalArgumentException |SecurityException | NoSuchMethodException 
 				| ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			LOGGER.severe("PitchSpace type error");
+			throw new IllegalArgumentException("PitchSpace type error: " + pitchSpace.getClass().getName());
 		}
 		return newPitchSpaceStrategy;
 	}

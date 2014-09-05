@@ -21,8 +21,15 @@
  */
 package neo.nsga;
 
+import static neo.data.harmony.HarmonyBuilder.harmony;
+import static neo.data.melody.HarmonicMelodyBuilder.harmonicMelody;
+import static neo.data.note.NoteBuilder.note;
+
 import java.io.IOException;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.sound.midi.InvalidMidiDataException;
 
@@ -34,6 +41,8 @@ import jmetal.base.SolutionSet;
 import jmetal.base.SolutionType;
 import jmetal.base.operator.selection.SelectionFactory;
 import jmetal.util.JMException;
+import neo.data.harmony.HarmonyBuilder;
+import neo.data.melody.HarmonicMelody;
 import neo.evaluation.MusicProperties;
 import neo.nsga.operator.crossover.OnePointCrossover;
 import neo.nsga.operator.mutation.OneNoteMutation;
@@ -42,42 +51,36 @@ import neo.print.Display;
 
 
 public class NSGAII_Main implements JMC{
-	private static MusicProperties inputProps = new MusicProperties();
 
 	public static void main(String [] args) throws JMException, SecurityException, IOException, InvalidMidiDataException, ClassNotFoundException {
-	    Problem problem = new MusicProblem("music", 1, inputProps);
-	    SolutionType type = new MusicSolutionType(problem, inputProps) ;
+		MusicProperties musicProperties = getMusicProperties();
+		
+	    Problem problem = new MusicProblem("music", 1, musicProperties);
+	    SolutionType type = new MusicSolutionType(problem, musicProperties) ;
 	    problem.setSolutionType(type);
 	    Algorithm algorithm = new NSGAII(problem);
 	
 	    // Algorithm parameters
-	    int populationSize = 20;
+	    int populationSize = 10;
 	    algorithm.setInputParameter("populationSize",populationSize);
 	    algorithm.setInputParameter("maxEvaluations",populationSize * 200);
 	    // Mutation and Crossover
 	    Operator crossover = new OnePointCrossover();
-	    //if homophonic don't do crossover!
-	//    if (inputProps.getPopulationStrategy().equals("homophonic")) {
-	    	 crossover.setParameter("probabilityCrossover",0.0);       
-	//	} else {
-	//		 crossover.setParameter("probabilityCrossover",0.0);       
-	//	}      
-	//    crossover.setParameter("distributionIndex",20.0);
+	    crossover.setParameter("probabilityCrossover", 1.0);       
 	
-	//    Operator mutation = MutationFactory.getMutationOperator("BitFlipMutation");
-	      Operator oneNoteMutation = new OneNoteMutation();
-	      oneNoteMutation.setParameter("probabilityOneNote",1.0);
+	    Operator oneNoteMutation = new OneNoteMutation();
+	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
 	    
-//	      Operator pitchSpaceMutation = new PitchSpaceMutation();
-//	      pitchSpaceMutation.setParameter("probabilityPitchSpace",1.0);
+	    Operator pitchSpaceMutation = new PitchSpaceMutation();
+	    pitchSpaceMutation.setParameter("probabilityPitchSpace", 1.0);
 	
 	    // Selection Operator 
 	    Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament2") ;                           
 	
 	    // Add the operators to the algorithm
 	    algorithm.addOperator("crossover",crossover);
-//	    algorithm.addOperator("oneNoteMutation", oneNoteMutation);
-//	    algorithm.addOperator("pitchSpaceMutation",pitchSpaceMutation);
+	    algorithm.addOperator("oneNoteMutation", oneNoteMutation);
+	    algorithm.addOperator("pitchSpaceMutation",pitchSpaceMutation);
 	    algorithm.addOperator("selection",selection);
 	
 	    // Execute the Algorithm
@@ -85,7 +88,39 @@ public class NSGAII_Main implements JMC{
 	    
 	    // Result messages 
 	    population.printObjectivesToFile("FUN");
-	    Display.view(population, inputProps.getTempo());
+	    Display.view(population, musicProperties.getTempo());
+	}
+
+	private static MusicProperties getMusicProperties() {
+		MusicProperties musicProperties = new MusicProperties();
+		List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
+		harmonyBuilders.add(harmony().pos(0).len(12));
+		harmonyBuilders.add(harmony().pos(12).len(12));
+		harmonyBuilders.add(harmony().pos(24).len(12));
+		musicProperties.setHarmonyBuilders(harmonyBuilders);
+		
+		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
+		harmonicMelodies.add(harmonicMelody().voice(2).pos(0)
+				.notes(note().voice(2).pos(0).len(6).build(), 
+					   note().voice(2).pos(6).len(12).build()).build());
+		harmonicMelodies.add(harmonicMelody().voice(2).pos(12)
+				.notes(note().voice(2).pos(18).len(6).build()).build());
+		harmonicMelodies.add(harmonicMelody().voice(2).pos(24)
+				.notes(note().voice(2).pos(24).len(6).build(),
+						note().voice(2).pos(30).len(6).build()).build());
+		musicProperties.setHarmonicMelodies(harmonicMelodies);
+		
+		Map<Integer, Double> rhythmWeightValues = new TreeMap<>();
+		rhythmWeightValues.put(0, 1.0);
+		rhythmWeightValues.put(6, 0.5);
+		rhythmWeightValues.put(12, 1.0);
+		rhythmWeightValues.put(18, 0.5);
+		rhythmWeightValues.put(24, 1.0);
+		rhythmWeightValues.put(30, 0.5);
+		rhythmWeightValues.put(36, 1.0);
+		rhythmWeightValues.put(42, 0.5);
+		musicProperties.setRhythmWeightValues(rhythmWeightValues);
+		return musicProperties;
 	} 
 	
 } 

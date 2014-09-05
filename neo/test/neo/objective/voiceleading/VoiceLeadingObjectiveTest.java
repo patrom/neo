@@ -55,7 +55,7 @@ public class VoiceLeadingObjectiveTest extends AbstractTest{
 		voiceLeadingObjective = new VoiceLeadingObjective(musicProperties, new Motive(harmonies));
 		double VoiceLeadingValue = voiceLeadingObjective.evaluate();
 		LOGGER.info("VoiceLeadingValue : " + VoiceLeadingValue);
-		assertEquals("Wrong VoiceLeading value", 3, VoiceLeadingValue, 0);
+		assertEquals("Wrong VoiceLeading value", 8/3d, VoiceLeadingValue, 0);
 	}
 
 }

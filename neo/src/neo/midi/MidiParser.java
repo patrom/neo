@@ -1,5 +1,7 @@
 package neo.midi;
 
+import static java.util.Collections.singletonList;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +35,6 @@ public class MidiParser {
 	public static final int NOTE_ON = 0x90;
 	public static final int NOTE_OFF = 0x80;
 	
-	
 	public static MidiInfo readMidi(String path) throws InvalidMidiDataException, IOException{
 		File file = new File(path);
 		return readMidi(file);
@@ -43,7 +44,6 @@ public class MidiParser {
 			throws InvalidMidiDataException, IOException {
 		Sequence sequence = MidiSystem.getSequence(midiFile);
 		LOGGER.finer("Ticks: " + sequence.getResolution());
-		LOGGER.finer("PPQ: " + sequence.PPQ);
 		LOGGER.finer("DivisionType: " + sequence.getDivisionType());
 		Track[] tracks = sequence.getTracks();
 		int voice = tracks.length - 1;
@@ -54,6 +54,7 @@ public class MidiParser {
 			List<Note> notes = new ArrayList<>();
 			for (int i = 0; i < track.size(); i++) {
 				MidiEvent event = track.get(i);
+				LOGGER.finer("@" + event.getTick() + " ");
 				MidiMessage message = event.getMessage();
 				if (message instanceof ShortMessage) {
 					LOGGER.finer("Voice:" + voice);
@@ -61,7 +62,7 @@ public class MidiParser {
 							.round(((double) event.getTick() / (double) sequence
 									.getResolution()) * RESOLUTION);
 					ShortMessage sm = (ShortMessage) message;
-
+					LOGGER.finer("Pitch: " + sm.getData1() + " ");
 					// Er zijn twee manieren om een note-off commando te
 					// versturen.
 					// // Er bestaat een echt note-off commando, maar de meeste
@@ -72,8 +73,6 @@ public class MidiParser {
 					if (sm.getCommand() == ShortMessage.NOTE_ON
 							&& sm.getData2() != 0) {
 						LOGGER.finer("on: " + ticks + " ");
-						LOGGER.finer("@" + event.getTick() + " ");
-						LOGGER.finer("Pitch: " + sm.getData1() + " ");
 						Note jNote = createNote(voice, ticks, sm);
 						notes.add(jNote);
 					}
@@ -81,13 +80,9 @@ public class MidiParser {
 							|| (sm.getCommand() == ShortMessage.NOTE_ON && sm
 									.getData2() == 0)) {
 						LOGGER.finer("off:" + ticks);
-						LOGGER.finer(" @" + event.getTick() + " ");
-						LOGGER.finer("Pitch: " + sm.getData1() + " ");
 						int key = sm.getData1();
 						int l = notes.size();
-						for (int k = l - 1; k > -1; k--) {// find note on
-															// belonging to note
-															// off
+						for (int k = l - 1; k > -1; k--) {// find note on belonging to note off
 							Note noteOn = notes.get(k);
 							if (noteOn.getPitch() == key) {
 								noteOn.setLength((int) ticks
@@ -115,9 +110,10 @@ public class MidiParser {
 	private static Melody createMelody(List<Note> notes, int voice) {
 		Note firstNote = notes.get(0);
 		Note lastNote = notes.get(notes.size() - 1);
-		int length = lastNote.getPosition() + lastNote.getLength()
-				- firstNote.getPosition();
-		Melody melody = new Melody(notes, voice);
+//		int length = lastNote.getPosition() + lastNote.getLength()
+//				- firstNote.getPosition();
+		HarmonicMelody harmonicMelody = new HarmonicMelody(null, notes, voice, firstNote.getPosition());
+		Melody melody = new Melody(singletonList(harmonicMelody), voice);
 		return melody;
 	}
 
@@ -218,7 +214,6 @@ public class MidiParser {
 		return strMessage;
 	}
 
-	
 	// convert from microseconds per quarter note to beats per minute and vice versa
 	private static float convertTempo(float value) {
 		if (value <= 0) {
@@ -226,6 +221,5 @@ public class MidiParser {
 		}
 		return 60000000.0f / value;
 	}
-
 
 }

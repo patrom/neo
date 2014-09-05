@@ -1,29 +1,16 @@
 package neo.evaluation;
 
-import static java.util.stream.Collectors.toSet;
-import static neo.data.harmony.HarmonyBuilder.harmony;
-import static neo.data.melody.HarmonicMelodyBuilder.harmonicMelody;
-import static neo.data.note.NoteBuilder.note;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import neo.data.harmony.Harmony;
 import neo.data.harmony.HarmonyBuilder;
 import neo.data.melody.HarmonicMelody;
-import neo.data.melody.HarmonicMelodyBuilder;
-import neo.data.note.NoteBuilder;
-import neo.data.note.Note;
 import neo.data.note.Scale;
 import neo.instrument.Instrument;
 
 public class MusicProperties {
-	
 	
 	private int harmonyBeatDivider = 12;
 	private float tempo = 60;
@@ -32,40 +19,11 @@ public class MusicProperties {
 	private int chordSize = 3;
 	private Integer[] octaveHighestPitchClassRange = {5,6};
 	private List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
+	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 	
 	//tonality
 	private Scale scale = new Scale(Scale.MAJOR_SCALE);
-	
-	public MusicProperties() {
-		harmonyBuilders.add(harmony().pos(0).len(12)
-				.melodyBuilders(harmonicMelody()
-						.voice(0)
-						.notes(note().voice(0).pos(0).len(6).build(), 
-							   note().voice(0).pos(6).len(12).build())
-						.build()));
-		harmonyBuilders.add(harmony().pos(12).len(12)
-				.melodyBuilders(harmonicMelody()
-						.voice(0)
-						.notes(note().voice(0).pos(18).len(6).build())
-						.build()));
-		
-		harmonyBuilders.add(harmony().pos(24).len(12)
-				.melodyBuilders(harmonicMelody()
-						.voice(0)
-						.notes(note().voice(0).pos(24).len(6).build(),
-								note().voice(0).pos(30).len(6).build())
-						.build()));
-		
-		rhythmWeightValues.put(0, 1.0);
-		rhythmWeightValues.put(6, 0.5);
-		rhythmWeightValues.put(12, 1.0);
-		rhythmWeightValues.put(18, 0.5);
-		rhythmWeightValues.put(24, 1.0);
-		rhythmWeightValues.put(30, 0.5);
-		rhythmWeightValues.put(36, 1.0);
-		rhythmWeightValues.put(42, 0.5);
-		
-	}
+	private Scale melodyScale = new Scale(Scale.MAJOR_SCALE);;
 	
 	//harmony
 	private double harmonyConsDissValue = 0.3;
@@ -84,7 +42,6 @@ public class MusicProperties {
 	private int rhythmTemplateValue = 5;//add to every note + template accents
 	private int innerMetricFactor = 10;// add 100/innerMetricFactor
 	private int[] rhythmProfile = {0,0,0,10,10};//whole note (with divisions), half note, quarter note, triplet half note, triplet quarter note.
-	
 
 	//generation
 	private int numerator = 4;//2/4,4/4,3/4 - 6/8
@@ -171,12 +128,6 @@ public class MusicProperties {
 	public void setNumerator(int numerator) {
 		this.numerator = numerator;
 	}
-//	public int getVoices() {
-//		return voices;
-//	}
-//	public void setVoices(int voices) {
-//		this.voices = voices;
-//	}
 	public int getMelodyLength() {
 		return melodyLength;
 	}
@@ -274,6 +225,25 @@ public class MusicProperties {
 	}
 	public void setHarmonyBuilders(List<HarmonyBuilder> harmonyBuilders) {
 		this.harmonyBuilders = harmonyBuilders;
+	}
+	public List<HarmonicMelody> getHarmonicMelodies() {
+		return harmonicMelodies;
+	}
+	public void setHarmonicMelodies(List<HarmonicMelody> harmonicMelodies) {
+		this.harmonicMelodies = harmonicMelodies;
+	}
+	public Integer[] getOctaveHighestPitchClassRange() {
+		return octaveHighestPitchClassRange;
+	}
+	public void setOctaveHighestPitchClassRange(
+			Integer[] octaveHighestPitchClassRange) {
+		this.octaveHighestPitchClassRange = octaveHighestPitchClassRange;
+	}
+	public Scale getMelodyScale() {
+		return melodyScale;
+	}
+	public void setMelodyScale(Scale melodyScale) {
+		this.melodyScale = melodyScale;
 	}
 	
 }

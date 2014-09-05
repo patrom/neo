@@ -6,7 +6,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import jm.music.data.Score;
+import jm.util.View;
 import neo.AbstractTest;
 import neo.data.Motive;
 import neo.data.harmony.ChordType;
@@ -15,6 +20,7 @@ import neo.data.melody.HarmonicMelody;
 import neo.data.melody.Melody;
 import neo.data.note.Interval;
 import neo.data.note.Note;
+import neo.print.ScoreUtilities;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,91 +31,108 @@ public class MelodicObjectiveTest extends AbstractTest {
 	private double totalWeight;
 	private List<Harmony> harmonies;
 	private Motive motive;
+	private List<Note> melodyNotes;
+	
+	private Random random = new Random();
 	
 	@Before
 	public void setup() {
 		musicProperties.setMinimumLength(6);
 		harmonies = new ArrayList<>();
+		motive = new Motive(harmonies);
+		melodyNotes = new ArrayList<>();
+		melodicObjective = new MelodicObjective(musicProperties, motive);
+	}
+	
+	private List<Note> generateRandomMelody(){
+		int length = 10;
+		IntStream intStream = random.ints(60, 79);
+		List<Integer> randomPitches = intStream
+				.limit(length)
+				.boxed()
+				.collect(Collectors.toList());
+		List<Note> notes = new ArrayList<Note>();
+		for (int i = 0; i < length; i++) {
+			Note note = note().pitch(randomPitches.get(i)).pos(i * 6).len(6).positionWeight(1.0).build();
+			notes.add(note);
+		}
+		return notes;
+	}
+	
+	@Test
+	public void testMelody(){
+		melodyNotes = generateRandomMelody();
+		HarmonicMelody harmonicMelody = new HarmonicMelody(null, melodyNotes, 0, 0);
+		List<HarmonicMelody> harmonicMelodies = new ArrayList<HarmonicMelody>();
+		harmonicMelodies.add(harmonicMelody);
+		Melody melody = new Melody(harmonicMelodies, 0);
+		List<Melody> melodies = new ArrayList<Melody>();
+		melodies.add(melody);
+		Score score = ScoreUtilities.createScoreMelodies(melodies, 60);
+		View.notate(score);
+		double melodicValue = melodicObjective.evaluateMelody(melodyNotes, 1);
+		LOGGER.info("test melody :" + melodicValue);
 	}
 	
 	@Test
 	public void test_E_C() {
-		List<Note> melodyNotes = new ArrayList<>();
-		melodyNotes.add(note().pc(4).pos(0).len(24).positionWeight(3.0).build());
-		melodyNotes.add(note().pc(0).pos(24).len(24).positionWeight(3.0).build());
-		int voice = 1;
-		Melody melody = new Melody(melodyNotes, voice);
-		melodies.add(melody);
-		
-		harmonies.add(harmony().pos(0).len(24).notes(4).positionWeight(3.0).build());
-		harmonies.add(harmony().pos(24).len(24).notes(0).positionWeight(3.0).build());
-		totalWeight = 6.0;
-		motive = new Motive(harmonies);
-		melodicObjective = new MelodicObjective(musicProperties, motive);
-		double melodicValue = melodicObjective.evaluate();
+		melodyNotes.add(note().pitch(64).positionWeight(3.0).build());
+		melodyNotes.add(note().pitch(60).positionWeight(3.0).build());
+		double melodicValue = melodicObjective.evaluateMelody(melodyNotes, 1);
 		LOGGER.info("test_E_C :" + melodicValue);
-		double expected = (Interval.GROTE_TERTS.getMelodicValue() * ((3 + 3)/totalWeight)) / (harmonies.size() - 1);
-		assertEquals(expected, melodicValue, 0);
+		double expected = Interval.GROTE_TERTS.getMelodicValue();
+		assertEquals(expected, melodicValue, 0.001);
 	}
 	
 	@Test
 	public void test_E_D_C() {
-		harmonies.add(harmony().pos(0).len(12).notes(4).positionWeight(1.5).build());
-		harmonies.add(harmony().pos(12).len(12).notes(2).positionWeight(1.5).build());
-		harmonies.add(harmony().pos(24).len(24).notes(0).positionWeight(3.0).build());
-		totalWeight = 6.0;
-		motive = new Motive(harmonies);
-		melodicObjective = new MelodicObjective(musicProperties, motive);
-		double melodicValue = melodicObjective.evaluate();
+		melodyNotes.add(note().pitch(64).positionWeight(1.5).build());
+		melodyNotes.add(note().pitch(62).positionWeight(1.5).build());
+		melodyNotes.add(note().pitch(60).positionWeight(3.0).build());
+		totalWeight = 7.5;
+		double melodicValue = melodicObjective.evaluateMelody(melodyNotes, 1);
 		LOGGER.info("test_E_D_C :" + melodicValue);
-		double expected = ((Interval.GROTE_SECONDE.getMelodicValue() * ((1.5 + 1.5)/totalWeight)) + (Interval.GROTE_SECONDE.getMelodicValue() * ((1.5 + 3)/totalWeight))
-				+ (Interval.GROTE_TERTS.getMelodicValue() * ((1.5 + 3)/totalWeight)))/ (harmonies.size() - 1);
+		double expected = (Interval.GROTE_SECONDE.getMelodicValue() * (1.5 + 1.5) 
+				+ (Interval.GROTE_SECONDE.getMelodicValue() * (1.5 + 3)))/totalWeight;
 		assertEquals(expected, melodicValue, 0);
 	}
 	
 	@Test
 	public void test_E__D_C() {
-		harmonies.add(harmony().pos(0).len(18).notes(4).positionWeight(2.5).build());
-		harmonies.add(harmony().pos(18).len(6).notes(2).positionWeight(0.5).build());
-		harmonies.add(harmony().pos(24).len(24).notes(0).positionWeight(3.0).build());
-		totalWeight = 6.0;
-		melodicObjective = new MelodicObjective(musicProperties, new Motive(harmonies));
-		double melodicValue = melodicObjective.evaluate();
+		melodyNotes.add(note().pitch(64).positionWeight(2.5).build());
+		melodyNotes.add(note().pitch(62).positionWeight(0.5).build());
+		melodyNotes.add(note().pitch(60).positionWeight(3.0).build());
+		totalWeight = 6.5;
+		double melodicValue = melodicObjective.evaluateMelody(melodyNotes, 1);
 		LOGGER.info("test_E__D_C :" + melodicValue);
-		double expected = ((Interval.GROTE_SECONDE.getMelodicValue() * ((2.5 + 0.5)/totalWeight)) + (Interval.GROTE_SECONDE.getMelodicValue() * ((0.5 + 3)/totalWeight))
-				+ (Interval.GROTE_TERTS.getMelodicValue() * ((2.5 + 3)/totalWeight)))/ (harmonies.size() - 1);
+		double expected = (Interval.GROTE_SECONDE.getMelodicValue() * (2.5 + 0.5) + Interval.GROTE_SECONDE.getMelodicValue() * (0.5 + 3))/totalWeight;
 		assertEquals(expected, melodicValue, 0);
 	}
 	
 	
 	@Test
 	public void test_E_D_C_D() {
-		harmonies.add(harmony().pos(0).len(12).notes(4).positionWeight(1.5).build());
-		harmonies.add(harmony().pos(12).len(12).notes(2).positionWeight(1.5).build());
-		harmonies.add(harmony().pos(24).len(12).notes(0).positionWeight(1.5).build());
-		harmonies.add(harmony().pos(36).len(12).notes(2).positionWeight(1.5).build());
-		totalWeight = 6.0;
-		melodicObjective = new MelodicObjective(musicProperties, new Motive(harmonies));
-		double melodicValue = melodicObjective.evaluate();
+		melodyNotes.add(note().pitch(64).positionWeight(1.5).build());
+		melodyNotes.add(note().pitch(62).positionWeight(1.5).build());
+		melodyNotes.add(note().pitch(60).positionWeight(1.5).build());
+		melodyNotes.add(note().pitch(62).positionWeight(1.5).build());
+		totalWeight = 9.0;
+		double melodicValue = melodicObjective.evaluateMelody(melodyNotes, 1);
 		LOGGER.info("test_E_D_C_D :" + melodicValue);
-		double expected = ((4 * (Interval.GROTE_SECONDE.getMelodicValue() * ((1.5 + 1.5)/totalWeight))) +  (Interval.UNISONO.getMelodicValue() * ((1.5 + 1.5)/totalWeight))
-				+ (Interval.GROTE_TERTS.getMelodicValue() * ((1.5 + 1.5)/totalWeight)))/ (harmonies.size() - 1);
+		double expected = 3 * (Interval.GROTE_SECONDE.getMelodicValue() * (1.5 + 1.5))/totalWeight;
 		assertEquals(expected, melodicValue, 0);
 	}
 	
 	@Test
 	public void test_C_D_E_F() {
-		harmonies.add(harmony().pos(0).len(12).notes(0).positionWeight(1.5).build());
-		harmonies.add(harmony().pos(12).len(12).notes(2).positionWeight(1.5).build());
-		harmonies.add(harmony().pos(24).len(12).notes(4).positionWeight(1.5).build());
-		harmonies.add(harmony().pos(36).len(12).notes(5).positionWeight(1.5).build());
-		totalWeight = 6.0;
-		melodicObjective = new MelodicObjective(musicProperties, new Motive(harmonies));
-		double melodicValue = melodicObjective.evaluate();
+		melodyNotes.add(note().pitch(60).positionWeight(1.5).build());
+		melodyNotes.add(note().pitch(62).positionWeight(1.5).build());
+		melodyNotes.add(note().pitch(64).positionWeight(1.5).build());
+		melodyNotes.add(note().pitch(65).positionWeight(1.5).build());
+		totalWeight = 9.0;
+		double melodicValue = melodicObjective.evaluateMelody(melodyNotes, 1);
 		LOGGER.info("test_C_D_E_F :" + melodicValue);
-		double expected = (((2 * (Interval.GROTE_SECONDE.getMelodicValue() * ((1.5 + 1.5)/totalWeight))) + (Interval.KLEINE_SECONDE.getMelodicValue() * ((1.5 + 1.5)/totalWeight))
-				+ (Interval.GROTE_TERTS.getMelodicValue() * ((1.5 + 1.5)/totalWeight)) + (Interval.KLEINE_TERTS.getMelodicValue() * ((1.5 + 1.5)/totalWeight)))
-				+ (Interval.KWART.getMelodicValue() * ((1.5 + 1.5)/totalWeight)))/ (harmonies.size() - 1);
+		double expected = ((2 * (Interval.GROTE_SECONDE.getMelodicValue() * (1.5 + 1.5))) + (Interval.KLEINE_SECONDE.getMelodicValue() * (1.5 + 1.5)))/totalWeight;
 		assertEquals(expected, melodicValue, 0.001);
 	}
 	

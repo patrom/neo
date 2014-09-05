@@ -18,7 +18,7 @@ import org.junit.Test;
 public class InnerMetricWeightTest {
 	
 	private static Logger LOGGER = Logger.getLogger(InnerMetricWeightTest.class.getName());
-	private double[] rhythmPattern = {6, 3, 3, 6, 12, 6, 12};
+	private int[] rhythmPattern = {0, 12, 18 , 24};
 	private int minimumRhythmicValue = 3;
 	
 	@Before
@@ -38,15 +38,15 @@ public class InnerMetricWeightTest {
 
 	@Test
 	public void testGetNormalizedInnerMetricWeight() {
-		Map<Integer, Double> normilazedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(rhythmPattern , minimumRhythmicValue);
-		LOGGER.info(normilazedMap.toString());
+		Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(rhythmPattern , minimumRhythmicValue);
+		LOGGER.info(normalizedMap.toString());
 	}
 	
 	@Test
 	public void testGetNormalizedInnerMetricWeightNotes() {
 		List<Note> notes = createMelody();
-		Map<Integer, Double> normilazedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(notes, minimumRhythmicValue);
-		LOGGER.info(normilazedMap.toString());
+		Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(notes, minimumRhythmicValue);
+		LOGGER.info(normalizedMap.toString());
 	}
 
 	private List<Note> createMelody() {

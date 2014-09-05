@@ -55,21 +55,21 @@ public class ScoreUtilities implements JMC{
 		Part[] scoreParts = new Part[melodies.size()];
 		int voice = 0;
 		for (Melody motive : melodies) {
-			List<neo.data.note.Note> notePosistions = motive.getNotes();
+			List<neo.data.note.Note> notes = motive.getNotes();
 			Phrase phrase = new Phrase();
 			int lastVoice = 0;
-			if (!notePosistions.isEmpty()) {
-				double startTime = (double)notePosistions.get(0).getPosition()/ATOMIC_VALUE;
+			if (!notes.isEmpty()) {
+				double startTime = (double)notes.get(0).getPosition()/ATOMIC_VALUE;
 				phrase.setStartTime(startTime);
-				int length = notePosistions.size();
+				int length = notes.size();
 				Note note = null;
 				for (int i = 0; i < length; i++) {
-					neo.data.note.Note notePos = notePosistions.get(i);
+					neo.data.note.Note notePos = notes.get(i);
 					lastVoice = notePos.getVoice();
 					note = new Note(notePos.getPitch(),(double)notePos.getLength()/ATOMIC_VALUE);
 					phrase.add(note);
 					if ((i + 1) < length) {	
-						neo.data.note.Note nextNotePos = notePosistions.get(i + 1);
+						neo.data.note.Note nextNotePos = notes.get(i + 1);
 						int gap = (notePos.getPosition()+ notePos.getLength()) - nextNotePos.getPosition();
 						if (gap < 0) {
 							note = new Rest((double)-gap/ATOMIC_VALUE);

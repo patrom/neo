@@ -34,6 +34,7 @@ public class FitnessEvaluationTest extends AbstractTest{
 		harmonies.add(harmony().pos(12).len(12).notes(11,2,7).positionWeight(1.0).build());
 		harmonies.add(harmony().pos(24).len(12).notes(0,4,9).positionWeight(0.5).build());
 		motive = new Motive(harmonies);
+		motive.setMusicProperties(musicProperties);
 		fitnessEvaluation = new FitnessEvaluationTemplate(musicProperties, motive);
 	}
 	

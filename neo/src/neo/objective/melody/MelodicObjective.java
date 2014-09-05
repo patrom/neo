@@ -30,12 +30,11 @@ public class MelodicObjective extends Objective {
 
 	@Override
 	public double evaluate() {
-//		double totalWeight = weights.values().stream().mapToDouble(v -> v).sum();
-		int maxDistance = 3;
+		int maxDistance = 1;
 		double totalMelodySum = 0;
 		List<Melody> melodies = motive.getMelodies();
 		for(Melody melody: melodies){
-			Collection<Note> notes =  melody.getNotes();
+			List<Note> notes =  melody.getNotes();
 //			notes = filterNotesAbove(notes, 0.5);
 //			notes = extractNotesOnLevel(notes, 1);
 			double melodyValue = evaluateMelody(notes, maxDistance);
@@ -79,21 +78,22 @@ public class MelodicObjective extends Objective {
 		return (harmonicValue == 0)? 0:harmonicValue/(notePositions.length - 2);
 	}
 
-	protected double evaluateMelody(Collection<Note> notes, int maxDistance) {
-		double totalPositionWeigth = notes.stream().mapToDouble(n -> n.getPositionWeight()).sum();
+	protected double evaluateMelody(List<Note> notes, int maxDistance) {
+		double totalPositionWeigth = 0;
 		Note[] notePositions = notes.toArray(new Note[notes.size()]);
 		double melodyIntervalValueSum = 0;
 		for (int distance = 1; distance <= maxDistance; distance++) {
 			for (int j = 0; j < notePositions.length - distance; j++) {
 				Note note = notePositions[j];
 				Note nextNote = notePositions[j + distance];
-				double intervalPositionWeightAverage = (note.getPositionWeight() + nextNote.getPositionWeight())/totalPositionWeigth;
+				double intervalPositionWeight = (note.getPositionWeight() + nextNote.getPositionWeight());
+				totalPositionWeigth = totalPositionWeigth + intervalPositionWeight;
 				double intervalMelodicValue = getIntervalMelodicValue(note, nextNote);
-				double intervalValue = intervalMelodicValue * intervalPositionWeightAverage;
+				double intervalValue = intervalMelodicValue * intervalPositionWeight;
 				melodyIntervalValueSum = melodyIntervalValueSum + intervalValue;
 			}
 		}
-		return melodyIntervalValueSum/(notePositions.length - 1);
+		return melodyIntervalValueSum/totalPositionWeigth;
 	}
 
 	private double getIntervalMelodicValue(Note note, Note nextNote) {

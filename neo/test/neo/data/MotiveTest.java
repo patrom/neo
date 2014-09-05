@@ -1,79 +1,49 @@
 package neo.data;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
+import static neo.data.melody.HarmonicMelodyBuilder.harmonicMelody;
+import static neo.data.note.NoteBuilder.note;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-import neo.data.Motive;
+import neo.AbstractTest;
 import neo.data.harmony.Harmony;
+import neo.data.melody.HarmonicMelody;
 import neo.data.melody.Melody;
-import neo.data.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class MotiveTest {
+public class MotiveTest extends AbstractTest{
 	
 	private Motive motive;
 
 	@Before
 	public void setUp(){
 		List<Harmony> harmonies = new ArrayList<>();
+		HarmonicMelody harmonicMelody = harmonicMelody()
+					.harmonyNote(note().pc(0).ocatve(5).build())
+					.voice(0)
+					.notes(note().voice(0).pc(4).pos(0).len(6).build(), 
+						   note().voice(0).pc(5).pos(6).len(12).build())
+					.build();
+		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
+		harmonicMelodies.add(harmonicMelody);
+		Harmony harmony = new Harmony(0, 12, harmonicMelodies);
+		harmonies.add(harmony);
 		motive = new Motive(harmonies);
+		musicProperties.setChordSize(3);
+		motive.setMusicProperties(musicProperties);
 	}
-
-//	@Test
-//	public void testConcatNotesWithSamePitchEnd() {
-//		List<NotePos> notes = new ArrayList<>();
-//		NotePos note = new NotePos(0, 0, 0, 6);
-//		note.setPitch(60);
-//		notes.add(note);
-//		note = new NotePos(0, 0, 6, 6);
-//		note.setPitch(60);
-//		notes.add(note);
-//		note = new NotePos(0, 0, 12, 12);
-//		note.setPitch(60);
-//		notes.add(note);
-//		List<NotePos> notePositions = motive.concatNotesWithSamePitch(notes);
-//		assertEquals(1, notePositions.size());
-//		assertEquals(24, notePositions.get(0).getLength());
-//	}
-//	
-//	@Test
-//	public void testConcatNotesWithSamePitch() {
-//		List<NotePos> notes = new ArrayList<>();
-//		NotePos note = new NotePos(0, 0, 0, 6);
-//		note.setPitch(60);
-//		notes.add(note);
-//		note = new NotePos(0, 0, 6, 6);
-//		note.setPitch(60);
-//		notes.add(note);
-//		note = new NotePos(2, 0, 12, 12);
-//		note.setPitch(62);
-//		notes.add(note);
-//		List<NotePos> notePositions = motive.concatNotesWithSamePitch(notes);
-//		assertEquals(2, notePositions.size());
-//		assertEquals(12, notePositions.get(0).getLength());
-//	}
-//	
-//	@Test
-//	public void testConcatNotesWithSamePitchNoConcat() {
-//		List<NotePos> notes = new ArrayList<>();
-//		NotePos note = new NotePos(0, 0, 0, 6);
-//		note.setPitch(60);
-//		notes.add(note);
-//		note = new NotePos(1, 0, 6, 6);
-//		note.setPitch(61);
-//		notes.add(note);
-//		note = new NotePos(2, 0, 12, 12);
-//		note.setPitch(62);
-//		notes.add(note);
-//		List<NotePos> notePositions = motive.concatNotesWithSamePitch(notes);
-//		assertEquals(3, notePositions.size());
-//		assertEquals(6, notePositions.get(0).getLength());
-//	}
+	
+	@Test
+	public void testGetMelodies(){
+		List<Melody> melodies = motive.getMelodies();
+		assertFalse(melodies.isEmpty());
+		assertEquals(2, melodies.get(0).getNotes().size());
+		assertEquals(5, melodies.get(0).getNotes().get(1).getPitchClass());
+	}
 
 }
