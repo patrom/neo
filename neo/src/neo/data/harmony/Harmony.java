@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import jmetal.util.PseudoRandom;
 import neo.data.melody.HarmonicMelody;
@@ -14,6 +15,7 @@ import neo.data.melody.pitchspace.TopOctavePitchSpace;
 import neo.data.melody.pitchspace.UniformPitchSpace;
 import neo.data.note.Note;
 import neo.data.note.Scale;
+import neo.util.RandomUtil;
 
 public class Harmony implements Comparable<Harmony>{
 	
@@ -81,17 +83,17 @@ public class Harmony implements Comparable<Harmony>{
 	}
 
 	private HarmonicMelody getRandomHarmonicMelody() {
-		int index = PseudoRandom.randInt(0, harmonicMelodies.size() - 1);
+		int index = RandomUtil.randomInt(0, harmonicMelodies.size());
 		return  harmonicMelodies.get(index);
 	}
 	
 	private <T> T getRandomFromList(List<T> list) {
-		int index = PseudoRandom.randInt(0, list.size() - 1);
+		int index = RandomUtil.randomInt(0, list.size());
 		return list.get(index);
 	}
 	
 	public void mutatePitchSpace(){
-		int i = PseudoRandom.randInt(0, 3);
+		int i = RandomUtil.randomInt(0, 4);
 		switch (i) {
 		case 0:
 			this.pitchSpace = new UniformPitchSpace(range);

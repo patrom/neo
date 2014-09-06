@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import jmetal.util.PseudoRandom;
 import neo.data.harmony.Harmony;
@@ -11,6 +12,7 @@ import neo.data.melody.HarmonicMelody;
 import neo.data.melody.Melody;
 import neo.data.note.Note;
 import neo.evaluation.MusicProperties;
+import neo.util.RandomUtil;
 
 public class Motive {
 
@@ -54,7 +56,7 @@ public class Motive {
 	}
 	
 	private Harmony randomHarmony() {
-		int harmonyIndex = PseudoRandom.randInt(0, harmonies.size() - 1);
+		int harmonyIndex = RandomUtil.randomInt(0, harmonies.size());
 		Harmony harmony = harmonies.get(harmonyIndex);
 		return harmony;
 	}

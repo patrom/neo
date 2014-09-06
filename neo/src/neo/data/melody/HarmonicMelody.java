@@ -4,7 +4,9 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 import jmetal.util.PseudoRandom;
 import neo.data.note.Note;
@@ -15,6 +17,7 @@ public class HarmonicMelody {
 	private int voice;
 	private int position;
 	private Note harmonyNote;
+	private Random random = new Random();
 	
 	public HarmonicMelody(Note harmonyNote, List<Note> melodyNotes, int voice, int position) {
 		this.harmonyNote = harmonyNote;
@@ -85,7 +88,7 @@ public class HarmonicMelody {
 	}
 	
 	private Note randomNote(List<Note> notes) {
-		int indexNote = PseudoRandom.randInt(0, notes.size() - 1);
+		int indexNote = random.ints(0, notes.size()).findFirst().getAsInt();
 		return notes.get(indexNote);
 	}
 	

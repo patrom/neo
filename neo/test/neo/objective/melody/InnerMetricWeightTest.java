@@ -18,7 +18,7 @@ import org.junit.Test;
 public class InnerMetricWeightTest {
 	
 	private static Logger LOGGER = Logger.getLogger(InnerMetricWeightTest.class.getName());
-	private int[] rhythmPattern = {0, 12, 18 , 24};
+	private int[] rhythmPattern = {0, 6, 9 , 12, 18, 30, 36};
 	private int minimumRhythmicValue = 3;
 	
 	@Before

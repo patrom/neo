@@ -1,9 +1,11 @@
 package neo.data.melody.pitchspace;
 
 import java.util.List;
+import java.util.Random;
 
 import jmetal.util.PseudoRandom;
 import neo.data.note.Note;
+import neo.util.RandomUtil;
 
 public abstract class PitchSpace {
 
@@ -33,7 +35,7 @@ public abstract class PitchSpace {
 	}
 
 	private int randomIntRange() {
-		return PseudoRandom.randInt(octaveHighestPitchClassRange[0], octaveHighestPitchClassRange[octaveHighestPitchClassRange.length - 1]);
+		return RandomUtil.randomInt(octaveHighestPitchClassRange[0], octaveHighestPitchClassRange[octaveHighestPitchClassRange.length - 1] + 1);
 	}
 
 	protected void setPitchClassFirstNote() {
