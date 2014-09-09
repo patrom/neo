@@ -83,7 +83,7 @@ public class Display {
 			melodies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
 			Score score = ScoreUtilities.createScoreMelodies(melodies, tempo);
 			score.setTitle("test " + (i));
-			Write.midi(score, "test" + (i) + ".mid");	
+			Write.midi(score, "resources/midi/test" + (i) + ".mid");	
 			View.notate(score);	
 		}
 

@@ -49,7 +49,7 @@ public class MidiDevicesUtil {
 					 * is end of track.
 					 */
 					sequencer.addMetaEventListener(new MetaEventListener() {
-						public void meta(MetaMessage event) {
+						public void meta(MetaMessage event) {//sequencer will close in case of looping files
 //							if (event.getType() == 47) {
 //								sequencer.close();
 //								if (device != null) {
