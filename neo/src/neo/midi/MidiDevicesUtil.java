@@ -91,6 +91,17 @@ public class MidiDevicesUtil {
 		}
 		return sequence;
 	}
+	
+	public static Sequence createSequence(List<Melody> motives, Instrument instrument)
+			throws InvalidMidiDataException {
+		int motiveSize = motives.size();
+		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
+		for (int i = 0; i < motiveSize; i++) {
+			List<Note> notes = motives.get(i).getNotes();
+			createTrack(sequence, notes, instrument);
+		}
+		return sequence;
+	}
 
 	private static void createTrack(Sequence sequence, List<Note> notes, Instrument instrument)
 			throws InvalidMidiDataException {

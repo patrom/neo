@@ -94,31 +94,54 @@ public class NSGAII_Main implements JMC{
 	private static MusicProperties getMusicProperties() {
 		MusicProperties musicProperties = new MusicProperties();
 		List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
-		harmonyBuilders.add(harmony().pos(0).len(12));
-		harmonyBuilders.add(harmony().pos(12).len(12));
-		harmonyBuilders.add(harmony().pos(24).len(12));
+		harmonyBuilders.add(harmony().pos(0).len(24));
+		harmonyBuilders.add(harmony().pos(24).len(24));
+		harmonyBuilders.add(harmony().pos(48).len(24));
+		harmonyBuilders.add(harmony().pos(72).len(24));
+		harmonyBuilders.add(harmony().pos(96).len(24));
 		musicProperties.setHarmonyBuilders(harmonyBuilders);
 		
 		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 		harmonicMelodies.add(harmonicMelody().voice(2).pos(0)
-				.notes(note().voice(2).pos(0).len(6).build(), 
-					   note().voice(2).pos(6).len(12).build()).build());
-		harmonicMelodies.add(harmonicMelody().voice(2).pos(12)
-				.notes(note().voice(2).pos(18).len(6).build()).build());
+				.notes(note().voice(2).pos(0).len(12).build(), 
+					   note().voice(2).pos(12).len(24).build()).build());
 		harmonicMelodies.add(harmonicMelody().voice(2).pos(24)
-				.notes(note().voice(2).pos(24).len(6).build(),
-						note().voice(2).pos(30).len(6).build()).build());
+				.notes(note().voice(2).pos(36).len(12).build()).build());
+		harmonicMelodies.add(harmonicMelody().voice(2).pos(48)
+				.notes(note().voice(2).pos(54).len(6).build(),
+						note().voice(2).pos(60).len(12).build()).build());
+		
+		harmonicMelodies.add(harmonicMelody().voice(1).pos(24)
+				.notes(note().voice(1).pos(24).len(12).build(), 
+					   note().voice(1).pos(36).len(24).build()).build());
+		harmonicMelodies.add(harmonicMelody().voice(1).pos(48)
+				.notes(note().voice(1).pos(60).len(12).build()).build());
 		musicProperties.setHarmonicMelodies(harmonicMelodies);
 		
 		Map<Integer, Double> rhythmWeightValues = new TreeMap<>();
 		rhythmWeightValues.put(0, 1.0);
 		rhythmWeightValues.put(6, 0.5);
-		rhythmWeightValues.put(12, 1.0);
+		rhythmWeightValues.put(12, 0.75);
 		rhythmWeightValues.put(18, 0.5);
 		rhythmWeightValues.put(24, 1.0);
 		rhythmWeightValues.put(30, 0.5);
-		rhythmWeightValues.put(36, 1.0);
+		rhythmWeightValues.put(36, 0.75);
 		rhythmWeightValues.put(42, 0.5);
+		
+		rhythmWeightValues.put(48, 1.0);
+		rhythmWeightValues.put(54, 0.5);
+		rhythmWeightValues.put(60, 0.75);
+		rhythmWeightValues.put(66, 0.5);
+		rhythmWeightValues.put(72, 1.0);
+		rhythmWeightValues.put(78, 0.5);
+		rhythmWeightValues.put(84, 0.75);
+		rhythmWeightValues.put(90, 0.5);
+		
+		rhythmWeightValues.put(96, 1.0);
+		rhythmWeightValues.put(102, 0.5);
+		rhythmWeightValues.put(108, 0.75);
+		rhythmWeightValues.put(114, 0.5);
+
 		musicProperties.setRhythmWeightValues(rhythmWeightValues);
 		return musicProperties;
 	} 

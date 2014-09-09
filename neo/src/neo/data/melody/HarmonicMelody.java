@@ -68,7 +68,7 @@ public class HarmonicMelody {
 			.forEach(updatePitchClass);
 	}
 	
-	public void updateMelodyNotes(int newPitchClass){
+	public void randomUpdateMelodyNotes(int newPitchClass){
 		List<Note> nonChordNotes = getNonChordNotes();
 		Note note = null;
 		if (!nonChordNotes.isEmpty()) {

@@ -78,7 +78,7 @@ public class Harmony implements Comparable<Harmony>{
 		if (!melodies.isEmpty()) {
 			HarmonicMelody harmonicMelody = getRandomFromList(melodies);
 			int newPitchClass = scale.pickRandomFromScale();
-			harmonicMelody.updateMelodyNotes(newPitchClass);
+			harmonicMelody.randomUpdateMelodyNotes(newPitchClass);
 		}
 	}
 

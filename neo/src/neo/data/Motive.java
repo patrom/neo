@@ -39,7 +39,7 @@ public class Motive {
 				.collect(toList());
 	}
 	
-	public void mutateHarmonyNoteToPreviousPitchFromScale(){
+	public void mutateHarmony(){
 		Harmony harmony = randomHarmony();
 		harmony.mutateNoteToPreviousPitchFromScale(musicProperties.getScale());
 		harmony.mutateNoteRandom(musicProperties.getMelodyScale());
@@ -56,7 +56,12 @@ public class Motive {
 	}
 	
 	private Harmony randomHarmony() {
-		int harmonyIndex = RandomUtil.randomInt(0, harmonies.size());
+		int harmonyIndex = 0;
+		if (musicProperties.isOuterBoundaryIncluded()) {
+			harmonyIndex = RandomUtil.randomInt(0, harmonies.size());
+		} else {
+			harmonyIndex = RandomUtil.randomInt(1, harmonies.size() - 1);
+		}
 		Harmony harmony = harmonies.get(harmonyIndex);
 		return harmony;
 	}

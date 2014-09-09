@@ -43,7 +43,7 @@ public class HarmonicMelodyTest {
 
 	@Test
 	public void testUpdateMelodyNotesInt() {
-		harmonicMelody.updateMelodyNotes(4);
+		harmonicMelody.randomUpdateMelodyNotes(4);
 		assertEquals(4, harmonicMelody.getMelodyNotes().get(1).getPitchClass());
 	}
 

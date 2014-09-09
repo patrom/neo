@@ -20,6 +20,7 @@ public class MusicProperties {
 	private Integer[] octaveHighestPitchClassRange = {5,6};
 	private List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
 	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
+	private boolean outerBoundaryIncluded = true;
 	
 	//tonality
 	private Scale scale = new Scale(Scale.MAJOR_SCALE);
@@ -244,6 +245,12 @@ public class MusicProperties {
 	}
 	public void setMelodyScale(Scale melodyScale) {
 		this.melodyScale = melodyScale;
+	}
+	public boolean isOuterBoundaryIncluded() {
+		return outerBoundaryIncluded;
+	}
+	public void setOuterBoundaryIncluded(boolean outerBoundaryIncluded) {
+		this.outerBoundaryIncluded = outerBoundaryIncluded;
 	}
 	
 }
