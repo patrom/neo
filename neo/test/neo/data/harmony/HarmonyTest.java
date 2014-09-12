@@ -9,7 +9,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
 import neo.data.melody.HarmonicMelody;
+import neo.data.note.Note;
+import neo.data.note.NoteBuilder;
 
 import org.junit.Test;
 
@@ -44,6 +47,19 @@ public class HarmonyTest {
 		assertEquals(0, harmony.getNotes().get(1).getPitchClass());
 		assertEquals(3, harmony.getNotes().get(2).getPitchClass());
 		harmony.mutatePitchSpace();
+	}
+	
+	@Test
+	public void testSwitchHarmonyNote(){
+		Harmony harmony = harmony().notes(0,4,7).build();
+		harmony.swapHarmonyNotes();
+		List<Note> notes = harmony.getNotes();
+		assertTrue(notes.contains(note().pc(0).build()));
+		assertTrue(notes.contains(note().pc(4).build()));
+		assertTrue(notes.contains(note().pc(7).build()));
+		for (HarmonicMelody harmonicMelody  : harmony.getHarmonicMelodies()) {
+			assertTrue(harmonicMelody.getMelodyNotes().contains(harmonicMelody.getHarmonyNote()));
+		}
 	}
 	
 //	@Test random octave range

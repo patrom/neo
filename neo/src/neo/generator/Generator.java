@@ -125,11 +125,11 @@ public class Generator {
 	}
 	
 	private List<Integer> generatePitchClasses() {
-		IntStream.generate(new Scale(Scale.MAJOR_SCALE)::pickRandomFromScale)
+		IntStream.generate(new Scale(Scale.MAJOR_SCALE)::pickRandomPitchClass)
 			.limit(chordSize);
 		List<Integer> chordPitchClasses = new ArrayList<>();
 		for (int j = 0; j < chordSize; j++) {
-			int pitchClass = scale.pickRandomFromScale();
+			int pitchClass = scale.pickRandomPitchClass();
 			chordPitchClasses.add(pitchClass);
 		}
 		return chordPitchClasses;

@@ -74,7 +74,7 @@ public class HarmonicMelody {
 		if (!nonChordNotes.isEmpty()) {
 			note = randomNote(nonChordNotes);
 		} else {
-			//all are chord notes
+			//change 1 chord note
 			note = randomNote(melodyNotes);
 		}
 		note.setPitchClass(newPitchClass);
