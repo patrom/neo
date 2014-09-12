@@ -18,6 +18,7 @@ import neo.data.melody.Melody;
 import neo.data.note.Note;
 import neo.evaluation.FitnessEvaluationTemplate;
 import neo.evaluation.MusicProperties;
+import neo.midi.MelodyInstrument;
 import neo.midi.MidiConverter;
 import neo.midi.MidiInfo;
 import neo.midi.MidiParser;
@@ -43,10 +44,10 @@ public class MelodiesTest extends AbstractTest{
 		for (File file : midiFiles) {
 			MidiInfo midiInfo = MidiParser.readMidi(file);
 			LOGGER.fine(file.getName());
-			List<Melody> melodies = midiInfo.getMelodies();
+			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 			MidiConverter.updatePositionNotes(melodies, midiInfo.getTimeSignature());
-			for (Melody melody : melodies) {
-				List<Note> notes = melody.getNotes();
+			for (MelodyInstrument melodyInstrument : melodies) {
+				List<Note> notes = melodyInstrument.getNotes();
 				MelodicObjective melodicObjective = new MelodicObjective(musicProperties, null);
 				double value = melodicObjective.evaluateMelody(notes, 1);
 				LOGGER.info("Intervals : " + value);

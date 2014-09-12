@@ -62,14 +62,6 @@ public class MelodicObjectiveTest extends AbstractTest {
 	@Test
 	public void testMelody(){
 		melodyNotes = generateRandomMelody();
-		HarmonicMelody harmonicMelody = new HarmonicMelody(null, melodyNotes, 0, 0);
-		List<HarmonicMelody> harmonicMelodies = new ArrayList<HarmonicMelody>();
-		harmonicMelodies.add(harmonicMelody);
-		Melody melody = new Melody(harmonicMelodies, 0);
-		List<Melody> melodies = new ArrayList<Melody>();
-		melodies.add(melody);
-		Score score = ScoreUtilities.createScoreMelodies(melodies, 60);
-		View.notate(score);
 		double melodicValue = melodicObjective.evaluateMelody(melodyNotes, 1);
 		LOGGER.info("test melody :" + melodicValue);
 	}

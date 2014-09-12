@@ -6,7 +6,7 @@ import neo.data.melody.Melody;
 
 public class MidiInfo {
 
-	private List<Melody> melodies;
+	private List<MelodyInstrument> melodies;
 	private String timeSignature;
 	private float tempo;
 	
@@ -22,10 +22,10 @@ public class MidiInfo {
 	public void setTempo(float tempo) {
 		this.tempo = tempo;
 	}
-	public List<Melody> getMelodies() {
+	public List<MelodyInstrument> getMelodies() {
 		return melodies;
 	}
-	public void setMelodies(List<Melody> melodies) {
+	public void setMelodies(List<MelodyInstrument> melodies) {
 		this.melodies = melodies;
 	}
 	

@@ -47,7 +47,7 @@ public class MidiParser {
 		LOGGER.finer("DivisionType: " + sequence.getDivisionType());
 		Track[] tracks = sequence.getTracks();
 		int voice = tracks.length - 1;
-		Map<Integer, Melody> map = new TreeMap<Integer, Melody>();
+		Map<Integer, MelodyInstrument> map = new TreeMap<Integer, MelodyInstrument>();
 		MidiInfo midiInfo = new MidiInfo();
 		for (int j = 0; j < tracks.length; j++) {
 			Track track = tracks[j];
@@ -97,23 +97,22 @@ public class MidiParser {
 			}
 
 			if (!notes.isEmpty()) {
-				Melody melody = createMelody(notes, voice);
+				MelodyInstrument melody = new MelodyInstrument(notes, voice);
 				map.put(voice, melody);
 			}
 			voice--;
 		}
-		List<Melody> melodies = new ArrayList<Melody>(map.values());
+		List<MelodyInstrument> melodies = new ArrayList<MelodyInstrument>(map.values());
 		midiInfo.setMelodies(melodies);
 		return midiInfo;
 	}
 
-	private static Melody createMelody(List<Note> notes, int voice) {
-		Note firstNote = notes.get(0);
-		Note lastNote = notes.get(notes.size() - 1);
+	private static MelodyInstrument createMelody(List<Note> notes, int voice) {
+//		Note firstNote = notes.get(0);
+//		Note lastNote = notes.get(notes.size() - 1);
 //		int length = lastNote.getPosition() + lastNote.getLength()
 //				- firstNote.getPosition();
-		HarmonicMelody harmonicMelody = new HarmonicMelody(null, notes, voice, firstNote.getPosition());
-		Melody melody = new Melody(singletonList(harmonicMelody), voice);
+		MelodyInstrument melody = new MelodyInstrument(notes, voice);
 		return melody;
 	}
 

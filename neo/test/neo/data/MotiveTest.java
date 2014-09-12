@@ -42,8 +42,8 @@ public class MotiveTest extends AbstractTest{
 	public void testGetMelodies(){
 		List<Melody> melodies = motive.getMelodies();
 		assertFalse(melodies.isEmpty());
-		assertEquals(2, melodies.get(0).getNotes().size());
-		assertEquals(5, melodies.get(0).getNotes().get(1).getPitchClass());
+		assertEquals(2, melodies.get(0).getMelodieNotes().size());
+		assertEquals(5, melodies.get(0).getMelodieNotes().get(1).getPitchClass());
 	}
 
 }

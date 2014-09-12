@@ -27,15 +27,10 @@ public class MidiParserTest extends AbstractTest {
 	@Test
 	public void testMidiInfo() {
 		melodies.forEach(n -> System.out.println(n.getNotes()));
-		Score score = ScoreUtilities.createScoreMelodies(melodies, midiInfo.getTempo());
 		String timeSignature = midiInfo.getTimeSignature();
 		System.out.println(timeSignature);
 		System.out.println(midiInfo.getTempo());
 		String[] split = timeSignature.split("/");
-		score.setNumerator(Integer.parseInt(split[0]));
-		score.setDenominator(Integer.parseInt(split[1]));
-		View.notate(score);
-		jm.util.Play.midi(score, false);
 	}
 
 }
