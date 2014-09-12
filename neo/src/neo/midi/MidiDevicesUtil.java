@@ -81,12 +81,9 @@ public class MidiDevicesUtil {
 	public static Sequence createSequence(List<Melody> motives, List<Instrument> instruments)
 			throws InvalidMidiDataException {
 		int motiveSize = motives.size();
-		if (motiveSize != instruments.size()) {
-			throw new IllegalArgumentException("Motives and ranges not equal!");
-		}
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
 		for (int i = 0; i < motiveSize; i++) {
-			List<Note> notes = motives.get(i).getNotes();
+			List<Note> notes = motives.get(i).getMelodieNotes();
 			createTrack(sequence, notes, instruments.get(i));
 		}
 		return sequence;
@@ -97,8 +94,20 @@ public class MidiDevicesUtil {
 		int motiveSize = motives.size();
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
 		for (int i = 0; i < motiveSize; i++) {
-			List<Note> notes = motives.get(i).getNotes();
+			List<Note> notes = motives.get(i).getMelodieNotes();
 			createTrack(sequence, notes, instrument);
+		}
+		return sequence;
+	}
+	
+	public static Sequence createSequence(List<MelodyInstrument> melodies)
+			throws InvalidMidiDataException {
+		int motiveSize = melodies.size();
+		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
+		for (MelodyInstrument melodyInstrument : melodies) {
+			if (melodyInstrument.getInstrument() != null) {
+				createTrack(sequence, melodyInstrument.getNotes(), melodyInstrument.getInstrument());
+			}
 		}
 		return sequence;
 	}
@@ -125,7 +134,7 @@ public class MidiDevicesUtil {
 	private static MidiEvent createInstrumentChange(Instrument instrument, int performance) throws InvalidMidiDataException {
 		if (instrument.isKeySwitch()) {
 			Note keySwitch = createKeySwitch(performance);
-			MidiEvent change = createNoteMidiEvent(ShortMessage.NOTE_ON, keySwitch, 30, 0);
+			MidiEvent change = createNoteMidiEvent(ShortMessage.NOTE_ON, keySwitch, 30, instrument.getChannel());
 			return change;
 		} else {
 			MidiEvent event = createProgramChangeMidiEvent(instrument.getChannel(), 0, performance);
@@ -145,7 +154,7 @@ public class MidiDevicesUtil {
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motives.size());
 		int i = 0;
 		for (Melody motive : motives) {
-			List<Note> notes = motive.getNotes();
+			List<Note> notes = motive.getMelodieNotes();
 			createTrack(sequence, notes, instruments.get(i));
 			i++;
 		}

@@ -76,7 +76,7 @@ public class Generator {
 
 	private void updateInnerMetricWeightMelodies(List<Melody> melodies) {
 		for (Melody melody : melodies) {
-			List<Note> notes = melody.getNotes();
+			List<Note> notes = melody.getMelodieNotes();
 			Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(notes, minimumLength);
 			for (Note note : notes) {
 				Integer key = note.getPosition()/minimumLength;

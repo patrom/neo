@@ -12,6 +12,7 @@ import neo.data.melody.Melody;
 import neo.evaluation.FitnessObjectiveValues;
 import neo.evaluation.MusicProperties;
 import neo.log.LogConfig;
+import neo.midi.MelodyInstrument;
 import neo.midi.MidiParser;
 import neo.print.Display;
 
@@ -21,7 +22,7 @@ public abstract class AbstractTest {
 	
 	protected static Logger LOGGER = Logger.getLogger(AbstractTest.class.getName());
 	
-	protected List<Melody> melodies = new ArrayList<>();
+	protected List<MelodyInstrument> melodies = new ArrayList<>();
 	protected FitnessObjectiveValues objectives;
 	protected MusicProperties musicProperties;
 	private LogConfig LogConfig = new LogConfig();

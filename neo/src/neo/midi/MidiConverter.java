@@ -1,5 +1,6 @@
 package neo.midi;
 
+import static java.util.stream.Collectors.toCollection;
 import static neo.data.harmony.HarmonyBuilder.harmony;
 
 import java.util.ArrayList;
@@ -12,8 +13,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import neo.data.harmony.Harmony;
-import neo.data.harmony.HarmonyBuilder;
-import neo.data.melody.Melody;
 import neo.data.note.Note;
 
 public class MidiConverter {
@@ -51,7 +50,7 @@ public class MidiConverter {
 		}
 	}
 	
-	public static void updatePositionNotes(List<Melody> melodies, String timeSignature){
+	public static void updatePositionNotes(List<MelodyInstrument> melodies, String timeSignature){
 		Map<Integer, Double> weights = null;
 		if (timeSignature.equals("4/4") || timeSignature.equals("2/4") || timeSignature.equals("2/2")) {
 			weights = fourFourOrTwoFourRhythmWeightValues;
@@ -62,7 +61,7 @@ public class MidiConverter {
 		} else {
 			throw new IllegalArgumentException("Weights time signature not implemented :" + timeSignature);
 		}
-		for (Melody melody : melodies) {
+		for (MelodyInstrument melody : melodies) {
 			List<Note> notes = melody.getNotes();
 			for (Note notePos : notes) {
 				if (weights.containsKey(notePos.getPosition())) {
@@ -74,7 +73,7 @@ public class MidiConverter {
 		}
 	}
 
-	public static List<Harmony> extractHarmony(List<Melody> melodies, Integer[] range){
+	public static List<Harmony> extractHarmony(List<MelodyInstrument> melodies, Integer[] range){
 		Map<Integer, List<Note>> chords = extractNoteMap(melodies);
 		List<Harmony> harmonies = new ArrayList<>();
 		for (Entry<Integer, List<Note>> ch : chords.entrySet()) {
@@ -88,17 +87,13 @@ public class MidiConverter {
 		return harmonies;
 	}
 
-	public static Map<Integer, List<Note>> extractNoteMap(List<Melody> melodies) {
+	public static Map<Integer, List<Note>> extractNoteMap(List<MelodyInstrument> melodies) {
 		Map<Integer, List<Note>> chords = new TreeMap<>();
-		Set<Integer> positions = new TreeSet<>();
-		for (Melody melody : melodies) {
-			List<Note> notes = melody.getNotes();
-			for (Note notePos : notes) {
-				positions.add(notePos.getPosition());
-			}
-		}
+		Set<Integer> positions = melodies.stream().flatMap(m -> m.getNotes().stream())
+											.map(note -> note.getPosition())
+											.collect(toCollection(TreeSet::new));
 		int voice = 0;
-		for (Melody melody : melodies) {
+		for (MelodyInstrument melody : melodies) {
 			List<Note> notes = melody.getNotes();
 			int melodyLength = notes.size() - 1;
 			Iterator<Integer> iterator = positions.iterator();

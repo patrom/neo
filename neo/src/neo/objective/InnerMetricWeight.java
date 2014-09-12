@@ -145,7 +145,7 @@ public class InnerMetricWeight {
 	
 	public Map<Integer, Double> applyInnerMetricWeight(Melody melody) {
 		Map<Integer, Double> melodiesMap = new TreeMap<Integer, Double>();
-		List<Note> notes = melody.getNotes();
+		List<Note> notes = melody.getMelodieNotes();
 		Map<Integer, Double> map = getInnerMetricMap(notes);
 		if (!map.isEmpty()) {
 			Set<Integer> onsets = map.keySet();

@@ -80,7 +80,7 @@ public class Display {
 		}
 
 		private static void viewScore(List<Melody> melodies, int i, double tempo) {
-			melodies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
+			melodies.forEach(h ->  LOGGER.info(h.getMelodieNotes() + ", "));
 			Score score = ScoreUtilities.createScoreMelodies(melodies, tempo);
 			score.setTitle("test " + (i));
 			Write.midi(score, "resources/midi/test" + (i) + ".mid");	

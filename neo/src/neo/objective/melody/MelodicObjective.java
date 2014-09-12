@@ -34,7 +34,7 @@ public class MelodicObjective extends Objective {
 		double totalMelodySum = 0;
 		List<Melody> melodies = motive.getMelodies();
 		for(Melody melody: melodies){
-			List<Note> notes =  melody.getNotes();
+			List<Note> notes =  melody.getMelodieNotes();
 //			notes = filterNotesAbove(notes, 0.5);
 //			notes = extractNotesOnLevel(notes, 1);
 			double melodyValue = evaluateMelody(notes, maxDistance);

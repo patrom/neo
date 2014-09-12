@@ -25,9 +25,16 @@ public class Melody{
 		return voice;
 	}
 	
-	public List<Note> getNotes(){
+	public List<Note> getMelodieNotes(){
 		return harmonicMelodies.stream()
-					.flatMap(h -> h.getMelodyNotes().stream())
+					.flatMap(harmonicMelody -> harmonicMelody.getMelodyNotes().stream())
+					.sorted()
+					.collect(toList());
+	}
+	
+	public List<Note> getHarmonyNotes(){
+		return harmonicMelodies.stream()
+					.map(harmonicMelody -> harmonicMelody.getHarmonyNote())
 					.sorted()
 					.collect(toList());
 	}
