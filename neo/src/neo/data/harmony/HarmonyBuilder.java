@@ -31,7 +31,7 @@ public class HarmonyBuilder {
 	public HarmonyBuilder notes(int ... pitchClass){
 		for (int i = 0; i < pitchClass.length; i++) {
 			Note note = new Note(pitchClass[i] , i , position, length);
-			HarmonicMelody harmonicMelody = new HarmonicMelody(note,i, position);
+			HarmonicMelody harmonicMelody = new HarmonicMelody(note, i, position);
 			melodyNotes.add(harmonicMelody);	
 		}
 		return this;

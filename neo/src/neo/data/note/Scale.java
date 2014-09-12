@@ -36,7 +36,7 @@ public class Scale {
 		this.scale = scale;
 	}
 
-	public int pickRandomFromScale(){
+	public int pickRandomPitchClass(){
 	    int index = random.nextInt(scale.length);
 	    return scale[index];
 	}

@@ -77,8 +77,23 @@ public class Harmony implements Comparable<Harmony>{
 				.collect(toList());
 		if (!melodies.isEmpty()) {
 			HarmonicMelody harmonicMelody = getRandomFromList(melodies);
-			int newPitchClass = scale.pickRandomFromScale();
+			int newPitchClass = scale.pickRandomPitchClass();
 			harmonicMelody.randomUpdateMelodyNotes(newPitchClass);
+		}
+	}
+	
+	public void swapHarmonyNotes(){
+		HarmonicMelody harmonicMelody = getRandomHarmonicMelody();
+		HarmonicMelody switchHarmonicMelody = getRandomHarmonicMelody();
+		Note harmonyNote = harmonicMelody.getHarmonyNote();
+		Note switchHarmonyNote = switchHarmonicMelody.getHarmonyNote();
+		if (!harmonyNote.equals(switchHarmonyNote)) {
+			int harmonyPitchClass = harmonyNote.getPitchClass();
+			int switchHarmonyPitchClass = switchHarmonyNote.getPitchClass();
+			harmonicMelody.updateMelodyNotes(harmonyPitchClass, switchHarmonyPitchClass);
+			harmonyNote.setPitchClass(switchHarmonyPitchClass);
+			switchHarmonicMelody.updateMelodyNotes(switchHarmonyPitchClass, harmonyPitchClass);
+			switchHarmonyNote.setPitchClass(harmonyPitchClass);
 		}
 	}
 
