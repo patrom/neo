@@ -1,6 +1,9 @@
 package neo.objective.harmony;
 
+import java.util.List;
+
 import neo.data.Motive;
+import neo.data.harmony.Harmony;
 import neo.evaluation.MusicProperties;
 import neo.objective.Objective;
 
@@ -12,10 +15,15 @@ public class HarmonicObjective extends Objective {
 
 	@Override
 	public double evaluate() {
-		double positionWeightTotal = motive.getHarmonies().stream().mapToDouble(harmony ->  harmony.getPositionWeight()).sum();
-		double harmonicValue = motive.getHarmonies().stream()
+		List<Harmony> harmonies = motive.getHarmonies();
+		double positionWeightTotal = harmonies.stream().mapToDouble(harmony ->  harmony.getPositionWeight()).sum();
+		double sumChordPositionWeight = harmonies.stream()
 				.mapToDouble(harmony -> harmony.getChordWeight() * harmony.getPositionWeight()).sum();
-		return harmonicValue/positionWeightTotal;
+		double chordPositionWeight = sumChordPositionWeight/positionWeightTotal;
+		double sumChordInnerMetricWeight = harmonies.stream()
+				.mapToDouble(harmony -> harmony.getChordWeight() * harmony.getInnerMetricWeight()).sum();
+		double chordInnerMetricWeight = sumChordInnerMetricWeight/harmonies.size();
+		return (chordPositionWeight + chordInnerMetricWeight)/2;
 	}
 
 }

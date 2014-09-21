@@ -1,13 +1,18 @@
 package neo.evaluation;
 
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jm.music.data.Note;
 import neo.data.Motive;
+import neo.data.harmony.Harmony;
+import neo.data.melody.Melody;
+import neo.data.note.Note;
 import neo.log.LogConfig;
 import neo.objective.Objective;
 import neo.objective.harmony.HarmonicObjective;
+import neo.objective.melody.InnerMetricWeight;
 import neo.objective.melody.MelodicObjective;
 import neo.objective.voiceleading.VoiceLeadingObjective;
 
@@ -19,11 +24,17 @@ public class FitnessEvaluationTemplate {
 	private Objective melodicObjective;
 	private Objective voiceLeadingObjective;
 
+	private int minimumLength;
+
 	public FitnessEvaluationTemplate(MusicProperties properties, Motive motive) {
+		minimumLength = properties.getMinimumLength();
+		updateInnerMetricWeightMelodies(motive.getMelodies());
+		updateInnerMetricWeightHarmonies(motive.getHarmonies());
 		harmonicObjective = new HarmonicObjective(properties, motive);
 		melodicObjective = new MelodicObjective(properties, motive);
 		voiceLeadingObjective = new VoiceLeadingObjective(properties, motive);
 		
+
 		LogConfig.configureLogger(Level.INFO);
 	}
 	
@@ -71,9 +82,45 @@ public class FitnessEvaluationTemplate {
 	}
 
 	private void calculateInnerMetricValues() {
+
 //		List<Integer> positions = noteList.stream().mapToInt(n -> n.getPosition()).collect(Collectors.toList());
 //		Map<Integer, Double> map = applyInnerMetricWeight(sentences);
 //		LOGGER.fine("Inner metric map: " + map.toString());
+	}
+	
+	private void updateInnerMetricWeightHarmonies(List<Harmony> harmonies) {
+		int[] harmonicRhythm = extractHarmonicRhythm(harmonies);
+		Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(harmonicRhythm, minimumLength);
+		for (Harmony harmony : harmonies) {
+			Integer key = harmony.getPosition()/minimumLength;
+			if (normalizedMap.containsKey(key)) {
+				Double innerMetricValue = normalizedMap.get(key);
+				harmony.setInnerMetricWeight(innerMetricValue);
+			}
+		}
+	}
+
+	private int[] extractHarmonicRhythm(List<Harmony> harmonies) {
+		int[] rhythm = new int[harmonies.size()];
+		for (int i = 0; i < rhythm.length; i++) {
+			Harmony harmony = harmonies.get(i);
+			rhythm[i] = harmony.getPosition();
+		}
+		return rhythm;
+	}
+
+	private void updateInnerMetricWeightMelodies(List<Melody> melodies) {
+		for (Melody melody : melodies) {
+			List<Note> notes = melody.getMelodieNotes();
+			Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(notes, minimumLength);
+			for (Note note : notes) {
+				Integer key = note.getPosition()/minimumLength;
+				if (normalizedMap.containsKey(key)) {
+					Double innerMetricValue = normalizedMap.get(key);
+					note.setInnerMetricWeight(innerMetricValue);
+				}
+			}
+		}
 	}
 
 //	private void applyDynamicTemplate(List<Harmony> noteList, int beat, boolean even) {

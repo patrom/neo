@@ -17,6 +17,8 @@ public class MusicProblem extends Problem {
 
 	private static Logger LOGGER = Logger.getLogger(MusicProblem.class
 			.getName());
+	
+	private FitnessEvaluationTemplate fitnessEvaluationTemplate;
 
 	private MusicProperties properties;
 
@@ -24,9 +26,8 @@ public class MusicProblem extends Problem {
 	private MembershipFunction harmonyMembershipFunction;
 	private MembershipFunction rhythmMembershipFunction;
 
-	public MusicProblem(String solutionType, int numberOfVariables,
-			MusicProperties inputProps) throws ClassNotFoundException {
-		numberOfVariables_ = numberOfVariables;
+	public MusicProblem(MusicProperties inputProps) throws ClassNotFoundException {
+		numberOfVariables_ = 1;
 		numberOfObjectives_ = 5;
 		numberOfConstraints_ = 0;
 		problemName_ = "MusicProblem";
@@ -49,12 +50,12 @@ public class MusicProblem extends Problem {
 	@Override
 	public void evaluate(Solution solution) throws JMException {
 		Variable[] variables = solution.getDecisionVariables();
-		FitnessEvaluationTemplate controller = new FitnessEvaluationTemplate(
+		fitnessEvaluationTemplate = new FitnessEvaluationTemplate(
 				properties, ((MusicVariable) variables[0]).getMotive());
 		// FugaDecorator decorator = new FugaDecorator(controller, 12, 48);
 		// DebussyDecorator decorator = new DebussyDecorator(controller);
 
-		FitnessObjectiveValues objectives = controller.evaluate();
+		FitnessObjectiveValues objectives = fitnessEvaluationTemplate.evaluate();
 
 		double harmonyObjective = 1 - (objectives.getHarmony());
 		solution.setObjective(0, harmonyObjective);// harmony

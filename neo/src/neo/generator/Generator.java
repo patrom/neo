@@ -48,8 +48,8 @@ public class Generator {
 	public Motive generateMotive() {
 		Motive motive = new Motive(generateHarmonies());
 		motive.setMusicProperties(musicProperties);
-		updateInnerMetricWeightMelodies(motive.getMelodies());
-		updateInnerMetricWeightHarmonies(motive.getHarmonies());
+//		updateInnerMetricWeightMelodies(motive.getMelodies());
+//		updateInnerMetricWeightHarmonies(motive.getHarmonies());
 		return motive;
 	}
 

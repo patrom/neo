@@ -1,6 +1,6 @@
 How to set evaluation optimized values:
 
-Harmony: set chordtype dissonance value
+Harmony: set chordtype dissonance value (position + innermetric weight)
 
 Voiceleading: voice leading sizes < 3
 

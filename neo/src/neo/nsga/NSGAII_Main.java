@@ -51,44 +51,49 @@ import neo.print.Display;
 
 
 public class NSGAII_Main implements JMC{
+	
+	private static Problem problem;
+	private static SolutionType type;
+	private static Operator crossover;
+	private static Operator oneNoteMutation;
+	private static Operator pitchSpaceMutation;
+	private static Algorithm algorithm;
+	private static Display display;
 
 	public static void main(String [] args) throws JMException, SecurityException, IOException, InvalidMidiDataException, ClassNotFoundException {
 		MusicProperties musicProperties = getMusicProperties();
 		
-	    Problem problem = new MusicProblem("music", 1, musicProperties);
-	    SolutionType type = new MusicSolutionType(problem, musicProperties) ;
+	    problem = new MusicProblem(musicProperties);
+	    type = new MusicSolutionType(problem, musicProperties) ;
 	    problem.setSolutionType(type);
-	    Algorithm algorithm = new NSGAII(problem);
+	    algorithm = new NSGAII(problem);
 	
 	    // Algorithm parameters
 	    int populationSize = 10;
 	    algorithm.setInputParameter("populationSize",populationSize);
 	    algorithm.setInputParameter("maxEvaluations",populationSize * 200);
 	    // Mutation and Crossover
-	    Operator crossover = new OnePointCrossover();
+	    crossover = new OnePointCrossover();
 	    crossover.setParameter("probabilityCrossover", 1.0);       
 	
-	    Operator oneNoteMutation = new OneNoteMutation();
+	    oneNoteMutation = new OneNoteMutation();
 	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
 	    
-	    Operator pitchSpaceMutation = new PitchSpaceMutation();
+	    pitchSpaceMutation = new PitchSpaceMutation();
 	    pitchSpaceMutation.setParameter("probabilityPitchSpace", 1.0);
 	
-	    // Selection Operator 
-	    Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament2") ;                           
-	
 	    // Add the operators to the algorithm
-	    algorithm.addOperator("crossover",crossover);
+	    algorithm.addOperator("crossover", crossover);
 	    algorithm.addOperator("oneNoteMutation", oneNoteMutation);
-	    algorithm.addOperator("pitchSpaceMutation",pitchSpaceMutation);
-	    algorithm.addOperator("selection",selection);
+	    algorithm.addOperator("pitchSpaceMutation", pitchSpaceMutation);
+	    algorithm.addOperator("selection", SelectionFactory.getSelectionOperator("BinaryTournament2"));
 	
 	    // Execute the Algorithm
 	    SolutionSet population = algorithm.execute();
 	    
 	    // Result messages 
-	    population.printObjectivesToFile("FUN");
-	    Display.view(population, musicProperties.getTempo());
+	    population.printObjectivesToFile("SOL");
+	    display.view(population, musicProperties.getTempo());
 	}
 
 	private static MusicProperties getMusicProperties() {

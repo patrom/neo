@@ -4,11 +4,8 @@ import java.io.IOException;
 
 import javax.sound.midi.InvalidMidiDataException;
 
-import jm.music.data.Score;
-import jm.util.View;
 import neo.AbstractTest;
 import neo.evaluation.MusicProperties;
-import neo.print.ScoreUtilities;
 
 import org.junit.Before;
 import org.junit.Test;

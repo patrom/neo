@@ -23,7 +23,7 @@ public class Display {
 
 	private static Logger LOGGER = Logger.getLogger(Display.class.getName());
 	 
-	 public static void view(SolutionSet solutionsList, double tempo) throws JMException, InvalidMidiDataException{
+	 public void view(SolutionSet solutionsList, double tempo) throws JMException, InvalidMidiDataException{
 		  Iterator<Solution> iterator = solutionsList.iterator();
 		  int i = 1;
 		  while (iterator.hasNext() && i < 11) {
@@ -73,13 +73,13 @@ public class Display {
 //	  		  }
 	  }
 	  
-		private static void printHarmonies(List<Harmony> harmonies) {
+		private void printHarmonies(List<Harmony> harmonies) {
 			harmonies.forEach(h ->  LOGGER.info(h.getChord().getChordType() + ", "));
 //			harmonies.forEach(h ->  LOGGER.info(h.getChord().getPitchClassMultiSet() + ", "));
 //			harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
 		}
 
-		private static void viewScore(List<Melody> melodies, int i, double tempo) {
+		private void viewScore(List<Melody> melodies, int i, double tempo) {
 			melodies.forEach(h ->  LOGGER.info(h.getMelodieNotes() + ", "));
 			Score score = ScoreUtilities.createScoreMelodies(melodies, tempo);
 			score.setTitle("test " + (i));
@@ -92,7 +92,7 @@ public class Display {
 //			LOGGER.info(vexTab);
 //		}
 		
-		private static void changeLengths(List<Harmony> harmonies) {
+		private void changeLengths(List<Harmony> harmonies) {
 			for (Harmony harmony : harmonies) {
 				List<Note> notes = harmony.getNotes();
 				int size = notes.size() - 1;
@@ -105,7 +105,7 @@ public class Display {
 			}
 		}
 
-		private static void printNotes(List<Harmony> harmonies) {
+		private void printNotes(List<Harmony> harmonies) {
 			for (Harmony harmony : harmonies) {
 				List<Note> notes = harmony.getNotes();
 				int length = harmony.getLength();

@@ -23,7 +23,7 @@ public class Play {
 	private MidiInfo midiInfo;
 
 	public static void playMidiFilesOnKontaktFor() throws IOException, InvalidMidiDataException, InterruptedException {
-		List<File> midiFiles = Files.list(new File(MidiParserTest.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		List<File> midiFiles = Files.list(new File(Play.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = MidiParser.readMidi(midiFile);
@@ -45,7 +45,7 @@ public class Play {
 	}
 
 	public static void playMidiFilesOnKontaktFor(Instrument instrument) throws IOException, InvalidMidiDataException, InterruptedException {
-		List<File> midiFiles = Files.list(new File(MidiParserTest.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		List<File> midiFiles = Files.list(new File(Play.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = MidiParser.readMidi(midiFile);
@@ -57,12 +57,12 @@ public class Play {
 	}
 	
 	public void testPlayOnKontakt() throws InvalidMidiDataException, IOException {
-		midiInfo = MidiParser.readMidi(MidiParserTest.class.getResource("/melodies/Wagner-Tristan.mid").getPath());
+		midiInfo = MidiParser.readMidi(Play.class.getResource("/melodies/Wagner-Tristan.mid").getPath());
 		Play.playOnKontakt(midiInfo.getMelodies(), midiInfo.getTempo());
 	}
 	
 	public void testPlayOnKontaktListOfMelodyInstrumentFloat() throws InvalidMidiDataException, IOException, InterruptedException {
-		midiInfo = MidiParser.readMidi(MidiParserTest.class.getResource("/melodies/Wagner-Tristan.mid").getPath());
+		midiInfo = MidiParser.readMidi(Play.class.getResource("/melodies/Wagner-Tristan.mid").getPath());
 		Play.playMidiFilesOnKontaktFor();
 	}
 	
