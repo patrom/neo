@@ -1,7 +1,7 @@
 package neo.midi;
 
 import static java.util.stream.Collectors.toCollection;
-import static neo.data.harmony.HarmonyBuilder.harmony;
+import static neo.model.harmony.HarmonyBuilder.harmony;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,8 +12,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import neo.data.harmony.Harmony;
-import neo.data.note.Note;
+import neo.model.harmony.Harmony;
+import neo.model.note.Note;
 
 public class MidiConverter {
 	

@@ -5,11 +5,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.data.melody.Melody;
-import neo.data.note.Note;
+import neo.generator.MusicProperties;
 import neo.log.LogConfig;
+import neo.model.Motive;
+import neo.model.harmony.Harmony;
+import neo.model.melody.Melody;
+import neo.model.note.Note;
 import neo.objective.Objective;
 import neo.objective.harmony.HarmonicObjective;
 import neo.objective.melody.InnerMetricWeight;

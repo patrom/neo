@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 import jm.music.data.Phrase;
 import jm.music.tools.NoteListException;
 import jm.music.tools.QuantisationException;
-import neo.data.note.Interval;
-import neo.data.note.Note;
+import neo.model.note.Interval;
+import neo.model.note.Note;
 
 import org.apache.commons.lang.ArrayUtils;
 

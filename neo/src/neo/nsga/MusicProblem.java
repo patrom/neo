@@ -8,7 +8,7 @@ import jmetal.core.Variable;
 import jmetal.util.JMException;
 import neo.evaluation.FitnessEvaluationTemplate;
 import neo.evaluation.FitnessObjectiveValues;
-import neo.evaluation.MusicProperties;
+import neo.generator.MusicProperties;
 import net.sourceforge.jFuzzyLogic.membership.MembershipFunction;
 import net.sourceforge.jFuzzyLogic.membership.MembershipFunctionTriangular;
 import net.sourceforge.jFuzzyLogic.membership.Value;

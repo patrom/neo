@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import neo.data.note.NoteBuilder;
-import neo.data.note.Note;
+import neo.model.note.Note;
+import neo.model.note.NoteBuilder;
 
 import org.junit.Assert;
 import org.junit.Before;

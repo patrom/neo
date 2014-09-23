@@ -1,6 +1,6 @@
 package neo.evaluation;
 
-import static neo.data.harmony.HarmonyBuilder.harmony;
+import static neo.model.harmony.HarmonyBuilder.harmony;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,9 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import neo.AbstractTest;
-import neo.data.Motive;
-import neo.data.harmony.Harmony;
+import neo.generator.MusicProperties;
+import neo.model.Motive;
+import neo.model.harmony.Harmony;
 
 import org.junit.After;
 import org.junit.Before;

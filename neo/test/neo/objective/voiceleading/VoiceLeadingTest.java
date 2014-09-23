@@ -1,12 +1,8 @@
 package neo.objective.voiceleading;
 
-import static neo.data.harmony.HarmonyBuilder.harmony;
-
-import java.util.logging.Logger;
-
+import static neo.model.harmony.HarmonyBuilder.harmony;
 import neo.AbstractTest;
-import neo.data.harmony.Harmony;
-import neo.print.Display;
+import neo.model.harmony.Harmony;
 
 import org.junit.Test;
 

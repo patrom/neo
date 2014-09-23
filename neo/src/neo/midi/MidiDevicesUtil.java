@@ -17,9 +17,9 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 import javax.sound.midi.Transmitter;
 
-import neo.data.melody.Melody;
-import neo.data.note.Note;
-import neo.instrument.Instrument;
+import neo.model.melody.Melody;
+import neo.model.note.Note;
+import neo.out.instrument.Instrument;
 
 public class MidiDevicesUtil {
 
@@ -27,7 +27,7 @@ public class MidiDevicesUtil {
 
 	private static final int RESOLUTION = 12;
 	
-	public static void playOnDevice(Sequence sequence, float tempo, neo.instrument.MidiDevice kontact) {
+	public static void playOnDevice(Sequence sequence, float tempo, neo.out.instrument.MidiDevice kontact) {
 		LOGGER.info("tempo:" + tempo);
 		MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
 		for (int i = 0; i < infos.length; i++) {

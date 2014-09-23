@@ -2,9 +2,9 @@ package neo.objective.harmony;
 
 import java.util.List;
 
-import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.evaluation.MusicProperties;
+import neo.generator.MusicProperties;
+import neo.model.Motive;
+import neo.model.harmony.Harmony;
 import neo.objective.Objective;
 
 public class HarmonicObjective extends Objective {

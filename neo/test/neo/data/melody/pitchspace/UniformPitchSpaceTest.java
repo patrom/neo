@@ -5,9 +5,11 @@ import static junit.framework.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import neo.data.harmony.Harmony;
-import neo.data.harmony.HarmonyBuilder;
-import neo.data.note.Note;
+import neo.model.harmony.Harmony;
+import neo.model.harmony.HarmonyBuilder;
+import neo.model.melody.pitchspace.PitchSpace;
+import neo.model.melody.pitchspace.UniformPitchSpace;
+import neo.model.note.Note;
 
 import org.junit.Test;
 

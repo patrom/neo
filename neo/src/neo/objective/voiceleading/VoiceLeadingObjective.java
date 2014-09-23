@@ -3,9 +3,9 @@ package neo.objective.voiceleading;
 import java.util.List;
 import java.util.logging.Logger;
 
-import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.evaluation.MusicProperties;
+import neo.generator.MusicProperties;
+import neo.model.Motive;
+import neo.model.harmony.Harmony;
 import neo.objective.Objective;
 
 public class VoiceLeadingObjective extends Objective {

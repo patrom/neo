@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
 
-import neo.instrument.Ensemble;
-import neo.instrument.Instrument;
-import neo.instrument.KontaktLibPiano;
-import neo.instrument.KontaktLibViolin;
-import neo.instrument.MidiDevice;
+import neo.out.instrument.Ensemble;
+import neo.out.instrument.Instrument;
+import neo.out.instrument.KontaktLibPiano;
+import neo.out.instrument.KontaktLibViolin;
+import neo.out.instrument.MidiDevice;
 
 public class Play {
 	

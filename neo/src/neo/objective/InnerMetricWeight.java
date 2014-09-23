@@ -12,8 +12,8 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import jm.music.data.Phrase;
-import neo.data.melody.Melody;
-import neo.data.note.Note;
+import neo.model.melody.Melody;
+import neo.model.note.Note;
 import neo.objective.voiceleading.VoiceLeadingObjective;
 
 import org.apache.commons.math.stat.correlation.PearsonsCorrelation;

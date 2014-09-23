@@ -7,8 +7,8 @@ import java.util.Map;
 import javax.sound.midi.InvalidMidiDataException;
 
 import neo.AbstractTest;
-import neo.data.harmony.Harmony;
-import neo.data.note.Note;
+import neo.model.harmony.Harmony;
+import neo.model.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;

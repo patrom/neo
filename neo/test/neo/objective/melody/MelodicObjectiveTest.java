@@ -1,7 +1,6 @@
 package neo.objective.melody;
 
-import static neo.data.harmony.HarmonyBuilder.harmony;
-import static neo.data.note.NoteBuilder.note;
+import static neo.model.note.NoteBuilder.note;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -10,17 +9,12 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import jm.music.data.Score;
-import jm.util.View;
 import neo.AbstractTest;
-import neo.data.Motive;
-import neo.data.harmony.ChordType;
-import neo.data.harmony.Harmony;
-import neo.data.melody.HarmonicMelody;
-import neo.data.melody.Melody;
-import neo.data.note.Interval;
-import neo.data.note.Note;
-import neo.print.ScoreUtilities;
+import neo.model.Motive;
+import neo.model.harmony.ChordType;
+import neo.model.harmony.Harmony;
+import neo.model.note.Interval;
+import neo.model.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;

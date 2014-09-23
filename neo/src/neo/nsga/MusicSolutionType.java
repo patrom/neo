@@ -3,7 +3,7 @@ package neo.nsga;
 import jmetal.core.Problem;
 import jmetal.core.SolutionType;
 import jmetal.core.Variable;
-import neo.data.Motive;
+import neo.model.Motive;
 
 public class MusicSolutionType extends SolutionType {
 

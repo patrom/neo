@@ -8,13 +8,10 @@ import java.util.logging.Logger;
 
 import javax.sound.midi.InvalidMidiDataException;
 
-import neo.data.melody.Melody;
 import neo.evaluation.FitnessObjectiveValues;
-import neo.evaluation.MusicProperties;
+import neo.generator.MusicProperties;
 import neo.log.LogConfig;
 import neo.midi.MelodyInstrument;
-import neo.midi.MidiParser;
-import neo.print.Display;
 
 import org.junit.Before;
 

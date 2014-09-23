@@ -8,7 +8,7 @@ import jmetal.operators.mutation.Mutation;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import jmetal.util.PseudoRandom;
-import neo.data.Motive;
+import neo.model.Motive;
 import neo.nsga.MusicVariable;
 
 

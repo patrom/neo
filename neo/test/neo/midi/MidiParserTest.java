@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.sound.midi.InvalidMidiDataException;
 
 import neo.AbstractTest;
-import neo.evaluation.MusicProperties;
+import neo.generator.MusicProperties;
 
 import org.junit.Before;
 import org.junit.Test;

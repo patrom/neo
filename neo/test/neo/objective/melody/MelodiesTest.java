@@ -3,26 +3,20 @@ package neo.objective.melody;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.sound.midi.InvalidMidiDataException;
 
-import jdk.nashorn.internal.ir.CallNode.EvalArgs;
-import jm.music.data.Score;
-import jm.util.View;
 import neo.AbstractTest;
-import neo.data.melody.Melody;
-import neo.data.note.Note;
 import neo.evaluation.FitnessEvaluationTemplate;
-import neo.evaluation.MusicProperties;
+import neo.generator.MusicProperties;
 import neo.midi.MelodyInstrument;
 import neo.midi.MidiConverter;
 import neo.midi.MidiInfo;
 import neo.midi.MidiParser;
-import neo.print.ScoreUtilities;
+import neo.model.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;

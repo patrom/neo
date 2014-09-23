@@ -2,7 +2,7 @@ package neo.midi;
 
 import java.util.List;
 
-import neo.data.melody.Melody;
+import neo.model.melody.Melody;
 
 public class MidiInfo {
 

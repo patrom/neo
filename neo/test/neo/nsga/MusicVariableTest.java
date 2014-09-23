@@ -1,17 +1,17 @@
 package neo.nsga;
 
-import static neo.data.harmony.HarmonyBuilder.harmony;
-import static neo.data.melody.HarmonicMelodyBuilder.harmonicMelody;
-import static neo.data.note.NoteBuilder.note;
+import static neo.model.harmony.HarmonyBuilder.harmony;
+import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
+import static neo.model.note.NoteBuilder.note;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.data.melody.HarmonicMelody;
-import neo.data.note.Note;
+import neo.model.Motive;
+import neo.model.harmony.Harmony;
+import neo.model.melody.HarmonicMelody;
+import neo.model.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;

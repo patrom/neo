@@ -21,9 +21,9 @@
  */
 package neo.nsga;
 
-import static neo.data.harmony.HarmonyBuilder.harmony;
-import static neo.data.melody.HarmonicMelodyBuilder.harmonicMelody;
-import static neo.data.note.NoteBuilder.note;
+import static neo.model.harmony.HarmonyBuilder.harmony;
+import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
+import static neo.model.note.NoteBuilder.note;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,15 +42,15 @@ import jmetal.core.SolutionSet;
 import jmetal.core.SolutionType;
 import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
-import neo.data.Motive;
-import neo.data.harmony.HarmonyBuilder;
-import neo.data.melody.HarmonicMelody;
-import neo.evaluation.MusicProperties;
 import neo.generator.Generator;
+import neo.generator.MusicProperties;
+import neo.model.Motive;
+import neo.model.harmony.HarmonyBuilder;
+import neo.model.melody.HarmonicMelody;
 import neo.nsga.operator.crossover.OnePointCrossover;
 import neo.nsga.operator.mutation.OneNoteMutation;
 import neo.nsga.operator.mutation.PitchSpaceMutation;
-import neo.print.Display;
+import neo.out.print.Display;
 
 
 public class NSGAII_Main implements JMC{

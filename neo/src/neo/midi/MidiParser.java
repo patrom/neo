@@ -20,9 +20,9 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
-import neo.data.melody.HarmonicMelody;
-import neo.data.melody.Melody;
-import neo.data.note.Note;
+import neo.model.melody.HarmonicMelody;
+import neo.model.melody.Melody;
+import neo.model.note.Note;
 
 public class MidiParser {
 

@@ -8,11 +8,11 @@ import java.util.logging.Logger;
 
 import jmetal.core.Variable;
 import jmetal.util.JMException;
-import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.data.melody.HarmonicMelody;
-import neo.data.melody.pitchspace.PitchSpace;
-import neo.data.note.Note;
+import neo.model.Motive;
+import neo.model.harmony.Harmony;
+import neo.model.melody.HarmonicMelody;
+import neo.model.melody.pitchspace.PitchSpace;
+import neo.model.note.Note;
 
 public class MusicVariable extends Variable {
 

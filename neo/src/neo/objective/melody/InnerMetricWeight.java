@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import neo.data.note.Note;
+import neo.model.note.Note;
 
 
 public class InnerMetricWeight {

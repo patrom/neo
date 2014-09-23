@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import neo.data.Motive;
-import neo.data.harmony.Chord;
-import neo.data.harmony.ChordType;
-import neo.data.melody.Melody;
-import neo.data.note.Interval;
-import neo.data.note.Note;
-import neo.evaluation.MusicProperties;
+import neo.generator.MusicProperties;
+import neo.model.Motive;
+import neo.model.harmony.Chord;
+import neo.model.harmony.ChordType;
+import neo.model.melody.Melody;
+import neo.model.note.Interval;
+import neo.model.note.Note;
 import neo.objective.Objective;
 
 public class MelodicObjective extends Objective {

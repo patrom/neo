@@ -13,14 +13,13 @@ import java.util.stream.Stream;
 
 import javax.sound.midi.InvalidMidiDataException;
 
-import neo.data.Motive;
-import neo.data.harmony.Harmony;
-import neo.data.harmony.HarmonyBuilder;
-import neo.data.melody.HarmonicMelody;
-import neo.data.melody.Melody;
-import neo.data.note.Note;
-import neo.data.note.Scale;
-import neo.evaluation.MusicProperties;
+import neo.model.Motive;
+import neo.model.harmony.Harmony;
+import neo.model.harmony.HarmonyBuilder;
+import neo.model.melody.HarmonicMelody;
+import neo.model.melody.Melody;
+import neo.model.note.Note;
+import neo.model.note.Scale;
 import neo.objective.melody.InnerMetricWeight;
 
 public class Generator {

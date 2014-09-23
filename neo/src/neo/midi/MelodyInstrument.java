@@ -2,8 +2,8 @@ package neo.midi;
 
 import java.util.List;
 
-import neo.data.note.Note;
-import neo.instrument.Instrument;
+import neo.model.note.Note;
+import neo.out.instrument.Instrument;
 
 public class MelodyInstrument {
 

@@ -1,7 +1,7 @@
 package neo.objective;
 
-import neo.data.Motive;
-import neo.evaluation.MusicProperties;
+import neo.generator.MusicProperties;
+import neo.model.Motive;
 
 public abstract class Objective {
 	
