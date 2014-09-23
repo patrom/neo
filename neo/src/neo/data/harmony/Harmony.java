@@ -4,9 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import jmetal.util.PseudoRandom;
 import neo.data.melody.HarmonicMelody;
 import neo.data.melody.pitchspace.BassOctavePitchSpace;
 import neo.data.melody.pitchspace.MiddleOctavePitchSpace;

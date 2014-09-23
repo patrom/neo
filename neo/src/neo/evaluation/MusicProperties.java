@@ -38,11 +38,6 @@ public class MusicProperties {
 	private double voiceLeadingConsDissValue;
 	private String voiceLeadingStrategy;
 	
-	//rhythm - context
-	private double rhythmConsDissValue = 0.4;
-	private int rhythmTemplateValue = 5;//add to every note + template accents
-	private int innerMetricFactor = 10;// add 100/innerMetricFactor
-	private int[] rhythmProfile = {0,0,0,10,10};//whole note (with divisions), half note, quarter note, triplet half note, triplet quarter note.
 
 	//generation
 	private int numerator = 4;//2/4,4/4,3/4 - 6/8
@@ -56,14 +51,6 @@ public class MusicProperties {
 	private double crossoverProbability;
 	private double mutationProbability;
 	
-	private List<Instrument> ranges = new ArrayList<>();
-	
-	public List<Instrument> getRanges() {
-		return ranges;
-	}
-	public void setRanges(List<Instrument> ranges) {
-		this.ranges = ranges;
-	}
 	public String getHarmonyStrategy() {
 		return harmonyStrategy;
 	}
@@ -107,22 +94,9 @@ public class MusicProperties {
 	public void setVoiceLeadingConsDissValue(double voiceLeadingConsDissValue) {
 		this.voiceLeadingConsDissValue = voiceLeadingConsDissValue;
 	}
-	public int getRhythmTemplateValue() {
-		return rhythmTemplateValue;
-	}
-	public void setRhythmTemplateValue(int rhythmTemplateValue) {
-		this.rhythmTemplateValue = rhythmTemplateValue;
-	}
-	public int getInnerMetricFactor() {
-		return innerMetricFactor;
-	}
-	public void setInnerMetricFactor(int innerMetricFactor) {
-		this.innerMetricFactor = innerMetricFactor;
-	}
 	public Scale getScale() {
 		return scale;
 	}
-	
 	public int getNumerator() {
 		return numerator;
 	}
@@ -158,18 +132,6 @@ public class MusicProperties {
 	}
 	public void setMutationProbability(double mutationProbability) {
 		this.mutationProbability = mutationProbability;
-	}
-	public int[] getRhythmProfile() {
-		return rhythmProfile;
-	}
-	public void setRhythmProfile(int[] rhythmProfile) {
-		this.rhythmProfile = rhythmProfile;
-	}
-	public double getRhythmConsDissValue() {
-		return rhythmConsDissValue;
-	}
-	public void setRhythmConsDissValue(double rhythmConsDissValue) {
-		this.rhythmConsDissValue = rhythmConsDissValue;
 	}
 	
 	public static Instrument getInstrument(int voice, int low, int high) {

@@ -1,9 +1,7 @@
 package neo.data.melody.pitchspace;
 
 import java.util.List;
-import java.util.Random;
 
-import jmetal.util.PseudoRandom;
 import neo.data.note.Note;
 import neo.util.RandomUtil;
 

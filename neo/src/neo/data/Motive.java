@@ -4,13 +4,10 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import jmetal.util.PseudoRandom;
 import neo.data.harmony.Harmony;
 import neo.data.melody.HarmonicMelody;
 import neo.data.melody.Melody;
-import neo.data.note.Note;
 import neo.evaluation.MusicProperties;
 import neo.util.RandomUtil;
 

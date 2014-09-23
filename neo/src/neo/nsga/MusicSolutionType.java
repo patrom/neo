@@ -1,27 +1,23 @@
 package neo.nsga;
 
-import jmetal.base.Problem;
-import jmetal.base.SolutionType;
-import jmetal.base.Variable;
+import jmetal.core.Problem;
+import jmetal.core.SolutionType;
+import jmetal.core.Variable;
 import neo.data.Motive;
-import neo.evaluation.MusicProperties;
-import neo.generator.Generator;
 
 public class MusicSolutionType extends SolutionType {
 
-	private Generator generator;
+	private Motive motive;
 	
-	public MusicSolutionType(Problem problem, MusicProperties musicProperties) {
+	public MusicSolutionType(Problem problem, Motive motive) {
 		super(problem);
-		problem.variableType_ = new Class[problem.getNumberOfVariables()];
 		problem.setSolutionType(this);
-		generator = new Generator(musicProperties);
+		this.motive = motive;
 	}
 
 	@Override
 	public Variable[] createVariables() throws ClassNotFoundException {
 		Variable[] variables = new Variable[problem_.getNumberOfVariables()];
-		Motive motive = generator.generateMotive();
 		variables[0] = new MusicVariable(motive);
 		return variables ;
 	}	

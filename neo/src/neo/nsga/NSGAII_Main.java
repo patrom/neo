@@ -27,6 +27,7 @@ import static neo.data.note.NoteBuilder.note;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,16 +35,18 @@ import java.util.TreeMap;
 import javax.sound.midi.InvalidMidiDataException;
 
 import jm.JMC;
-import jmetal.base.Algorithm;
-import jmetal.base.Operator;
-import jmetal.base.Problem;
-import jmetal.base.SolutionSet;
-import jmetal.base.SolutionType;
-import jmetal.base.operator.selection.SelectionFactory;
+import jmetal.core.Algorithm;
+import jmetal.core.Operator;
+import jmetal.core.Problem;
+import jmetal.core.SolutionSet;
+import jmetal.core.SolutionType;
+import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
+import neo.data.Motive;
 import neo.data.harmony.HarmonyBuilder;
 import neo.data.melody.HarmonicMelody;
 import neo.evaluation.MusicProperties;
+import neo.generator.Generator;
 import neo.nsga.operator.crossover.OnePointCrossover;
 import neo.nsga.operator.mutation.OneNoteMutation;
 import neo.nsga.operator.mutation.PitchSpaceMutation;
@@ -58,13 +61,16 @@ public class NSGAII_Main implements JMC{
 	private static Operator oneNoteMutation;
 	private static Operator pitchSpaceMutation;
 	private static Algorithm algorithm;
-	private static Display display;
+	private static Display display = new Display();
+	private static Generator generator;
 
 	public static void main(String [] args) throws JMException, SecurityException, IOException, InvalidMidiDataException, ClassNotFoundException {
 		MusicProperties musicProperties = getMusicProperties();
 		
 	    problem = new MusicProblem(musicProperties);
-	    type = new MusicSolutionType(problem, musicProperties) ;
+	    generator = new Generator(musicProperties);
+	    Motive motive = generator.generateMotive();
+	    type = new MusicSolutionType(problem, motive) ;
 	    problem.setSolutionType(type);
 	    algorithm = new NSGAII(problem);
 	
@@ -73,20 +79,21 @@ public class NSGAII_Main implements JMC{
 	    algorithm.setInputParameter("populationSize",populationSize);
 	    algorithm.setInputParameter("maxEvaluations",populationSize * 200);
 	    // Mutation and Crossover
-	    crossover = new OnePointCrossover();
+	    HashMap<String, Object> parameters = new HashMap<>();
+	    crossover = new OnePointCrossover(parameters);
 	    crossover.setParameter("probabilityCrossover", 1.0);       
 	
-	    oneNoteMutation = new OneNoteMutation();
+	    oneNoteMutation = new OneNoteMutation(parameters);
 	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
 	    
-	    pitchSpaceMutation = new PitchSpaceMutation();
+	    pitchSpaceMutation = new PitchSpaceMutation(parameters);
 	    pitchSpaceMutation.setParameter("probabilityPitchSpace", 1.0);
 	
 	    // Add the operators to the algorithm
 	    algorithm.addOperator("crossover", crossover);
 	    algorithm.addOperator("oneNoteMutation", oneNoteMutation);
 	    algorithm.addOperator("pitchSpaceMutation", pitchSpaceMutation);
-	    algorithm.addOperator("selection", SelectionFactory.getSelectionOperator("BinaryTournament2"));
+	    algorithm.addOperator("selection", SelectionFactory.getSelectionOperator("BinaryTournament2", parameters));
 	
 	    // Execute the Algorithm
 	    SolutionSet population = algorithm.execute();

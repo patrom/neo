@@ -10,11 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import jmetal.base.Algorithm;
-import jmetal.base.Operator;
-import jmetal.base.Problem;
-import jmetal.base.Solution;
-import jmetal.base.SolutionSet;
+import jmetal.core.Algorithm;
+import jmetal.core.Operator;
+import jmetal.core.Problem;
+import jmetal.core.Solution;
+import jmetal.core.SolutionSet;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.Distance;
 import jmetal.util.JMException;
@@ -27,17 +27,13 @@ public class NSGAII extends Algorithm {
 
 	private static Logger LOGGER = Logger.getLogger(NSGAII.class.getName());
 	
-  /**
-   * stores the problem  to solve
-   */
-  private Problem problem_;
 
   /**
    * Constructor
    * @param problem Problem to solve
    */
   public NSGAII(Problem problem) {
-    this.problem_ = problem;
+	  super(problem);
   } 
 
   /**   
@@ -152,7 +148,7 @@ public class NSGAII extends Algorithm {
       // Remain is less than front(index).size, insert only the best one
       if (remain > 0) {  // front contains individuals to insert                        
         distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
-        front.sort(new jmetal.base.operator.comparator.CrowdingComparator());
+        front.sort(new jmetal.util.comparators.CrowdingComparator());
         for (int k = 0; k < remain; k++) {
           population.add(front.get(k));
         } 

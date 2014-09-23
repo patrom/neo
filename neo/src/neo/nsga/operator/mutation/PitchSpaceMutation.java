@@ -1,9 +1,10 @@
 package neo.nsga.operator.mutation;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
-import jmetal.base.Solution;
-import jmetal.base.operator.mutation.Mutation;
+import jmetal.core.Solution;
+import jmetal.operators.mutation.Mutation;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import jmetal.util.PseudoRandom;
@@ -12,6 +13,10 @@ import neo.nsga.MusicVariable;
 
 public class PitchSpaceMutation extends Mutation {
 	
+	public PitchSpaceMutation(HashMap<String, Object> parameters) {
+		super(parameters);
+	}
+
 	private static Logger LOGGER = Logger.getLogger(OneNoteMutation.class.getName());
 
 	/**
@@ -36,7 +41,6 @@ public class PitchSpaceMutation extends Mutation {
 	 */
 	public Object execute(Object object) throws JMException {
 		Solution solution = (Solution) object;
-
 		Double probability = (Double) getParameter("probabilityPitchSpace");
 		if (probability == null) {
 			Configuration.logger_.severe("probabilityOneNote: probability not " +
@@ -45,7 +49,6 @@ public class PitchSpaceMutation extends Mutation {
 			String name = cls.getName();
 			throw new JMException("Exception in " + name + ".execute()");
 		}
-
 		doMutation(probability.doubleValue(), solution);
 		return solution;
 	} 

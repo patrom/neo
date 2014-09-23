@@ -1,7 +1,7 @@
 package neo.nsga;
 
-import jmetal.base.Problem;
-import jmetal.base.Solution;
+import jmetal.core.Problem;
+import jmetal.core.Solution;
 
 public class MusicSolution extends Solution {
 	

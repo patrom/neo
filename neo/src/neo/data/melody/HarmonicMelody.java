@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
-import java.util.stream.IntStream;
 
-import jmetal.util.PseudoRandom;
 import neo.data.note.Note;
 
 public class HarmonicMelody {
