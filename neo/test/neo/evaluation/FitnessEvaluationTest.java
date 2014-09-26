@@ -4,11 +4,10 @@ import static neo.model.harmony.HarmonyBuilder.harmony;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import neo.AbstractTest;
+import neo.DefaultConfig;
 import neo.generator.MusicProperties;
 import neo.model.Motive;
 import neo.model.harmony.Harmony;
@@ -16,18 +15,25 @@ import neo.model.harmony.Harmony;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DefaultConfig.class, loader = SpringApplicationContextLoader.class)
 public class FitnessEvaluationTest extends AbstractTest{
 
 	private static Logger LOGGER = Logger.getLogger(FitnessEvaluationTest.class.getName());
-	
+	@Autowired
 	private FitnessEvaluationTemplate fitnessEvaluation;
+	@Autowired
 	private MusicProperties musicProperties;
 	private Motive motive;
 
 	@Before
 	public void setUp(){
-		musicProperties = new MusicProperties();
 		musicProperties.setMinimumLength(6);
 		List<Harmony> harmonies = new ArrayList<>();
 		harmonies.add(harmony().pos(0).len(6).notes(0,4,7).positionWeight(1.0).build());
@@ -36,7 +42,6 @@ public class FitnessEvaluationTest extends AbstractTest{
 		harmonies.add(harmony().pos(24).len(12).notes(0,4,9).positionWeight(0.5).build());
 		motive = new Motive(harmonies);
 		motive.setMusicProperties(musicProperties);
-		fitnessEvaluation = new FitnessEvaluationTemplate(musicProperties, motive);
 	}
 	
 	@After
@@ -46,7 +51,7 @@ public class FitnessEvaluationTest extends AbstractTest{
 	
 	@Test
 	public void evaluationTest() {
-		objectives = fitnessEvaluation.evaluate();
+		objectives = fitnessEvaluation.evaluate(motive);
 	}
 
 }

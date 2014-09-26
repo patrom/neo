@@ -11,7 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import neo.generator.MusicProperties;
+import org.springframework.stereotype.Component;
+
 import neo.model.Motive;
 import neo.model.harmony.Chord;
 import neo.model.harmony.ChordType;
@@ -20,16 +21,11 @@ import neo.model.note.Interval;
 import neo.model.note.Note;
 import neo.objective.Objective;
 
+@Component
 public class MelodicObjective extends Objective {
 	
-	private int minimumLength = musicProperties.getMinimumLength();
-
-	public MelodicObjective(MusicProperties musicProperties, Motive motive) {
-		super(musicProperties, motive);
-	}
-
 	@Override
-	public double evaluate() {
+	public double evaluate(Motive motive) {
 		int maxDistance = 1;
 		double totalMelodySum = 0;
 		List<Melody> melodies = motive.getMelodies();

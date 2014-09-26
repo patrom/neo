@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import neo.AbstractTest;
-import neo.model.Motive;
+import neo.DefaultConfig;
 import neo.model.harmony.Harmony;
 import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
@@ -19,15 +19,24 @@ import neo.model.note.Scale;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DefaultConfig.class, loader = SpringApplicationContextLoader.class)
 public class GeneratorTest extends AbstractTest{
 	
+	@Autowired
 	private Generator generator;
-	private int chordSize;
+	@Autowired
+	private MusicProperties musicProperties;
+
 	
 	@Before
 	public void setUp(){
-		MusicProperties musicProperties = new MusicProperties();
 		List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
 		harmonyBuilders.add(harmony().pos(0).len(12));
 		harmonyBuilders.add(harmony().pos(12).len(12));
@@ -46,7 +55,7 @@ public class GeneratorTest extends AbstractTest{
 		musicProperties.setHarmonicMelodies(harmonicMelodies);
 		musicProperties.setChordSize(3);
 		
-		chordSize = 4;
+		int chordSize = 4;
 		Integer[] octave = {5};
 		musicProperties.setScale(new Scale(Scale.MAJOR_SCALE));
 		musicProperties.setMinimumLength(6);
@@ -62,7 +71,6 @@ public class GeneratorTest extends AbstractTest{
 		musicProperties.setRhythmWeightValues(rhythmWeightValues);
 		musicProperties.setOctaveHighestPitchClass(octave);
 		musicProperties.setChordSize(chordSize);
-		generator = new Generator(musicProperties);
 	}
 
 	@Test

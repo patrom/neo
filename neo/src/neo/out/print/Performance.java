@@ -2,7 +2,6 @@ package neo.out.print;
 
 public class Performance {
 
-	
 //	private List<Melody> extractMelodies_concat(List<Harmony> harmonies) {
 //	melodies.clear();
 //	List<NotePos> allNotes = new ArrayList<>();

@@ -17,17 +17,20 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 import javax.sound.midi.Transmitter;
 
+import org.springframework.stereotype.Component;
+
 import neo.model.melody.Melody;
 import neo.model.note.Note;
 import neo.out.instrument.Instrument;
 
+@Component
 public class MidiDevicesUtil {
 
 	private static Logger LOGGER = Logger.getLogger(MidiDevicesUtil.class.getName());
 
-	private static final int RESOLUTION = 12;
+	private final int RESOLUTION = 12;
 	
-	public static void playOnDevice(Sequence sequence, float tempo, neo.out.instrument.MidiDevice kontact) {
+	public void playOnDevice(Sequence sequence, float tempo, neo.out.instrument.MidiDevice kontact) {
 		LOGGER.info("tempo:" + tempo);
 		MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
 		for (int i = 0; i < infos.length; i++) {
@@ -78,7 +81,7 @@ public class MidiDevicesUtil {
 		}
 	}
 
-	public static Sequence createSequence(List<Melody> motives, List<Instrument> instruments)
+	public Sequence createSequence(List<Melody> motives, List<Instrument> instruments)
 			throws InvalidMidiDataException {
 		int motiveSize = motives.size();
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
@@ -89,7 +92,7 @@ public class MidiDevicesUtil {
 		return sequence;
 	}
 	
-	public static Sequence createSequence(List<Melody> motives, Instrument instrument)
+	public Sequence createSequence(List<Melody> motives, Instrument instrument)
 			throws InvalidMidiDataException {
 		int motiveSize = motives.size();
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
@@ -100,7 +103,7 @@ public class MidiDevicesUtil {
 		return sequence;
 	}
 	
-	public static Sequence createSequence(List<MelodyInstrument> melodies)
+	public Sequence createSequence(List<MelodyInstrument> melodies)
 			throws InvalidMidiDataException {
 		int motiveSize = melodies.size();
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
@@ -112,7 +115,7 @@ public class MidiDevicesUtil {
 		return sequence;
 	}
 
-	private static void createTrack(Sequence sequence, List<Note> notes, Instrument instrument)
+	private void createTrack(Sequence sequence, List<Note> notes, Instrument instrument)
 			throws InvalidMidiDataException {
 		Track track = sequence.createTrack();
 		int prevPerfomance = 0;
@@ -131,7 +134,7 @@ public class MidiDevicesUtil {
 		}
 	}
 
-	private static MidiEvent createInstrumentChange(Instrument instrument, int performance) throws InvalidMidiDataException {
+	private MidiEvent createInstrumentChange(Instrument instrument, int performance) throws InvalidMidiDataException {
 		if (instrument.isKeySwitch()) {
 			Note keySwitch = createKeySwitch(performance);
 			MidiEvent change = createNoteMidiEvent(ShortMessage.NOTE_ON, keySwitch, 30, instrument.getChannel());
@@ -142,14 +145,14 @@ public class MidiDevicesUtil {
 		}
 	}
 
-	private static Note createKeySwitch(int performance) {
+	private Note createKeySwitch(int performance) {
 		Note keySwitch = new Note();
 		keySwitch.setPitch(performance);
 		keySwitch.setDynamic(80);
 		return keySwitch;
 	}
 
-	public static Sequence createSequenceFromStructures(List<Melody> motives, List<Instrument> instruments)
+	public Sequence createSequenceFromStructures(List<Melody> motives, List<Instrument> instruments)
 			throws InvalidMidiDataException {
 		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motives.size());
 		int i = 0;
@@ -161,7 +164,7 @@ public class MidiDevicesUtil {
 		return sequence;
 	}
 
-	private static MidiEvent createNoteMidiEvent(int cmd, Note notePos, int position, int channel)
+	private MidiEvent createNoteMidiEvent(int cmd, Note notePos, int position, int channel)
 			throws InvalidMidiDataException {
 		ShortMessage note = new ShortMessage();
 		if (notePos.isRest()) {
@@ -175,7 +178,7 @@ public class MidiDevicesUtil {
 		return event;
 	}
 	
-	private static MidiEvent createProgramChangeMidiEvent(int channel, int pc, int position)
+	private MidiEvent createProgramChangeMidiEvent(int channel, int pc, int position)
 			throws InvalidMidiDataException {
 		ShortMessage change = new ShortMessage();
 		change.setMessage(ShortMessage.PROGRAM_CHANGE, channel, pc, 0);

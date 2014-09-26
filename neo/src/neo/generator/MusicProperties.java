@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.springframework.stereotype.Component;
+
 import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
 import neo.model.note.Scale;
 import neo.out.instrument.Instrument;
 
+@Component
 public class MusicProperties {
 	
 	private int harmonyBeatDivider = 12;
@@ -37,7 +40,6 @@ public class MusicProperties {
 	//voice leading
 	private double voiceLeadingConsDissValue;
 	private String voiceLeadingStrategy;
-	
 
 	//generation
 	private int numerator = 4;//2/4,4/4,3/4 - 6/8

@@ -1,7 +1,5 @@
 package neo.midi;
 
-import static java.util.Collections.singletonList;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,27 +18,28 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
-import neo.model.melody.HarmonicMelody;
-import neo.model.melody.Melody;
+import org.springframework.stereotype.Component;
+
 import neo.model.note.Note;
 
+@Component
 public class MidiParser {
 
 	private static Logger LOGGER = Logger.getLogger(MidiParser.class.getName());
 	
-	private static final int RESOLUTION = 12;
-	public static final int TRACK_TIMESIGNATURE = 0x58;
-	private static Random random = new Random();
+	private final int RESOLUTION = 12;
+	public final int TRACK_TIMESIGNATURE = 0x58;
+	private Random random = new Random();
 
-	public static final int NOTE_ON = 0x90;
-	public static final int NOTE_OFF = 0x80;
+	public final int NOTE_ON = 0x90;
+	public final int NOTE_OFF = 0x80;
 	
-	public static MidiInfo readMidi(String path) throws InvalidMidiDataException, IOException{
+	public MidiInfo readMidi(String path) throws InvalidMidiDataException, IOException{
 		File file = new File(path);
 		return readMidi(file);
 	}
 
-	public static MidiInfo readMidi(File midiFile)
+	public MidiInfo readMidi(File midiFile)
 			throws InvalidMidiDataException, IOException {
 		Sequence sequence = MidiSystem.getSequence(midiFile);
 		LOGGER.finer("Ticks: " + sequence.getResolution());
@@ -107,7 +106,7 @@ public class MidiParser {
 		return midiInfo;
 	}
 
-	private static MelodyInstrument createMelody(List<Note> notes, int voice) {
+	private MelodyInstrument createMelody(List<Note> notes, int voice) {
 //		Note firstNote = notes.get(0);
 //		Note lastNote = notes.get(notes.size() - 1);
 //		int length = lastNote.getPosition() + lastNote.getLength()
@@ -116,7 +115,7 @@ public class MidiParser {
 		return melody;
 	}
 
-	private static Note createNote(int voice, long ticks, ShortMessage sm) {
+	private Note createNote(int voice, long ticks, ShortMessage sm) {
 		Note jNote = new Note();
 		int key = sm.getData1();
 		jNote.setPitch(key);
@@ -132,7 +131,7 @@ public class MidiParser {
 	 * Generates random tempo between 50 - 150 bpm
 	 * @return
 	 */
-	public static float randomTempoFloat() {
+	public float randomTempoFloat() {
 		float r = random.nextFloat();
 		if (r < 0.5) {
 			r = (r * 100) + 100;
@@ -143,7 +142,7 @@ public class MidiParser {
 		return r;
 	}
 	
-	private static String decodeMessage(MetaMessage message, MidiInfo midiInfo){
+	private String decodeMessage(MetaMessage message, MidiInfo midiInfo){
 		byte[]	abData = message.getData();
 		String	strMessage = null;
 		switch (message.getType()){
@@ -214,7 +213,7 @@ public class MidiParser {
 	}
 
 	// convert from microseconds per quarter note to beats per minute and vice versa
-	private static float convertTempo(float value) {
+	private float convertTempo(float value) {
 		if (value <= 0) {
 			value = 0.1f;
 		}

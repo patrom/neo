@@ -10,6 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
@@ -23,6 +26,7 @@ import jmetal.util.Ranking;
 /**
  * This class implements the NSGA-II algorithm. 
  */
+@Component
 public class NSGAII extends Algorithm {
 
 	private static Logger LOGGER = Logger.getLogger(NSGAII.class.getName());
@@ -32,6 +36,7 @@ public class NSGAII extends Algorithm {
    * Constructor
    * @param problem Problem to solve
    */
+ @Autowired
   public NSGAII(Problem problem) {
 	  super(problem);
   } 

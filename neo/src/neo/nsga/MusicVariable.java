@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.stereotype.Component;
+
 import jmetal.core.Variable;
 import jmetal.util.JMException;
 import neo.model.Motive;

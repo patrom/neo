@@ -10,21 +10,26 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import neo.AbstractTest;
-import neo.model.Motive;
+import neo.DefaultConfig;
 import neo.model.harmony.ChordType;
-import neo.model.harmony.Harmony;
 import neo.model.note.Interval;
 import neo.model.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DefaultConfig.class, loader = SpringApplicationContextLoader.class)
 public class MelodicObjectiveTest extends AbstractTest {
 
+	@Autowired
 	private MelodicObjective melodicObjective;
 	private double totalWeight;
-	private List<Harmony> harmonies;
-	private Motive motive;
 	private List<Note> melodyNotes;
 	
 	private Random random = new Random();
@@ -32,10 +37,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 	@Before
 	public void setup() {
 		musicProperties.setMinimumLength(6);
-		harmonies = new ArrayList<>();
-		motive = new Motive(harmonies);
 		melodyNotes = new ArrayList<>();
-		melodicObjective = new MelodicObjective(musicProperties, motive);
 	}
 	
 	private List<Note> generateRandomMelody(){
@@ -129,7 +131,6 @@ public class MelodicObjectiveTest extends AbstractTest {
 		notes.add(note().pc(2).pos(6).len(6).positionWeight(0.5).build());
 		notes.add(note().pc(4).pos(12).len(6).positionWeight(1.0).build());
 		notes.add(note().pc(2).pos(18).len(6).positionWeight(0.5).build());
-		melodicObjective = new MelodicObjective(musicProperties, null);
 		double value = melodicObjective.evaluateMelody(notes, 1);
 		LOGGER.info("Melody value: " + value);
 	}
@@ -142,7 +143,6 @@ public class MelodicObjectiveTest extends AbstractTest {
 		notes.add(note().pc(3).pos(9).len(3).positionWeight(1.0).build());//max finds only 1
 		notes.add(note().pc(4).pos(12).len(6).positionWeight(0.5).build());
 		notes.add(note().pc(5).pos(18).len(6).positionWeight(1.0).build());
-		melodicObjective = new MelodicObjective(musicProperties, null);
 		notes = melodicObjective.extractNotesOnLevel(notes, 1);
 		assertEquals(2, notes.size());
 		assertEquals(5, notes.get(1).getPitchClass());
@@ -158,7 +158,6 @@ public class MelodicObjectiveTest extends AbstractTest {
 		notes.add(note().pc(4).pos(6).len(6).positionWeight(0.5).build());
 		notes.add(note().pc(7).pos(12).len(6).positionWeight(1.0).build());
 		notes.add(note().pc(0).pos(18).len(6).positionWeight(0.5).build());
-		melodicObjective = new MelodicObjective(musicProperties, null);
 		double value = melodicObjective.evaluateTriadicValueMelody(notes);
 		assertEquals(ChordType.MAJOR.getDissonance(), value, 0);
 	}

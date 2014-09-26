@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.sound.midi.InvalidMidiDataException;
 
 import neo.AbstractTest;
+import neo.DefaultConfig;
 import neo.evaluation.FitnessEvaluationTemplate;
 import neo.generator.MusicProperties;
 import neo.midi.MelodyInstrument;
@@ -20,13 +21,22 @@ import neo.model.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DefaultConfig.class, loader = SpringApplicationContextLoader.class)
 public class MelodiesTest extends AbstractTest{
 	
 	private static Logger LOGGER = Logger.getLogger(FitnessEvaluationTemplate.class.getName());
 	
 	private List<File> midiFiles;
 	private MusicProperties musicProperties = new MusicProperties();
+	@Autowired
+	private MidiParser midiParser;
 	
 	@Before
 	public void setUp() throws IOException, InvalidMidiDataException {
@@ -36,13 +46,13 @@ public class MelodiesTest extends AbstractTest{
 	@Test
 	public void testMelodies() throws InvalidMidiDataException, IOException {
 		for (File file : midiFiles) {
-			MidiInfo midiInfo = MidiParser.readMidi(file);
+			MidiInfo midiInfo = midiParser.readMidi(file);
 			LOGGER.fine(file.getName());
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 			MidiConverter.updatePositionNotes(melodies, midiInfo.getTimeSignature());
 			for (MelodyInstrument melodyInstrument : melodies) {
 				List<Note> notes = melodyInstrument.getNotes();
-				MelodicObjective melodicObjective = new MelodicObjective(musicProperties, null);
+				MelodicObjective melodicObjective = new MelodicObjective();
 				double value = melodicObjective.evaluateMelody(notes, 1);
 				LOGGER.info("Intervals : " + value);
 				value = melodicObjective.evaluateTriadicValueMelody(notes);

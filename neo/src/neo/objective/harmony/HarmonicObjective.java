@@ -2,19 +2,17 @@ package neo.objective.harmony;
 
 import java.util.List;
 
-import neo.generator.MusicProperties;
+import org.springframework.stereotype.Component;
+
 import neo.model.Motive;
 import neo.model.harmony.Harmony;
 import neo.objective.Objective;
 
+@Component
 public class HarmonicObjective extends Objective {
 
-	public HarmonicObjective(MusicProperties musicProperties, Motive motive) {
-		super(musicProperties, motive);
-	}
-
 	@Override
-	public double evaluate() {
+	public double evaluate(Motive motive) {
 		List<Harmony> harmonies = motive.getHarmonies();
 		double positionWeightTotal = harmonies.stream().mapToDouble(harmony ->  harmony.getPositionWeight()).sum();
 		double sumChordPositionWeight = harmonies.stream()

@@ -8,8 +8,13 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import neo.nsga.MusicSolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component(value="crossover")
 public class OnePointCrossover extends Crossover {
 
+	@Autowired
 	public OnePointCrossover(HashMap<String, Object> parameters) {
 		super(parameters);
 	}

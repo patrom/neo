@@ -11,8 +11,13 @@ import jmetal.util.PseudoRandom;
 import neo.model.Motive;
 import neo.nsga.MusicVariable;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component(value="pitchSpaceMutation")
 public class PitchSpaceMutation extends Mutation {
 	
+	@Autowired
 	public PitchSpaceMutation(HashMap<String, Object> parameters) {
 		super(parameters);
 	}

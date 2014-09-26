@@ -1,4 +1,4 @@
-package neo.objective.melody;
+package neo.objective.meter;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
+import neo.objective.meter.InnerMetricWeight;
 
 import org.junit.Assert;
 import org.junit.Before;

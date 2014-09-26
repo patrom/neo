@@ -1,17 +1,25 @@
 package neo.nsga;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import jmetal.core.Problem;
 import jmetal.core.SolutionType;
 import jmetal.core.Variable;
 import neo.model.Motive;
 
+@Component
 public class MusicSolutionType extends SolutionType {
 
 	private Motive motive;
 	
-	public MusicSolutionType(Problem problem, Motive motive) {
+	@Autowired
+	public MusicSolutionType(Problem problem) {
 		super(problem);
 		problem.setSolutionType(this);
+	}
+	
+	public void setMotive(Motive motive) {
 		this.motive = motive;
 	}
 

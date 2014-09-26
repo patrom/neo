@@ -8,9 +8,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import jm.music.data.Phrase;
-import jm.music.tools.NoteListException;
-import jm.music.tools.QuantisationException;
 import neo.model.note.Interval;
 import neo.model.note.Note;
 

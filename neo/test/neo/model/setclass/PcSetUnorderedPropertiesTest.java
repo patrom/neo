@@ -5,31 +5,39 @@ import static java.util.stream.Collectors.toSet;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.sound.midi.InvalidMidiDataException;
 
 import neo.AbstractTest;
+import neo.DefaultConfig;
 import neo.midi.MidiConverter;
 import neo.midi.MidiInfo;
 import neo.midi.MidiParser;
 import neo.midi.MidiParserTest;
 import neo.model.note.Note;
-import neo.model.setclass.PcSetUnorderedProperties;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DefaultConfig.class, loader = SpringApplicationContextLoader.class)
 public class PcSetUnorderedPropertiesTest extends AbstractTest{
 
 	private PcSetUnorderedProperties pcSetUnorderedProperties;
 	private MidiInfo midiInfo;
+	@Autowired
+	private MidiParser midiParser;
 	
 	@Before
 	public void setUp() throws InvalidMidiDataException, IOException {
-		midiInfo = MidiParser.readMidi(MidiParserTest.class.getResource("/Bach-choral227deel1.mid").getPath());
+		midiInfo = midiParser.readMidi(MidiParserTest.class.getResource("/melodies/Bach-choral227deel1.mid").getPath());
 		melodies = midiInfo.getMelodies();
 	}
 	

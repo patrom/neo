@@ -4,11 +4,14 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import neo.generator.MusicProperties;
 import neo.model.harmony.Harmony;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.Melody;
+import neo.model.note.Note;
+import neo.objective.meter.InnerMetricWeight;
 import neo.util.RandomUtil;
 
 public class Motive {
@@ -80,6 +83,41 @@ public class Motive {
 			melodies.add(melody);
 		}
 		return melodies;
+	}
+	
+	public void updateInnerMetricWeightMelodies() {
+		for (Melody melody : melodies) {
+			List<Note> notes = melody.getMelodieNotes();
+			Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(notes, musicProperties.getMinimumLength());
+			for (Note note : notes) {
+				Integer key = note.getPosition()/musicProperties.getMinimumLength();
+				if (normalizedMap.containsKey(key)) {
+					Double innerMetricValue = normalizedMap.get(key);
+					note.setInnerMetricWeight(innerMetricValue);
+				}
+			}
+		}
+	}
+	
+	public void updateInnerMetricWeightHarmonies() {
+		int[] harmonicRhythm = extractHarmonicRhythm();
+		Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(harmonicRhythm, musicProperties.getMinimumLength());
+		for (Harmony harmony : harmonies) {
+			Integer key = harmony.getPosition()/musicProperties.getMinimumLength();
+			if (normalizedMap.containsKey(key)) {
+				Double innerMetricValue = normalizedMap.get(key);
+				harmony.setInnerMetricWeight(innerMetricValue);
+			}
+		}
+	}
+
+	private int[] extractHarmonicRhythm() {
+		int[] rhythm = new int[harmonies.size()];
+		for (int i = 0; i < rhythm.length; i++) {
+			Harmony harmony = harmonies.get(i);
+			rhythm[i] = harmony.getPosition();
+		}
+		return rhythm;
 	}
 	
 }

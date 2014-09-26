@@ -2,6 +2,9 @@ package neo.nsga;
 
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.Variable;
@@ -13,19 +16,21 @@ import net.sourceforge.jFuzzyLogic.membership.MembershipFunction;
 import net.sourceforge.jFuzzyLogic.membership.MembershipFunctionTriangular;
 import net.sourceforge.jFuzzyLogic.membership.Value;
 
+@Component
 public class MusicProblem extends Problem {
 
 	private static Logger LOGGER = Logger.getLogger(MusicProblem.class
 			.getName());
 	
+	@Autowired
 	private FitnessEvaluationTemplate fitnessEvaluationTemplate;
-
 	private MusicProperties properties;
 
 	private MembershipFunction melodyMembershipFunction;
 	private MembershipFunction harmonyMembershipFunction;
-
-	public MusicProblem(MusicProperties inputProps) throws ClassNotFoundException {
+	
+	@Autowired
+	public MusicProblem(MusicProperties properties) throws ClassNotFoundException {
 		numberOfVariables_ = 1;
 		numberOfObjectives_ = 5;
 		numberOfConstraints_ = 0;
@@ -33,25 +38,25 @@ public class MusicProblem extends Problem {
 
 		upperLimit_ = new double[numberOfVariables_];
 		lowerLimit_ = new double[numberOfVariables_];
-
-		this.properties = inputProps;
+		
+		this.properties = properties;
 		this.melodyMembershipFunction = new MembershipFunctionTriangular(
-				new Value(0.0), new Value(inputProps.getMelodyConsDissValue()),
+				new Value(0.0), new Value(properties.getMelodyConsDissValue()),
 				new Value(1.0));
 		this.harmonyMembershipFunction = new MembershipFunctionTriangular(
 				new Value(0.0),
-				new Value(inputProps.getHarmonyConsDissValue()), new Value(1.0));
+				new Value(properties.getHarmonyConsDissValue()), new Value(1.0));
 	}
 
 	@Override
 	public void evaluate(Solution solution) throws JMException {
 		Variable[] variables = solution.getDecisionVariables();
-		fitnessEvaluationTemplate = new FitnessEvaluationTemplate(
-				properties, ((MusicVariable) variables[0]).getMotive());
+//		fitnessEvaluationTemplate = new FitnessEvaluationTemplate(
+//				properties, ((MusicVariable) variables[0]).getMotive());
 		// FugaDecorator decorator = new FugaDecorator(controller, 12, 48);
 		// DebussyDecorator decorator = new DebussyDecorator(controller);
 
-		FitnessObjectiveValues objectives = fitnessEvaluationTemplate.evaluate();
+		FitnessObjectiveValues objectives = fitnessEvaluationTemplate.evaluate(((MusicVariable) variables[0]).getMotive());
 
 		double harmonyObjective = 1 - (objectives.getHarmony());
 		solution.setObjective(0, harmonyObjective);// harmony

@@ -5,6 +5,7 @@ public class FitnessObjectiveValues {
 	private double harmony;
 	private double melody;
 	private double voiceleading;
+	private double tonality;
 	
 	public double getHarmony() {
 		return harmony;
@@ -26,8 +27,15 @@ public class FitnessObjectiveValues {
 	}
 	@Override
 	public String toString() {
-		return "FitnessObjectiveValues [harmony=" + harmony + ", melody=" + melody
-				+ ", voiceleading=" + voiceleading + "]";
+		return "FitnessObjectiveValues [harmony=" + harmony + ", melody="
+				+ melody + ", voiceleading=" + voiceleading + ", tonality="
+				+ tonality + "]";
+	}
+	public double getTonality() {
+		return tonality;
+	}
+	public void setTonality(double tonality) {
+		this.tonality = tonality;
 	}
 	
 }

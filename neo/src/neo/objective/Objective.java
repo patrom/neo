@@ -3,19 +3,13 @@ package neo.objective;
 import neo.generator.MusicProperties;
 import neo.model.Motive;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+
 public abstract class Objective {
 	
+	@Autowired
 	protected MusicProperties musicProperties;
-	protected Motive motive;
-	
-	public Objective(Motive motive){
-		this.motive = motive;
-	}
 
-	public Objective(MusicProperties musicProperties, Motive motive) {
-		this.musicProperties = musicProperties;
-		this.motive = motive;
-	}
-
-	public abstract double evaluate();
+	public abstract double evaluate(Motive motive);
 }

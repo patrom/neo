@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import javax.sound.midi.InvalidMidiDataException;
 
+import org.springframework.stereotype.Component;
+
 import jm.music.data.Score;
 import jm.util.View;
 import jm.util.Write;
@@ -19,6 +21,7 @@ import neo.model.note.Note;
 import neo.nsga.MusicSolution;
 import neo.nsga.MusicVariable;
 
+@Component
 public class Display {
 
 	private static Logger LOGGER = Logger.getLogger(Display.class.getName());

@@ -11,9 +11,13 @@ import jmetal.util.PseudoRandom;
 import neo.model.Motive;
 import neo.nsga.MusicVariable;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component(value="oneNoteMutation")
 public class OneNoteMutation extends Mutation {
 	
+	@Autowired
 	public OneNoteMutation(HashMap<String, Object> parameters) {
 		super(parameters);
 	}

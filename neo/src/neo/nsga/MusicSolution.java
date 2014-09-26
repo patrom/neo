@@ -1,5 +1,7 @@
 package neo.nsga;
 
+import org.springframework.stereotype.Component;
+
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 

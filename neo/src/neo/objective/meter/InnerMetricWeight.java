@@ -1,4 +1,4 @@
-package neo.objective.melody;
+package neo.objective.meter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
