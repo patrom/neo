@@ -8,6 +8,7 @@ import java.util.List;
 
 import neo.model.melody.HarmonicMelody;
 import neo.model.note.Note;
+import neo.model.note.NoteBuilder;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class HarmonicMelodyTest {
 	@Before
 	public void setUp() {
 		harmonicMelody = harmonicMelody()
-				.notes(note().pc(0).pitch(60).ocatve(5).build(), note().pc(2).pitch(0).ocatve(5).build())
+				.notes(note().pc(0).pitch(60).ocatve(5).build(), note().pc(2).pitch(62).ocatve(5).build())
 				.harmonyNote(note().pc(0).pitch(60).ocatve(5).build())
 				.build();
 	}
@@ -43,9 +44,20 @@ public class HarmonicMelodyTest {
 	}
 
 	@Test
-	public void testUpdateMelodyNotesInt() {
+	public void testRandomUpdateMelodyNotes() {
 		harmonicMelody.randomUpdateMelodyNotes(4);
-		assertEquals(4, harmonicMelody.getMelodyNotes().get(1).getPitchClass());
+		assertEquals(true, harmonicMelody.getMelodyNotes().contains(NoteBuilder.note().pc(4).build()));
+	}
+	
+	@Test
+	public void testRandomUpdateMelodyNotesAllNonChordTone() {
+		Note harmonyNote = note().pc(0).pitch(60).ocatve(5).build();
+		harmonicMelody = harmonicMelody()
+				.notes(note().pc(1).pitch(61).ocatve(5).build(), note().pc(2).pitch(62).ocatve(5).build())
+				.harmonyNote(harmonyNote)
+				.build();
+		harmonicMelody.randomUpdateMelodyNotes(4);
+		assertEquals(true, harmonicMelody.getMelodyNotes().contains(harmonyNote));
 	}
 
 	@Test

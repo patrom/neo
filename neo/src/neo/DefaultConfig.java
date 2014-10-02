@@ -16,4 +16,5 @@ public class DefaultConfig {
 	public HashMap<String, Object> parameters() {
 		return new HashMap<>();
 	}
+	
 }

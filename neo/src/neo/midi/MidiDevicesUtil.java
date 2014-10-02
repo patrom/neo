@@ -1,5 +1,7 @@
 package neo.midi;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -16,6 +18,7 @@ import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 import javax.sound.midi.Transmitter;
+import javax.sound.midi.spi.MidiFileWriter;
 
 import org.springframework.stereotype.Component;
 
@@ -184,6 +187,10 @@ public class MidiDevicesUtil {
 		change.setMessage(ShortMessage.PROGRAM_CHANGE, channel, pc, 0);
 		MidiEvent event = new MidiEvent(change, position);
 		return event;
+	}
+	
+	public void write(Sequence in, String ouputPath) throws IOException{
+		MidiSystem.write(in, 1, new File(ouputPath));//1 = multi-track
 	}
 
 }

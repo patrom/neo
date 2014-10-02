@@ -58,6 +58,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 			playOnInstruments(melodies);
 			playOnKontakt(melodies, midiInfo.getTempo());
+			write(melodies, "resources/transform/" + midiFile.getName());
 			Thread.sleep(13000);
 		}
 	}
@@ -81,6 +82,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			float tempo) throws InvalidMidiDataException {
 		Sequence seq = midiDevicesUtil.createSequence(melodies);
 		midiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTACT);
+		
 	}
 
 	public void playMidiFilesOnKontaktFor(Instrument instrument) throws IOException, InvalidMidiDataException, InterruptedException {
@@ -100,5 +102,9 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		playOnKontakt(midiInfo.getMelodies(), midiInfo.getTempo());
 	}
 	
+	private void write(List<MelodyInstrument> melodies, String outputPath) throws InvalidMidiDataException, IOException{
+		Sequence seq = midiDevicesUtil.createSequence(melodies);
+		midiDevicesUtil.write(seq, outputPath);
+	}
 	
 }

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
@@ -28,10 +30,13 @@ import neo.out.print.Display;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Import;
 
 @Import(DefaultConfig.class)
 public class NsgaApplication extends JFrame implements CommandLineRunner{
+	
+	private static Logger LOGGER = Logger.getLogger(NsgaApplication.class.getName());
 	
 	@Autowired
 	private Problem problem;
@@ -53,14 +58,19 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	private Generator generator;
 	@Autowired
 	private MusicProperties musicProperties;
-	
 	@Autowired
 	private HashMap<String, Object> parameters;
 	
+	public static AtomicInteger COUNTER = new AtomicInteger();
+	
 	public static void main(final String[] args) {
-	 	SpringApplication app = new SpringApplication(NsgaApplication.class);
-	    app.setShowBanner(false);
-	    app.run(args);
+		for (int i = 0; i < 2; i++) {
+			LOGGER.info("RUN: " + i + " START");
+			SpringApplication app = new SpringApplication(NsgaApplication.class);
+		    app.setShowBanner(false);
+		    app.run(args);
+		    LOGGER.info("RUN: " + i + " END");
+		}
 	}
 
 	@Override

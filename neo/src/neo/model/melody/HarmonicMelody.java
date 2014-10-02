@@ -69,13 +69,16 @@ public class HarmonicMelody {
 	public void randomUpdateMelodyNotes(int newPitchClass){
 		List<Note> nonChordNotes = getNonChordNotes();
 		Note note = null;
-		if (!nonChordNotes.isEmpty()) {
+		if (melodyNotes.size() == nonChordNotes.size()) {
+			// at least 1 note should be a harmony note
 			note = randomNote(nonChordNotes);
-		} else {
-			//change 1 chord note
+			note.setPitchClass(harmonyNote.getPitchClass());
+		}  else {
+			//change 1 note
 			note = randomNote(melodyNotes);
+			note.setPitchClass(newPitchClass);
 		}
-		note.setPitchClass(newPitchClass);
+		
 	}
 	
 	public void updateMelodyPitchesToHarmonyPitch(){
