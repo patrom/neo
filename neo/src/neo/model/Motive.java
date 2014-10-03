@@ -41,7 +41,7 @@ public class Motive {
 	
 	public void mutateHarmony(){
 		Harmony harmony = randomHarmony();
-		harmony.mutateNoteToPreviousPitchFromScale(musicProperties.getScale());
+		harmony.mutateNoteToPreviousPitchFromScale(musicProperties.getMelodyScale());
 		harmony.mutateNoteRandom(musicProperties.getMelodyScale());
 		harmony.swapHarmonyNotes();
 	}

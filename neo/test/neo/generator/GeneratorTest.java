@@ -84,5 +84,12 @@ public class GeneratorTest extends AbstractTest{
 		double weight = generator.calculatePositionWeight(0, 18);
 		assertEquals(2.5, weight, 0);
 	}
+	
+	@Test
+	public void generateHarmonicMelodiesForVoiceTest() {
+		int[] harmonyPositions = {0,24,48,72,96,120};// last = length
+		List<HarmonicMelody> harmonicMelodies = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 2);
+		assertEquals(harmonyPositions.length - 2, harmonicMelodies.size());
+	}
 
 }

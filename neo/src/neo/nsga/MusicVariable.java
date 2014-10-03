@@ -56,7 +56,7 @@ public class MusicVariable extends Variable {
 			HarmonicMelody newHarmonicMelody = copyHarmonicMelody(harmonicMelody);
 			harmonicMelodies.add(newHarmonicMelody);
 		}
-		Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), harmonicMelodies);
+		Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), harmonicMelodies, harmony.getRange());
 		PitchSpace newPitchSpace = clonePitchClass(harmony.getPitchSpace());
 		newPitchSpace.setNotes(copyHarmony.getNotes());
 		copyHarmony.setPitchSpace(newPitchSpace);

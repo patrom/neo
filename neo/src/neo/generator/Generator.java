@@ -1,5 +1,7 @@
 package neo.generator;
 
+import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +12,11 @@ import neo.model.Motive;
 import neo.model.harmony.Harmony;
 import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
+import neo.model.melody.HarmonicMelodyBuilder;
 import neo.model.note.Note;
+import neo.model.note.NoteBuilder;
 import neo.model.note.Scale;
+import neo.util.RandomUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,7 +54,7 @@ public class Generator {
 			List<Integer> chordPitchClasses = generatePitchClasses();
 			List<Note> notes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
 			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(notes);
-			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
+			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies, musicProperties.getOctaveHighestPitchClassRange());
 			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
 			harmony.setPositionWeight(totalWeight);
 			harmonies.add(harmony);		
@@ -112,6 +117,33 @@ public class Generator {
 			newNotes.add(newNote);
 		}
 		return newNotes;
+	}
+	
+	public List<HarmonicMelody> generateHarmonicMelodiesForVoice(int[] harmonyPosition, int maxLength, int voice){
+		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
+		int endNote = 0;
+		for (int i = 0; i < harmonyPosition.length - 2; i++) {
+			HarmonicMelodyBuilder harmonicMelodyBuilder = harmonicMelody().voice(voice).pos(harmonyPosition[i]);
+			List<Note> notes = new ArrayList<>();
+			while (endNote < harmonyPosition[i + 1]) {
+				int harmonyLength = harmonyPosition[i + 1] - endNote;
+				int notePosition = 0;
+				if (harmonyLength > 0) {
+					notePosition = RandomUtil.randomInt(0, (harmonyLength/musicProperties.getMinimumLength()));
+				}
+				int pos = (notePosition * musicProperties.getMinimumLength()) + endNote;
+				int l = notePosition + (harmonyPosition[i + 2])/musicProperties.getMinimumLength();
+				if ( l < maxLength) {
+					maxLength = l;
+				}
+				int noteLength = RandomUtil.randomInt(1, maxLength);
+				int length = noteLength * musicProperties.getMinimumLength();
+				endNote = pos + length;
+				notes.add(NoteBuilder.note().pos(pos).len(length).build());
+			}
+			harmonicMelodies.add(harmonicMelodyBuilder.notes(notes).build());
+		}
+		return harmonicMelodies;
 	}
 	
 }

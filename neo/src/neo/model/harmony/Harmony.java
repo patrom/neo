@@ -24,12 +24,13 @@ public class Harmony implements Comparable<Harmony>{
 	private double innerMetricWeight;
 	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 	private PitchSpace pitchSpace;
-	private Integer[] range = {5, 6};
+	private Integer[] range;
 	
-	public Harmony(int position, int length, List<HarmonicMelody> harmonicMelodies) {
+	public Harmony(int position, int length, List<HarmonicMelody> harmonicMelodies, Integer[] range) {
 		this.position = position;
 		this.length = length;
 		this.harmonicMelodies = harmonicMelodies;
+		this.range = range;
 		this.pitchSpace = new UniformPitchSpace(range);
 		this.pitchSpace.setNotes(getNotes());
 		toChord();
@@ -199,6 +200,10 @@ public class Harmony implements Comparable<Harmony>{
 
 	public void setInnerMetricWeight(double innerMetricWeight) {
 		this.innerMetricWeight = innerMetricWeight;
+	}
+
+	public Integer[] getRange() {
+		return range;
 	}
 	
 }

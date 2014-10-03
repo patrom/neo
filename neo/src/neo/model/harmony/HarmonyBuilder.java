@@ -56,7 +56,8 @@ public class HarmonyBuilder {
 	}
 
 	public Harmony build(){
-		Harmony harmony = new Harmony(position, length, melodyNotes);
+		Integer[] range = {5, 6};
+		Harmony harmony = new Harmony(position, length, melodyNotes, range);
 		harmony.setPositionWeight(positionWeight);
 		return harmony;
 	}

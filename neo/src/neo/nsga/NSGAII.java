@@ -31,7 +31,6 @@ public class NSGAII extends Algorithm {
 
 	private static Logger LOGGER = Logger.getLogger(NSGAII.class.getName());
 	
-
   /**
    * Constructor
    * @param problem Problem to solve

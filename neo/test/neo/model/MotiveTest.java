@@ -32,7 +32,7 @@ public class MotiveTest extends AbstractTest{
 					.build();
 		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 		harmonicMelodies.add(harmonicMelody);
-		Harmony harmony = new Harmony(0, 12, harmonicMelodies);
+		Harmony harmony = new Harmony(0, 12, harmonicMelodies , musicProperties.getOctaveHighestPitchClass());
 		harmonies.add(harmony);
 		motive = new Motive(harmonies);
 		musicProperties.setChordSize(3);
