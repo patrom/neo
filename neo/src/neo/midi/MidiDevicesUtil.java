@@ -33,14 +33,13 @@ public class MidiDevicesUtil {
 
 	private final int RESOLUTION = 12;
 	
-	public void playOnDevice(Sequence sequence, float tempo, neo.out.instrument.MidiDevice kontact) {
+	public void playOnDevice(Sequence sequence, float tempo, neo.out.instrument.MidiDevice kontakt) {
 		LOGGER.info("tempo:" + tempo);
 		MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
 		for (int i = 0; i < infos.length; i++) {
 			try {
 				LOGGER.info(infos[i].toString());
-//				if (infos[i].getName().equals("Real Time Sequencer")) {
-				if (infos[i].getName().equals(kontact.getName())) {
+				if (infos[i].getName().equals(kontakt.getName())) {
 					final MidiDevice device = MidiSystem
 							.getMidiDevice(infos[i]);
 					device.open();

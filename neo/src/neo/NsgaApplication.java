@@ -112,9 +112,9 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 		int[] harmonyPositions = {0,24,48,72,96,120};// last = length
 		List<HarmonyBuilder> harmonyBuilders = generateHarmonyBuilders(harmonyPositions);
 		musicProperties.setHarmonyBuilders(harmonyBuilders);
-		List<HarmonicMelody> harmonicMelodies = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 2);
-		List<HarmonicMelody> harmonicMelodies2 = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 1);
-		harmonicMelodies.addAll(harmonicMelodies2);
+		List<HarmonicMelody> harmonicMelodies = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 3);
+//		List<HarmonicMelody> harmonicMelodies2 = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 1);
+//		harmonicMelodies.addAll(harmonicMelodies2);
 //		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 //		harmonicMelodies.add(harmonicMelody().voice(2).pos(0)
 //				.notes(note().voice(2).pos(0).len(12).build(), 

@@ -58,20 +58,23 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 			playOnInstruments(melodies);
 			playOnKontakt(melodies, midiInfo.getTempo());
-			write(melodies, "resources/transform/" + midiFile.getName());
+//			write(melodies, "resources/transform/" + midiFile.getName());
 			Thread.sleep(13000);
 		}
 	}
 
 	private void playOnInstruments(List<MelodyInstrument> melodies) {
-		List<Note> transformedNotes = transformNotes(melodies.get(0).getNotes());
-		melodies.get(0).setNotes(transformedNotes);
+//		List<Note> transformedNotes = transformNotes(melodies.get(0).getNotes());
+//		melodies.get(0).setNotes(transformedNotes);
 		
 		melodies.get(0).setInstrument(new KontaktLibPiano(0, 0));
 		melodies.get(1).setInstrument(new KontaktLibPiano(0, 0));
 		melodies.get(2).setInstrument(new KontaktLibPiano(0, 0));
+		arrangement.transpose(melodies.get(3).getNotes(), -12);
+		melodies.get(3).setInstrument(new KontaktLibPiano(0, 0));
 		
-		melodies.get(5).setInstrument(new KontaktLibViolin(0, 1));
+		arrangement.transpose(melodies.get(7).getNotes(), -12);
+		melodies.get(7).setInstrument(new KontaktLibViolin(0, 1));
 	}
 	
 	private List<Note> transformNotes(List<Note> notes) {
@@ -81,7 +84,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	private void playOnKontakt(List<MelodyInstrument> melodies,
 			float tempo) throws InvalidMidiDataException {
 		Sequence seq = midiDevicesUtil.createSequence(melodies);
-		midiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTACT);
+		midiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTAKT);
 		
 	}
 

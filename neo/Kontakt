@@ -1,0 +1,6 @@
+(channel 0 java = channel 1 Kontakt)
+
+Windows: use loopBE channel 1 on kontakt 
+(LoopBe Internal MIDI)
+
+Mac: (Kontakt 5 Virtual Input)

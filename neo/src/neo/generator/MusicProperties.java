@@ -19,15 +19,15 @@ public class MusicProperties {
 	private float tempo = 60;
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength = 6;
-	private int chordSize = 3;
-	private Integer[] octaveHighestPitchClassRange = {5,6};
+	private int chordSize = 4;
+	private Integer[] octaveHighestPitchClassRange = {6,7};
 	private List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
 	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 	private boolean outerBoundaryIncluded = true;
 	
 	//tonality
 	private Scale scale = new Scale(Scale.MAJOR_SCALE);
-	private Scale melodyScale = new Scale(Scale.MAJOR_SCALE);;
+	private Scale melodyScale = new Scale(Scale.MAJOR_SCALE);
 	
 	//harmony
 	private double harmonyConsDissValue = 0.3;

@@ -60,7 +60,7 @@ public class Harmony implements Comparable<Harmony>{
 		this.harmonicMelodies.forEach(harmonicMelody -> harmonicMelody.updateMelodyPitchesToHarmonyPitch());
 	}
 
-	public void mutateNoteToPreviousPitchFromScale(Scale scale){
+	public void mutateHarmonyNoteToPreviousPitchFromScale(Scale scale){
 		HarmonicMelody harmonicMelody = getRandomHarmonicMelody();
 		Note harmonyNote = harmonicMelody.getHarmonyNote();
 		int oldPitchClass = harmonyNote.getPitchClass();
@@ -70,7 +70,7 @@ public class Harmony implements Comparable<Harmony>{
 		toChord();
 	}
 	
-	public void mutateNoteRandom(Scale scale){
+	public void mutateMelodyNoteRandom(Scale scale){
 		List<HarmonicMelody> melodies = harmonicMelodies.stream()
 				.filter(harmonicMelody -> harmonicMelody.getMelodyNotes().size() > 1)
 				.collect(toList());

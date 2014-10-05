@@ -29,7 +29,7 @@ public class Arrangement {
 	}
 	
 	public void transpose(List<Note> notes, int octave){
-		notes.forEach(n -> n.setPitch(n.getPitch() * (n.getOctave() + octave)));
+		notes.forEach(n -> n.setPitch(n.getPitch() + octave));
 	}
 	
 	public List<Note> applyFixedPattern(List<Note> notes, int[] pattern){

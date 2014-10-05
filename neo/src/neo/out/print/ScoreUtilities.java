@@ -35,15 +35,15 @@ public class ScoreUtilities implements JMC{
 	
 	public static Score createScoreMelodies(List<Melody> melodies, double tempo){
 		Score score = new Score();
-		Part[] scoreParts = new Part[melodies.size() * 1];
+		Part[] scoreParts = new Part[melodies.size() * 2];
 		int voice = 0;
-//		for (Melody motive : melodies) {
-//			List<neo.model.note.Note> notes = motive.getHarmonyNotes();
-//			Phrase phrase = createPhrase(notes);	
-//			Part part = new Part(phrase);
-//			scoreParts[voice] = part;
-//			voice++;	
-//		}
+		for (Melody motive : melodies) {
+			List<neo.model.note.Note> notes = motive.getHarmonyNotes();
+			Phrase phrase = createPhrase(notes);	
+			Part part = new Part(phrase);
+			scoreParts[voice] = part;
+			voice++;	
+		}
 		for (Melody motive : melodies) {
 			List<neo.model.note.Note> notes = motive.getMelodieNotes();
 			Phrase phrase = createPhrase(notes);	
