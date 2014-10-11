@@ -3,7 +3,9 @@ package neo;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -11,11 +13,13 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
 import javax.swing.JFrame;
 
+import neo.generator.MusicProperties;
 import neo.midi.MelodyInstrument;
 import neo.midi.MidiDevicesUtil;
 import neo.midi.MidiInfo;
 import neo.midi.MidiParser;
 import neo.model.note.Note;
+import neo.out.arrangement.Accompagnement;
 import neo.out.arrangement.Arrangement;
 import neo.out.instrument.Instrument;
 import neo.out.instrument.KontaktLibPiano;
@@ -37,7 +41,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	@Autowired
 	private MidiDevicesUtil midiDevicesUtil;
 	@Autowired
-	private Arrangement arrangement;
+	private MusicProperties musicProperties;
 	
 	public static void main(final String[] args) {
 	 	SpringApplication app = new SpringApplication(PlayApplication.class);
@@ -50,23 +54,43 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		playMidiFilesOnKontaktFor();
 	}
 	
+//	private Accompagnement accompagnementStrategy = (notes) -> {
+//		ArrayList<List<Note>> list = new ArrayList<List<Note>>();
+//		list.add(notes);
+//		return list;
+//	};
+//	
+//	private Accompagnement comp = notes -> Accompagnement.chordal(notes);
+//	private Accompagnement compref = Accompagnement::chordal;
+	
 	public void playMidiFilesOnKontaktFor() throws IOException, InvalidMidiDataException, InterruptedException {
 		List<File> midiFiles = Files.list(new File(PlayApplication.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
-			playOnInstruments(melodies);
+		
+			playOnInstruments(midiInfo);
 			playOnKontakt(melodies, midiInfo.getTempo());
 //			write(melodies, "resources/transform/" + midiFile.getName());
 			Thread.sleep(13000);
 		}
 	}
+	
+	public List<List<Note>> chordal(List<Note> harmonyNotes) {
+		ArrayList<List<Note>> list = new ArrayList<List<Note>>();
+		list.add(harmonyNotes);
+		return list;
+	}
 
-	private void playOnInstruments(List<MelodyInstrument> melodies) {
-//		List<Note> transformedNotes = transformNotes(melodies.get(0).getNotes());
-//		melodies.get(0).setNotes(transformedNotes);
+	private void playOnInstruments(MidiInfo midiInfo) {
+		Arrangement arrangement = new Arrangement(Accompagnement::chordal);
+		Map<Integer, List<Note>> harmonyPositions = midiInfo.getHarmonyPositions(musicProperties.getChordSize());
+		Integer[] compPattern = {6,12,18, 24, 30};
+		List<Note> accompagnement = arrangement.harmonyAccompagnement(harmonyPositions, compPattern);
 		
+		List<MelodyInstrument> melodies = midiInfo.getMelodies();
+//		arrangement.applyFixedPattern(melodies.get(0).getNotes(), 6);
 		melodies.get(0).setInstrument(new KontaktLibPiano(0, 0));
 		melodies.get(1).setInstrument(new KontaktLibPiano(0, 0));
 		melodies.get(2).setInstrument(new KontaktLibPiano(0, 0));
@@ -77,9 +101,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		melodies.get(7).setInstrument(new KontaktLibViolin(0, 1));
 	}
 	
-	private List<Note> transformNotes(List<Note> notes) {
-		return arrangement.applyFixedPattern(notes, 6);
-	}
+	
 
 	private void playOnKontakt(List<MelodyInstrument> melodies,
 			float tempo) throws InvalidMidiDataException {

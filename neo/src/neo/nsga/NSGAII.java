@@ -176,7 +176,7 @@ public class NSGAII extends Algorithm {
 //      SolutionSet paretoFront = ranking.getSubfront(0);
       List<Solution> frontSolutions = copyList(population);
       boolean changed = hasPopulationChanged(copySolutions, frontSolutions);
-      LOGGER.info("Population changed: " + changed + ", evaluations: " + evaluations + ", change count:" + changeCount);
+      LOGGER.fine("Population changed: " + changed + ", evaluations: " + evaluations + ", change count:" + changeCount);
       if (changed) {
 			changeCount = 0;
 		} else {

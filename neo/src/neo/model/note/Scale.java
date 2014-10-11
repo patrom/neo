@@ -27,7 +27,11 @@ public class Scale {
 			ALL_INTERVAL_TRETRACHORD1 = {0, 1, 4, 6},
 			ALL_INTERVAL_TRETRACHORD2 = {0, 1, 3, 7},
 			ALL_INTERVAL_HEXACHORD = {0, 1, 2, 4, 7, 8},
-			HEXATONIC = {0, 3, 4, 7, 8, 11};
+			HEXATONIC = {0, 3, 4, 7, 8, 11},
+			
+			OCTATCONIC_WHOLE = {0, 2, 3, 5, 6, 8, 9, 11},
+			OCTATCONIC_HALF = {0, 1, 3, 4, 6, 7,  9, 10},
+			ACOUSTIC =  {0, 2, 4, 6, 7, 9, 10};
 	
 	private Random random = new Random(System.currentTimeMillis());
 	private int[] scale;

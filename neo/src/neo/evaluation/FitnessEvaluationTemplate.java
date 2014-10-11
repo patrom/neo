@@ -30,16 +30,16 @@ public class FitnessEvaluationTemplate {
 
 	private FitnessObjectiveValues evaluateObjectives(Motive motive) {
 		double harmony = harmonicObjective.evaluate(motive);
-//		LOGGER.info("harmonic: " + harmony);
+		LOGGER.fine("harmonic: " + harmony);
 
 		double voiceLeading = voiceLeadingObjective.evaluate(motive);
-//		LOGGER.info("voiceLeadingSize: " + voiceLeading);
+		LOGGER.fine("voiceLeadingSize: " + voiceLeading);
 		
 		double melodic = melodicObjective.evaluate(motive);
-//		LOGGER.info("melodic = " + melodic);
+		LOGGER.fine("melodic = " + melodic);
 		
 		double tonality = tonalityObjective.evaluate(motive);
-//		LOGGER.fine("tonality = " + tonality);
+		LOGGER.fine("tonality = " + tonality);
 		
 		FitnessObjectiveValues fitnessObjectives = new FitnessObjectiveValues();
 		fitnessObjectives.setHarmony(harmony);

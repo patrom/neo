@@ -2,10 +2,15 @@ package neo.out.print;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.sound.midi.InvalidMidiDataException;
 
@@ -16,13 +21,13 @@ import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.util.JMException;
 import neo.NsgaApplication;
-import neo.model.Motive;
 import neo.model.harmony.Harmony;
+import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.Melody;
+import neo.model.note.Note;
+import neo.model.note.NoteBuilder;
 import neo.nsga.MusicSolution;
-import neo.nsga.MusicVariable;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,6 +36,7 @@ public class Display {
 	private static Logger LOGGER = Logger.getLogger(Display.class.getName());
 	 
 	 public void view(SolutionSet solutions, double tempo) throws JMException, InvalidMidiDataException{
+		 solutions.sort(Comparator.comparing(MusicSolution::getHarmony).thenComparing(MusicSolution::getMelody));
 		  Iterator<Solution> iterator = solutions.iterator();
 		  String dateID = generateDateID();
 		  int i = 1;
@@ -39,9 +45,9 @@ public class Display {
 			String id = dateID + "_" + NsgaApplication.COUNTER.getAndIncrement();
 			LOGGER.info(id);
 			LOGGER.info(solution.toString());
-			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
-			printHarmonies(motive.getHarmonies());
-			viewScore(motive.getMelodies(), id, tempo);
+//			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
+//			printHarmonies(motive.getHarmonies());
+//			viewScore(motive.getMelodies(), id, tempo);
 			i++;
 			
 //			List<MusicalStructure> structures = FugaUtilities.addTransposedVoices(sentences, inputProps.getScale(), 8, 12);
@@ -83,4 +89,5 @@ public class Display {
 //			String vexTab = ScoreUtilities.createVexTab(harmonies, inputProps);
 //			LOGGER.info(vexTab);
 //		}
+		
 }
