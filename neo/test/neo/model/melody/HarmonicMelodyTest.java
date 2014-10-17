@@ -53,7 +53,7 @@ public class HarmonicMelodyTest {
 	public void testRandomUpdateMelodyNotesAllNonChordTone() {
 		Note harmonyNote = note().pc(0).pitch(60).ocatve(5).build();
 		harmonicMelody = harmonicMelody()
-				.notes(note().pc(1).pitch(61).ocatve(5).build(), note().pc(2).pitch(62).ocatve(5).build())
+				.notes(note().pc(0).pitch(60).ocatve(5).build(), note().pc(2).pitch(62).ocatve(5).build())
 				.harmonyNote(harmonyNote)
 				.build();
 		harmonicMelody.randomUpdateMelodyNotes(4);

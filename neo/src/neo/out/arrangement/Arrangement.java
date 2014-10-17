@@ -3,6 +3,7 @@ package neo.out.arrangement;
 import static neo.model.note.NoteBuilder.note;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,19 +11,13 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import neo.midi.HarmonyInstrument;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
 
-
+@Component
 public class Arrangement {
 	
-	private Accompagnement accompagnement;
-	
-	
-	public Arrangement(Accompagnement accompagnement) {
-		this.accompagnement = accompagnement;
-	}
-
 	public List<Note> applyFixedPattern(List<Note> notes, int rhythmicLength){
 		List<Note> rhythmicNotes = new ArrayList<>();
 		for (Note note : notes) {
@@ -68,47 +63,27 @@ public class Arrangement {
 		return rhythmicNotes;
 	}
 	
-	public List<Note> harmonyAccompagnement(Map<Integer, List<Note>> harmonyPositions, 	Integer[] compPattern) {
+	public List<Note> accompagnement(List<HarmonyInstrument> harmonyPositions, List<Integer[]> compPatterns, Accompagnement[] compStrategy) {
 		List<Note> transformedList = new ArrayList<>();
-		for (Entry<Integer, List<Note>> harmonyPosition : harmonyPositions.entrySet()) {
-			List<Note> harmonyNotes = harmonyPosition.getValue();
-			List<List<Note>> rhythmNotes = accompagnement.applyAccompagnement(harmonyNotes);
+		int j = 0;
+		for (HarmonyInstrument harmonyPosition : harmonyPositions) {
+			Accompagnement compStr = compStrategy[j % compStrategy.length];
+			List<List<Note>> rhythmNotes = compStr.applyAccompagnement(harmonyPosition.getNotes());
+			Integer[] compPattern = compPatterns.get(j % compPatterns.size());
 			for (int i = 0; i < compPattern.length - 1; i++) {
-				List<Note> compNotes = rhythmNotes.get(i % rhythmNotes.size());
-				for (Note note : compNotes) {
-					Note compNote = NoteBuilder.note()
-							.pos(harmonyPosition.getKey() + compPattern[i])
-							.pc(note.getPitchClass())
-							.pitch(note.getPitch())
-							.len(compPattern[i + 1] - compPattern[i]).build();
-					transformedList.add(compNote);
+			List<Note> compNotes = rhythmNotes.get(i % rhythmNotes.size());
+			for (Note note : compNotes) {
+				Note compNote = NoteBuilder.note()
+						.pos(harmonyPosition.getPosition() + compPattern[i])
+						.pc(note.getPitchClass())
+						.pitch(note.getPitch())
+						.len(compPattern[i + 1] - compPattern[i]).build();
+				transformedList.add(compNote);
 				}
 			}
+			j++;
 		}
-		return transformedList;
-	}
-	
-	public List<Note> accompagnement(Map<Integer, List<Note>> harmonyPositions, Integer[] compPattern) {
-		Accompagnement[] compStrategy = {Accompagnement::chordal, Accompagnement::arpeggio};
-		List<Note> transformedList = new ArrayList<>();
-		int c = 0;
-		for (Entry<Integer, List<Note>> harmonyPosition : harmonyPositions.entrySet()) {
-			List<Note> harmonyNotes = harmonyPosition.getValue();
-			Accompagnement compStr = compStrategy[c];
-			List<List<Note>> rhythmNotes = compStr.applyAccompagnement(harmonyNotes);
-			for (int i = 0; i < compPattern.length - 1; i++) {
-				List<Note> compNotes = rhythmNotes.get(i % rhythmNotes.size());
-				for (Note note : compNotes) {
-					Note compNote = NoteBuilder.note()
-							.pos(harmonyPosition.getKey() + compPattern[i])
-							.pc(note.getPitchClass())
-							.pitch(note.getPitch())
-							.len(compPattern[i + 1] - compPattern[i]).build();
-					transformedList.add(compNote);
-				}
-			}
-			c++;
-		}
+		transformedList.sort(Comparator.comparing(Note::getPosition));
 		return transformedList;
 	}
 	

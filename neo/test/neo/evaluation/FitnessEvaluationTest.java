@@ -35,6 +35,7 @@ public class FitnessEvaluationTest extends AbstractTest{
 	@Before
 	public void setUp(){
 		musicProperties.setMinimumLength(6);
+		musicProperties.setChordSize(3);
 		List<Harmony> harmonies = new ArrayList<>();
 		harmonies.add(harmony().pos(0).len(6).notes(0,4,7).positionWeight(1.0).build());
 		harmonies.add(harmony().pos(6).len(6).notes(1,4,6).positionWeight(0.5).build());

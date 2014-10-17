@@ -57,8 +57,8 @@ public class MidiParser {
 				MidiMessage message = event.getMessage();
 				if (message instanceof ShortMessage) {
 					LOGGER.finer("Voice:" + voice);
-					long ticks = Math
-							.round(((double) event.getTick() / (double) sequence
+					int ticks = (int) Math
+							.ceil((event.getTick() / (double) sequence
 									.getResolution()) * RESOLUTION);
 					ShortMessage sm = (ShortMessage) message;
 					LOGGER.finer("Pitch: " + sm.getData1() + " ");
@@ -219,5 +219,5 @@ public class MidiParser {
 		}
 		return 60000000.0f / value;
 	}
-
+	
 }

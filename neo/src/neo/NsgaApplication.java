@@ -109,41 +109,74 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	}
 	
 	private  void prepareHarmonies() {
-		int[] harmonyPositions = {0,24,48,72,96,120};// last = length
-		List<HarmonyBuilder> harmonyBuilders = generateHarmonyBuilders(harmonyPositions);
-		musicProperties.setHarmonyBuilders(harmonyBuilders);
-		List<HarmonicMelody> harmonicMelodies = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 3);
-//		List<HarmonicMelody> harmonicMelodies2 = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 1);
-//		harmonicMelodies.addAll(harmonicMelodies2);
-//		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
-//		harmonicMelodies.add(harmonicMelody().voice(2).pos(0)
-//				.notes(note().voice(2).pos(0).len(12).build(), 
-//					   note().voice(2).pos(12).len(24).build()).build());
-//		harmonicMelodies.add(harmonicMelody().voice(2).pos(24)
-//				.notes(note().voice(2).pos(36).len(12).build()).build());
-//		harmonicMelodies.add(harmonicMelody().voice(2).pos(48)
-//				.notes(note().voice(2).pos(54).len(6).build(),
-//						note().voice(2).pos(60).len(12).build()).build());
-//		
-//		harmonicMelodies.add(harmonicMelody().voice(1).pos(24)
-//				.notes(note().voice(1).pos(24).len(12).build(), 
-//					   note().voice(1).pos(36).len(24).build()).build());
-//		harmonicMelodies.add(harmonicMelody().voice(1).pos(48)
-//				.notes(note().voice(1).pos(60).len(12).build()).build());
-		musicProperties.setHarmonicMelodies(harmonicMelodies);
-		
-		double[] barWeights = {1.0, 0.5, 0.75, 0.5};
-		Map<Integer, Double> rhythmWeightValues = RhythmWeight.generateRhythmWeight(5, barWeights, musicProperties.getMinimumLength());
-		musicProperties.setRhythmWeightValues(rhythmWeightValues);
-	} 
+        int[][] harmonies = {{0,12,18,24},{36,30,36,42,60},{72, 72,78,84},{108}};//first = harmony position / other melodies (last = length)
+        int melodyVoice = 3;
+        List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
+        for (int i = 0; i < harmonies.length; i++) {
+            if (harmonies[i].length > 1) {
+                List<Note> notes = new ArrayList<>();
+                for (int j = 1; j < harmonies[i].length - 1; j++) {
+                    notes.add(note().voice(melodyVoice).pos(harmonies[i][j]).len(harmonies[i][j + 1] - harmonies[i][j]).build());
+                }
+                harmonicMelodies.add(harmonicMelody().voice(melodyVoice).pos(harmonies[i][0]).notes(notes).build());
+            }
+        }
+        List<HarmonyBuilder> harmonyBuilders = generateHarmonyBuilders(harmonies);
+        musicProperties.setHarmonyBuilders(harmonyBuilders);
+//        List<HarmonicMelody> harmonicMelodies = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 3);
+        musicProperties.setHarmonicMelodies(harmonicMelodies);
+        
+        double[] measureWeights = {1.0, 0.5, 0.75, 0.5, 0.75, 0.5};// measure must correspond to minimumlength!
+        int measures = harmonies.length - 1;
+        Map<Integer, Double> rhythmWeightValues = RhythmWeight.generateRhythmWeight(measures, measureWeights);
+        musicProperties.setRhythmWeightValues(rhythmWeightValues);
+    } 
 	
-	private List<HarmonyBuilder> generateHarmonyBuilders(int[] positions){
+	private List<HarmonyBuilder> generateHarmonyBuilders(int[][] positions){
 		List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
 		for (int i = 0; i < positions.length - 1; i++) {
-			harmonyBuilders.add(harmony().pos(positions[i]).len(positions[i + 1] - positions[i]));
+			harmonyBuilders.add(harmony().pos(positions[i][0]).len(positions[i + 1][0] - positions[i][0]));
 		}
 		return harmonyBuilders;
 	}
+	
+//	private  void prepareHarmonies() {
+//		int[] harmonyPositions = {0,24,48,72,96,120};// last = length
+//		List<HarmonyBuilder> harmonyBuilders = generateHarmonyBuilders(harmonyPositions);
+//		musicProperties.setHarmonyBuilders(harmonyBuilders);
+//		List<HarmonicMelody> harmonicMelodies = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 3);
+////		List<HarmonicMelody> harmonicMelodies2 = generator.generateHarmonicMelodiesForVoice(harmonyPositions, 3, 1);
+////		harmonicMelodies.addAll(harmonicMelodies2);
+////		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
+////		harmonicMelodies.add(harmonicMelody().voice(2).pos(0)
+////				.notes(note().voice(2).pos(0).len(12).build(), 
+////					   note().voice(2).pos(12).len(24).build()).build());
+////		harmonicMelodies.add(harmonicMelody().voice(2).pos(24)
+////				.notes(note().voice(2).pos(36).len(12).build()).build());
+////		harmonicMelodies.add(harmonicMelody().voice(2).pos(48)
+////				.notes(note().voice(2).pos(54).len(6).build(),
+////						note().voice(2).pos(60).len(12).build()).build());
+////		
+////		harmonicMelodies.add(harmonicMelody().voice(1).pos(24)
+////				.notes(note().voice(1).pos(24).len(12).build(), 
+////					   note().voice(1).pos(36).len(24).build()).build());
+////		harmonicMelodies.add(harmonicMelody().voice(1).pos(48)
+////				.notes(note().voice(1).pos(60).len(12).build()).build());
+//		musicProperties.setHarmonicMelodies(harmonicMelodies);
+//		
+//		double[] barWeights = {1.0, 0.5, 0.75, 0.5};
+//		Map<Integer, Double> rhythmWeightValues = RhythmWeight.generateRhythmWeight(5, barWeights, musicProperties.getMinimumLength());
+//		musicProperties.setRhythmWeightValues(rhythmWeightValues);
+//	} 
+	
+//	private List<HarmonyBuilder> generateHarmonyBuilders(int[] positions){
+//		List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
+//		for (int i = 0; i < positions.length - 1; i++) {
+//			harmonyBuilders.add(harmony().pos(positions[i]).len(positions[i + 1] - positions[i]));
+//		}
+//		return harmonyBuilders;
+//	}
+	
 	
 	public List<HarmonicMelody> generateHarmonicMelody(int[] harmonyPosition, int maxLength, int voice){
 		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
@@ -170,6 +203,14 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 			harmonicMelodies.add(harmonicMelodyBuilder.notes(notes).build());
 		}
 		return harmonicMelodies;
+	}
+	
+	private void threeFour(){
+		 int[][] harmonies = {{0},{36},{72},{108}};//first = harmony position / other melodies (last = length)
+		 double[] measureWeights = {1.0, 0.5, 0.5};
+	     int measures = 10;
+//	     numerator = 3;
+//	     denominator = 4;
 	}
 
 }

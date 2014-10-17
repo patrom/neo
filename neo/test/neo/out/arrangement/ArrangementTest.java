@@ -1,6 +1,7 @@
 package neo.out.arrangement;
 
 import static neo.model.note.NoteBuilder.note;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import neo.DefaultConfig;
+import neo.midi.HarmonyInstrument;
 import neo.model.note.Note;
 
 import org.junit.Before;
@@ -55,6 +57,26 @@ public class ArrangementTest extends JFrame{
 	public void testApplyPattern() {
 		List<Note> rhythmicNotes2 = arrangement.applyFixedPattern(notes, pattern);
 		System.out.println(rhythmicNotes2);
+	}
+	
+	@Test
+	public void testAccompagnement() {
+		Integer[] compPattern = {6,12,18,30};
+		List<HarmonyInstrument> harmonyPositions = new ArrayList<>();
+		harmonyPositions.add(createHarmonyInstrument(0, notes));
+		harmonyPositions.add(createHarmonyInstrument(24, notes));
+		List<Integer[]> compPatterns = new ArrayList<Integer[]>();
+		compPatterns.add(compPattern);
+		Accompagnement[] compStrategy = {Accompagnement::chordal};
+		List<Note> accompagnement = arrangement.accompagnement(harmonyPositions, compPatterns, compStrategy);
+		assertEquals(12, accompagnement.get(notes.size()).getPosition());
+	}
+
+	private HarmonyInstrument createHarmonyInstrument(int position, List<Note> notes) {
+		HarmonyInstrument harmonyInstrument = new HarmonyInstrument();
+		harmonyInstrument.setNotes(notes);
+		harmonyInstrument.setPosition(position);
+		return harmonyInstrument;
 	}
 
 }

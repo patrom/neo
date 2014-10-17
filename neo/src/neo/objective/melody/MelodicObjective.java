@@ -26,21 +26,28 @@ public class MelodicObjective extends Objective {
 	
 	@Override
 	public double evaluate(Motive motive) {
-		int maxDistance = 1;
 		double totalMelodySum = 0;
 		List<Melody> melodies = motive.getMelodies();
+		int melodyCount = melodies.size();
 		for(Melody melody: melodies){
 			List<Note> notes =  melody.getMelodieNotes();
-//			notes = filterNotesAbove(notes, 0.5);
+			double melodyValue = evaluateMelody(notes, 2);
 //			notes = extractNotesOnLevel(notes, 1);
-			double melodyValue = evaluateMelody(notes, maxDistance);
+			for (double level : musicProperties.getFilterLevels()) {
+				List<Note> filteredNotes = filterNotesWithWeightEqualToOrGreaterThan(notes, level);
+				if (!filteredNotes.isEmpty() && filteredNotes.size() != notes.size()) {
+					double value = evaluateMelody(filteredNotes, 1);
+					totalMelodySum = totalMelodySum + value;
+					melodyCount++;
+				}
+			}
 			totalMelodySum = totalMelodySum + melodyValue;
 		}
-		return totalMelodySum/melodies.size();
+		return totalMelodySum/melodyCount;
 	}
 	
-	protected List<Note> filterNotesWithPositionWeightAbove(Collection<Note> notes, double filterValue){
-		return notes.stream().filter(n -> n.getPositionWeight() > filterValue).collect(toList());
+	protected List<Note> filterNotesWithWeightEqualToOrGreaterThan(Collection<Note> notes, double filterValue){
+		return notes.stream().filter(n -> n.getWeightedSum() > filterValue).collect(toList());
 	}
 
 	protected List<Note> extractNotesOnLevel(Collection<Note> notes, int level) {
@@ -68,7 +75,7 @@ public class MelodicObjective extends Objective {
 				chord.addPitchClass(secondNote.getPitchClass());
 				chord.addPitchClass(thirdNote.getPitchClass());
 				if (chord.getChordType().equals(ChordType.MAJOR) || chord.getChordType().equals(ChordType.MINOR)) {
-					harmonicValue = harmonicValue + 1.0;
+					harmonicValue = harmonicValue + ChordType.MAJOR.getDissonance();
 				}
 		}
 		return (harmonicValue == 0)? 0:harmonicValue/(notePositions.length - 2);
@@ -82,7 +89,7 @@ public class MelodicObjective extends Objective {
 			for (int j = 0; j < notePositions.length - distance; j++) {
 				Note note = notePositions[j];
 				Note nextNote = notePositions[j + distance];
-				double intervalPositionWeight = (note.getPositionWeight() + nextNote.getPositionWeight());
+				double intervalPositionWeight = (note.getWeightedSum() + nextNote.getWeightedSum());
 				totalPositionWeigth = totalPositionWeigth + intervalPositionWeight;
 				double intervalMelodicValue = getIntervalMelodicValue(note, nextNote);
 				double intervalValue = intervalMelodicValue * intervalPositionWeight;

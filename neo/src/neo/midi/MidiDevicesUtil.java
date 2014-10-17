@@ -116,7 +116,13 @@ public class MidiDevicesUtil {
 		}
 		return sequence;
 	}
-
+	
+//	public Sequence createSequenceFromNotes(List<Note> notes, Instrument intstrument) throws InvalidMidiDataException {
+//		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, 1);
+//		createTrack(sequence, notes, intstrument);
+//		return sequence;
+//	}
+	
 	private void createTrack(Sequence sequence, List<Note> notes, Instrument instrument)
 			throws InvalidMidiDataException {
 		Track track = sequence.createTrack();

@@ -124,9 +124,8 @@ public class InnerMetricWeight {
 		double maxValue = Collections.max(map.values());
 		Set<Integer> keys = map.keySet();
 		for (Integer key : keys) {
-			double value = map.get(key);
-			double normalizedValue = Math.round(value / maxValue);
-			map.put(key, normalizedValue);
+			double value = map.get(key)/ maxValue;
+			map.put(key, value);
 		}
 		return map;
 	}

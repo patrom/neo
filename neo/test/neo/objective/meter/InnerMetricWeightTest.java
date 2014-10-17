@@ -85,5 +85,5 @@ public class InnerMetricWeightTest {
 		LOGGER.info(innerMetricWeights.toString());
 		Assert.assertEquals(21.0, innerMetricWeights.get(6).doubleValue(), 0);
 	}
-
+	
 }

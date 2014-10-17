@@ -13,7 +13,10 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
 import javax.swing.JFrame;
 
+import jm.util.Read;
+import jm.util.View;
 import neo.generator.MusicProperties;
+import neo.midi.HarmonyInstrument;
 import neo.midi.MelodyInstrument;
 import neo.midi.MidiDevicesUtil;
 import neo.midi.MidiInfo;
@@ -25,6 +28,7 @@ import neo.out.instrument.Instrument;
 import neo.out.instrument.KontaktLibPiano;
 import neo.out.instrument.KontaktLibViolin;
 import neo.out.instrument.MidiDevice;
+import neo.out.print.ScoreUtilities;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -42,6 +46,10 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	private MidiDevicesUtil midiDevicesUtil;
 	@Autowired
 	private MusicProperties musicProperties;
+	@Autowired
+	private Arrangement arrangement;
+	@Autowired
+	private ScoreUtilities scoreUtilities;
 	
 	public static void main(final String[] args) {
 	 	SpringApplication app = new SpringApplication(PlayApplication.class);
@@ -54,15 +62,6 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		playMidiFilesOnKontaktFor();
 	}
 	
-//	private Accompagnement accompagnementStrategy = (notes) -> {
-//		ArrayList<List<Note>> list = new ArrayList<List<Note>>();
-//		list.add(notes);
-//		return list;
-//	};
-//	
-//	private Accompagnement comp = notes -> Accompagnement.chordal(notes);
-//	private Accompagnement compref = Accompagnement::chordal;
-	
 	public void playMidiFilesOnKontaktFor() throws IOException, InvalidMidiDataException, InterruptedException {
 		List<File> midiFiles = Files.list(new File(PlayApplication.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
@@ -70,8 +69,9 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		
-			playOnInstruments(midiInfo);
-			playOnKontakt(melodies, midiInfo.getTempo());
+//			playOnInstruments(midiInfo);
+//			playOnKontakt(melodies, midiInfo.getTempo());
+			View.notate(scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo()));
 //			write(melodies, "resources/transform/" + midiFile.getName());
 			Thread.sleep(13000);
 		}
@@ -84,21 +84,29 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	}
 
 	private void playOnInstruments(MidiInfo midiInfo) {
-		Arrangement arrangement = new Arrangement(Accompagnement::chordal);
-		Map<Integer, List<Note>> harmonyPositions = midiInfo.getHarmonyPositions(musicProperties.getChordSize());
-		Integer[] compPattern = {6,12,18, 24, 30};
-		List<Note> accompagnement = arrangement.harmonyAccompagnement(harmonyPositions, compPattern);
-		
 		List<MelodyInstrument> melodies = midiInfo.getMelodies();
+		
+		//accompagnement
+		List<HarmonyInstrument> harmonyPositions = midiInfo.getHarmonyPositions(musicProperties.getChordSize());
+		Integer[] compPattern = {6,12,18,24};
+		List<Integer[]> compPatterns = new ArrayList<Integer[]>();
+		compPatterns.add(compPattern);
+		Accompagnement[] compStrategy = {Accompagnement::chordal};
+		List<Note> accompagnement = arrangement.accompagnement(harmonyPositions, compPatterns, compStrategy);
+		MelodyInstrument accomp = new MelodyInstrument(accompagnement, melodies.size() + 1);
+		accomp.setInstrument(new KontaktLibPiano(0, 0));
+		melodies.add(accomp);
 //		arrangement.applyFixedPattern(melodies.get(0).getNotes(), 6);
+		//harmony
 		melodies.get(0).setInstrument(new KontaktLibPiano(0, 0));
 		melodies.get(1).setInstrument(new KontaktLibPiano(0, 0));
 		melodies.get(2).setInstrument(new KontaktLibPiano(0, 0));
 		arrangement.transpose(melodies.get(3).getNotes(), -12);
 		melodies.get(3).setInstrument(new KontaktLibPiano(0, 0));
-		
+		//melody
 		arrangement.transpose(melodies.get(7).getNotes(), -12);
 		melodies.get(7).setInstrument(new KontaktLibViolin(0, 1));
+		
 	}
 	
 	

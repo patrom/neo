@@ -21,19 +21,25 @@ import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.util.JMException;
 import neo.NsgaApplication;
+import neo.model.Motive;
 import neo.model.harmony.Harmony;
 import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.Melody;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
 import neo.nsga.MusicSolution;
+import neo.nsga.MusicVariable;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Display {
 
 	private static Logger LOGGER = Logger.getLogger(Display.class.getName());
+	
+	@Autowired
+	private ScoreUtilities scoreUtilities;
 	 
 	 public void view(SolutionSet solutions, double tempo) throws JMException, InvalidMidiDataException{
 		 solutions.sort(Comparator.comparing(MusicSolution::getHarmony).thenComparing(MusicSolution::getMelody));
@@ -45,9 +51,9 @@ public class Display {
 			String id = dateID + "_" + NsgaApplication.COUNTER.getAndIncrement();
 			LOGGER.info(id);
 			LOGGER.info(solution.toString());
-//			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
-//			printHarmonies(motive.getHarmonies());
-//			viewScore(motive.getMelodies(), id, tempo);
+			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
+			printHarmonies(motive.getHarmonies());
+			viewScore(motive.getMelodies(), id, tempo);
 			i++;
 			
 //			List<MusicalStructure> structures = FugaUtilities.addTransposedVoices(sentences, inputProps.getScale(), 8, 12);
@@ -74,7 +80,7 @@ public class Display {
 
 		private void viewScore(List<Melody> melodies, String id, double tempo) {
 			melodies.forEach(h ->  LOGGER.info(h.getMelodieNotes() + ", "));
-			Score score = ScoreUtilities.createScoreMelodies(melodies, tempo);
+			Score score = scoreUtilities.createScoreMelodies(melodies, tempo);
 			score.setTitle(id);
 			Write.midi(score, "resources/midi/" + id + ".mid");	
 			View.notate(score);	

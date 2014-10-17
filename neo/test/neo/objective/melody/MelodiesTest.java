@@ -57,7 +57,7 @@ public class MelodiesTest extends AbstractTest{
 				LOGGER.info("Intervals : " + value);
 				value = melodicObjective.evaluateTriadicValueMelody(notes);
 				LOGGER.info("Triadic value: " + value);
-				List<Note> filteredNotes = melodicObjective.filterNotesWithPositionWeightAbove(notes, 0.5);
+				List<Note> filteredNotes = melodicObjective.filterNotesWithWeightEqualToOrGreaterThan(notes, 0.5);
 				double filteredValue = melodicObjective.evaluateMelody(filteredNotes, 1);
 				LOGGER.info("filteredValue : " + filteredValue);
 //				List<Note> notesLevel2 = melodicObjective.extractNotesOnLevel(notes, 2);

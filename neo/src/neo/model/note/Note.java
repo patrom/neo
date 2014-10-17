@@ -107,7 +107,7 @@ public class Note implements Comparable<Note>, Cloneable{
 	}
 
 	public double getWeightedSum() {
-		return positionWeight;
+		return (positionWeight + innerMetricWeight)/2;
 	}
 
 	public int getOctave() {

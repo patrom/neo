@@ -16,7 +16,7 @@ import neo.out.instrument.Instrument;
 public class MusicProperties {
 	
 	private int harmonyBeatDivider = 12;
-	private float tempo = 60;
+	private float tempo = 90;
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength = 6;
 	private int chordSize = 4;
@@ -24,6 +24,7 @@ public class MusicProperties {
 	private List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
 	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 	private boolean outerBoundaryIncluded = true;
+	private double[] filterLevels = {0.5};
 	
 	//tonality
 	private Scale scale = new Scale(Scale.MAJOR_SCALE);
@@ -41,9 +42,11 @@ public class MusicProperties {
 	private double voiceLeadingConsDissValue;
 	private String voiceLeadingStrategy;
 
-	//generation
-	private int numerator = 4;//2/4,4/4,3/4 - 6/8
-//	private int voices = 4;
+	//score
+	private int numerator = 3;
+	private int denominator = 4;
+	
+	
 	private int melodyLength = 8;
 	private String populationStrategy = "polyphonic";//homophonic or polyphonic
 	
@@ -215,6 +218,18 @@ public class MusicProperties {
 	}
 	public void setOuterBoundaryIncluded(boolean outerBoundaryIncluded) {
 		this.outerBoundaryIncluded = outerBoundaryIncluded;
+	}
+	public double[] getFilterLevels() {
+		return filterLevels;
+	}
+	public void setFilterLevels(double[] filterLevels) {
+		this.filterLevels = filterLevels;
+	}
+	public int getDenominator() {
+		return denominator;
+	}
+	public void setDenominator(int denominator) {
+		this.denominator = denominator;
 	}
 	
 }
