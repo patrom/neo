@@ -43,7 +43,7 @@ public class PcSetUnorderedPropertiesTest extends AbstractTest{
 	
 	@Test
 	public void testGetForteName() {
-		Map<Integer, List<Note>> chords = MidiConverter.extractNoteMap(melodies);
+		Map<Integer, List<Note>> chords = MidiConverter.extractNoteMapFromMelodies(melodies);
 		chords.forEach((i,chord) -> {
 			java.util.Set<Integer> pitchClasses = chord.stream()
 					.map(note -> note.getPitchClass())

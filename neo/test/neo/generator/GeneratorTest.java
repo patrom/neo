@@ -34,14 +34,13 @@ public class GeneratorTest extends AbstractTest{
 	@Autowired
 	private MusicProperties musicProperties;
 
-	
 	@Before
 	public void setUp(){
 		List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
 		harmonyBuilders.add(harmony().pos(0).len(12));
 		harmonyBuilders.add(harmony().pos(12).len(12));
 		harmonyBuilders.add(harmony().pos(24).len(12));
-		musicProperties.setHarmonyBuilders(harmonyBuilders);
+		generator.setHarmonyBuilders(harmonyBuilders);
 		
 		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 		harmonicMelodies.add(harmonicMelody().voice(2).pos(0)
@@ -52,7 +51,7 @@ public class GeneratorTest extends AbstractTest{
 		harmonicMelodies.add(harmonicMelody().voice(2).pos(24)
 				.notes(note().voice(2).pos(24).len(6).build(),
 						note().voice(2).pos(30).len(6).build()).build());
-		musicProperties.setHarmonicMelodies(harmonicMelodies);
+		generator.setHarmonicMelodies(harmonicMelodies);
 		musicProperties.setChordSize(3);
 		
 		int chordSize = 4;
@@ -68,7 +67,7 @@ public class GeneratorTest extends AbstractTest{
 		rhythmWeightValues.put(30, 0.5);
 		rhythmWeightValues.put(36, 1.0);
 		rhythmWeightValues.put(42, 0.5);
-		musicProperties.setRhythmWeightValues(rhythmWeightValues);
+		generator.setRhythmWeightValues(rhythmWeightValues);
 		musicProperties.setOctaveHighestPitchClass(octave);
 		musicProperties.setChordSize(chordSize);
 	}

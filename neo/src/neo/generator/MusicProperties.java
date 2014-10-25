@@ -1,16 +1,12 @@
 package neo.generator;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.springframework.stereotype.Component;
-
-import neo.model.harmony.HarmonyBuilder;
-import neo.model.melody.HarmonicMelody;
 import neo.model.note.Scale;
 import neo.out.instrument.Instrument;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class MusicProperties {
@@ -20,9 +16,7 @@ public class MusicProperties {
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength = 6;
 	private int chordSize = 4;
-	private Integer[] octaveHighestPitchClassRange = {6,7};
-	private List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
-	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
+	private Integer[] octaveHighestPitchClassRange = {5,6};
 	private boolean outerBoundaryIncluded = true;
 	private double[] filterLevels = {0.5};
 	
@@ -33,7 +27,6 @@ public class MusicProperties {
 	//harmony
 	private double harmonyConsDissValue = 0.3;
 	private int allowChordsOfPitchesOrHigher = 3;
-	private String harmonyStrategy;
 	
 	//melody
 	private double melodyConsDissValue = 0.2;//hoe lager, hoe cons - stapsgewijs
@@ -45,10 +38,7 @@ public class MusicProperties {
 	//score
 	private int numerator = 3;
 	private int denominator = 4;
-	
-	
-	private int melodyLength = 8;
-	private String populationStrategy = "polyphonic";//homophonic or polyphonic
+	private int keySignature = 0;
 	
 	//MOGA
 	private int populationSize;
@@ -56,24 +46,32 @@ public class MusicProperties {
 	private double crossoverProbability;
 	private double mutationProbability;
 	
-	public String getHarmonyStrategy() {
-		return harmonyStrategy;
+	private int[][] harmonies;
+	private double[] measureWeights;
+	
+	public void threeFour(){
+//		int[][] harmonies = {{0,12,18,24},{36,30,36,42,60},{72, 72,78,84},{108}};//first = harmony position / other melodies (last = length)
+//		this.harmonies = harmonies;
+		double[] measureWeights = {1.0, 0.5, 0.75, 0.5, 0.75, 0.5};// measure must correspond to minimumlength!
+		this.measureWeights = measureWeights;
+		this.numerator = 3;
+		this.denominator = 4;
 	}
-	public void setHarmonyStrategy(String harmonyStrategy) {
-		this.harmonyStrategy = harmonyStrategy;
+	
+	public void fourFour(){
+//		int[][] harmonies = {{0,6,18,24},{48},{96},{144},{192}};
+//		this.harmonies = harmonies;
+		double[] measureWeights = {1.0, 0.5, 0.75, 0.5, 1.0, 0.5, 0.75, 0.5};
+		this.measureWeights = measureWeights;
+	    this.numerator = 4;
+	    this.denominator = 4;
 	}
+	
 	public String getVoiceLeadingStrategy() {
 		return voiceLeadingStrategy;
 	}
 	public void setVoiceLeadingStrategy(String voiceLeadingStrategy) {
 		this.voiceLeadingStrategy = voiceLeadingStrategy;
-	}
-	
-	public String getPopulationStrategy() {
-		return populationStrategy;
-	}
-	public void setPopulationStrategy(String populationStrategy) {
-		this.populationStrategy = populationStrategy;
 	}
 	public double getHarmonyConsDissValue() {
 		return harmonyConsDissValue;
@@ -107,12 +105,6 @@ public class MusicProperties {
 	}
 	public void setNumerator(int numerator) {
 		this.numerator = numerator;
-	}
-	public int getMelodyLength() {
-		return melodyLength;
-	}
-	public void setMelodyLength(int melodyLength) {
-		this.melodyLength = melodyLength;
 	}
 	public int getPopulationSize() {
 		return populationSize;
@@ -158,12 +150,6 @@ public class MusicProperties {
 	public void setTempo(float tempo) {
 		this.tempo = tempo;
 	}
-	public Map<Integer, Double> getRhythmWeightValues() {
-		return rhythmWeightValues;
-	}
-	public void setRhythmWeightValues(Map<Integer, Double> rhythmWeightValues) {
-		this.rhythmWeightValues = rhythmWeightValues;
-	}
 	public int getMinimumLength() {
 		return minimumLength;
 	}
@@ -188,18 +174,6 @@ public class MusicProperties {
 		this.scale = scale;
 	}
 	
-	public List<HarmonyBuilder> getHarmonyBuilders() {
-		return harmonyBuilders;
-	}
-	public void setHarmonyBuilders(List<HarmonyBuilder> harmonyBuilders) {
-		this.harmonyBuilders = harmonyBuilders;
-	}
-	public List<HarmonicMelody> getHarmonicMelodies() {
-		return harmonicMelodies;
-	}
-	public void setHarmonicMelodies(List<HarmonicMelody> harmonicMelodies) {
-		this.harmonicMelodies = harmonicMelodies;
-	}
 	public Integer[] getOctaveHighestPitchClassRange() {
 		return octaveHighestPitchClassRange;
 	}
@@ -230,6 +204,36 @@ public class MusicProperties {
 	}
 	public void setDenominator(int denominator) {
 		this.denominator = denominator;
+	}
+	public int getKeySignature() {
+		return keySignature;
+	}
+	public void setKeySignature(int keySignature) {
+		this.keySignature = keySignature;
+	}
+
+	public Map<Integer, Double> getRhythmWeightValues() {
+		return rhythmWeightValues;
+	}
+
+	public void setRhythmWeightValues(Map<Integer, Double> rhythmWeightValues) {
+		this.rhythmWeightValues = rhythmWeightValues;
+	}
+
+	public double[] getMeasureWeights() {
+		return measureWeights;
+	}
+
+	public void setMeasureWeights(double[] measureWeights) {
+		this.measureWeights = measureWeights;
+	}
+
+	public int[][] getHarmonies() {
+		return harmonies;
+	}
+
+	public void setHarmonies(int[][] harmonies) {
+		this.harmonies = harmonies;
 	}
 	
 }

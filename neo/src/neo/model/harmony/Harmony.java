@@ -1,10 +1,20 @@
 package neo.model.harmony;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
+import neo.midi.HarmonyCollector;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.pitchspace.BassOctavePitchSpace;
 import neo.model.melody.pitchspace.MiddleOctavePitchSpace;
@@ -34,6 +44,29 @@ public class Harmony implements Comparable<Harmony>{
 		this.pitchSpace = new UniformPitchSpace(range);
 		this.pitchSpace.setNotes(getNotes());
 		toChord();
+	}
+	
+	public void search(){
+		Set<Integer> allPositions = harmonicMelodies.stream().flatMap(m -> m.getMelodyNotes().stream())
+				.map(note -> note.getPosition())
+				.collect(toCollection(TreeSet::new));
+		int voice = 0;
+		Map<Integer, List<Note>> harmonyPositions = harmonicMelodies.stream()
+				.filter(harmonicMelody -> harmonicMelody.getVoice() == voice)
+				.flatMap(harmonicMelody -> harmonicMelody.getMelodyNotes().stream())
+				.collect(Collectors.collectingAndThen(
+						Collectors.groupingBy(note -> note.getPosition(), Collectors.toList()),
+			 			(value) -> { 
+			 				List<Note> note = null;
+			 				for (Integer position : allPositions) {
+			 					if (value.containsKey(position)) {
+			 						note = value.get(position);
+								} else{
+									value.put(position, note);
+								}
+							}
+			 				return value;}
+			 	));
 	}
 	
 	public List<Note> getNotes() {

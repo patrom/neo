@@ -95,6 +95,7 @@ public class ScoreUtilities implements JMC{
 		score.setTempo(tempo);
 		score.setNumerator(musicProperties.getNumerator());
 		score.setDenominator(musicProperties.getDenominator());
+		score.setKeySignature(musicProperties.getKeySignature());
 		return score;
 	}
 
@@ -108,12 +109,14 @@ public class ScoreUtilities implements JMC{
 			for (int i = 0; i < length; i++) {
 				neo.model.note.Note notePos = notes.get(i);
 				note = new Note(notePos.getPitch(),(double)notePos.getLength()/ATOMIC_VALUE);
+				note.setDuration(note.getRhythmValue());//note has DEFAULT_DURATION_MULTIPLIER = 0.9
 				phrase.add(note);
 				if ((i + 1) < length) {	
 					neo.model.note.Note nextNotePos = notes.get(i + 1);
 					int gap = (notePos.getPosition()+ notePos.getLength()) - nextNotePos.getPosition();
 					if (gap < 0) {
 						note = new Rest((double)-gap/ATOMIC_VALUE);
+						note.setDuration(note.getRhythmValue());//note has DEFAULT_DURATION_MULTIPLIER = 0.9
 						phrase.add(note);
 					}
 				}	

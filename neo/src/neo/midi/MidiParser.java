@@ -42,7 +42,7 @@ public class MidiParser {
 	public MidiInfo readMidi(File midiFile)
 			throws InvalidMidiDataException, IOException {
 		Sequence sequence = MidiSystem.getSequence(midiFile);
-		LOGGER.finer("Ticks: " + sequence.getResolution());
+		LOGGER.finer("Resolution: " + sequence.getResolution());
 		LOGGER.finer("DivisionType: " + sequence.getDivisionType());
 		Track[] tracks = sequence.getTracks();
 		int voice = tracks.length - 1;
@@ -58,8 +58,8 @@ public class MidiParser {
 				if (message instanceof ShortMessage) {
 					LOGGER.finer("Voice:" + voice);
 					int ticks = (int) Math
-							.ceil((event.getTick() / (double) sequence
-									.getResolution()) * RESOLUTION);
+							.round((event.getTick() / (double) sequence
+									.getResolution()) * RESOLUTION) ;
 					ShortMessage sm = (ShortMessage) message;
 					LOGGER.finer("Pitch: " + sm.getData1() + " ");
 					// Er zijn twee manieren om een note-off commando te

@@ -1,6 +1,7 @@
 package neo.midi;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import neo.AbstractTest;
 import neo.DefaultConfig;
 import neo.model.harmony.Harmony;
 import neo.model.note.Note;
+import neo.model.note.NoteBuilder;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +43,8 @@ public class MidiConverterTest extends AbstractTest {
 	}
 
 	@Test
-	public void testExtractNoteMap() {
-		Map<Integer, List<Note>> chords = MidiConverter.extractNoteMap(melodies);
+	public void testExtractNoteMapFromMelodies() {
+		Map<Integer, List<Note>> chords = MidiConverter.extractNoteMapFromMelodies(melodies);
 		chords.forEach((k, n) -> LOGGER.info(k + ": " + n));
 	}
 	

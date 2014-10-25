@@ -74,7 +74,7 @@ public class MidiConverter {
 	}
 
 	public static List<Harmony> extractHarmony(List<MelodyInstrument> melodies, Integer[] range){
-		Map<Integer, List<Note>> chords = extractNoteMap(melodies);
+		Map<Integer, List<Note>> chords = extractNoteMapFromMelodies(melodies);
 		List<Harmony> harmonies = new ArrayList<>();
 		for (Entry<Integer, List<Note>> ch : chords.entrySet()) {
 			Harmony harmony = harmony()
@@ -87,7 +87,7 @@ public class MidiConverter {
 		return harmonies;
 	}
 
-	public static Map<Integer, List<Note>> extractNoteMap(List<MelodyInstrument> melodies) {
+	public static Map<Integer, List<Note>> extractNoteMapFromMelodies(List<MelodyInstrument> melodies) {
 		Map<Integer, List<Note>> chords = new TreeMap<>();
 		Set<Integer> positions = melodies.stream().flatMap(m -> m.getNotes().stream())
 											.map(note -> note.getPosition())
@@ -112,6 +112,7 @@ public class MidiConverter {
 		}
 		return chords;
 	}
+	
 
 	private static void addNoteToChordMap(Map<Integer, List<Note>> chords, Note note,
 			 int voice) {

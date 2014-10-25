@@ -1,5 +1,6 @@
 package neo.midi;
 
+import java.util.Collections;
 import java.util.List;
 
 import neo.model.note.Note;
@@ -33,6 +34,11 @@ public class MelodyInstrument {
 	}
 	public void setInstrument(Instrument instrument) {
 		this.instrument = instrument;
+	}
+	
+	public void addNotes(List<Note> notes){
+		this.notes.addAll(notes);
+		Collections.sort(this.notes);
 	}
 	
 	

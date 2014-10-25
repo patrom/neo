@@ -22,6 +22,7 @@ public class HarmonicMelody {
 		this.melodyNotes = melodyNotes;
 		this.voice = voice;
 		this.position = position;
+		updateNotesForVoice(voice);
 	}
 	
 	public HarmonicMelody(Note note, int voice, int position) {
@@ -29,6 +30,11 @@ public class HarmonicMelody {
 		this.melodyNotes.add(note.copy());
 		this.voice = voice;
 		this.position = position;
+		updateNotesForVoice(voice);
+	}
+	
+	private void updateNotesForVoice(int voice){
+		this.melodyNotes.forEach(note -> note.setVoice(voice));
 	}
 
 	public List<Note> getMelodyNotes() {

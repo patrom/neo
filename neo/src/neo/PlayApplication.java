@@ -13,6 +13,7 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
 import javax.swing.JFrame;
 
+import jm.music.data.Score;
 import jm.util.Read;
 import jm.util.View;
 import neo.generator.MusicProperties;
@@ -69,10 +70,13 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		
-//			playOnInstruments(midiInfo);
+			List<MelodyInstrument> playList = playOnInstruments(midiInfo);
 //			playOnKontakt(melodies, midiInfo.getTempo());
-			View.notate(scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo()));
+			View.notate(scoreUtilities.createScoreFromMelodyInstrument(playList, midiInfo.getTempo()));
 //			write(melodies, "resources/transform/" + midiFile.getName());
+//			Score score = new Score();
+//			Read.midi(score, midiFile.getAbsolutePath());
+//			View.notate(score);
 			Thread.sleep(13000);
 		}
 	}
@@ -83,7 +87,8 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		return list;
 	}
 
-	private void playOnInstruments(MidiInfo midiInfo) {
+	private List<MelodyInstrument> playOnInstruments(MidiInfo midiInfo) {
+		List<MelodyInstrument> playList = new ArrayList<>();
 		List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		
 		//accompagnement
@@ -91,14 +96,15 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		Integer[] compPattern = {6,12,18,24};
 		List<Integer[]> compPatterns = new ArrayList<Integer[]>();
 		compPatterns.add(compPattern);
-		Accompagnement[] compStrategy = {Accompagnement::chordal};
+		Accompagnement[] compStrategy = {Accompagnement::arpeggio};
 		List<Note> accompagnement = arrangement.accompagnement(harmonyPositions, compPatterns, compStrategy);
 		MelodyInstrument accomp = new MelodyInstrument(accompagnement, melodies.size() + 1);
 		accomp.setInstrument(new KontaktLibPiano(0, 0));
-		melodies.add(accomp);
+		arrangement.transpose(accomp.getNotes(), -12);
+		accomp.addNotes(melodies.get(0).getNotes());//add bass notes
+		playList.add(accomp);
 //		arrangement.applyFixedPattern(melodies.get(0).getNotes(), 6);
 		//harmony
-		melodies.get(0).setInstrument(new KontaktLibPiano(0, 0));
 		melodies.get(1).setInstrument(new KontaktLibPiano(0, 0));
 		melodies.get(2).setInstrument(new KontaktLibPiano(0, 0));
 		arrangement.transpose(melodies.get(3).getNotes(), -12);
@@ -106,6 +112,8 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		//melody
 		arrangement.transpose(melodies.get(7).getNotes(), -12);
 		melodies.get(7).setInstrument(new KontaktLibViolin(0, 1));
+		playList.add(melodies.get(7));
+		return playList;
 		
 	}
 	

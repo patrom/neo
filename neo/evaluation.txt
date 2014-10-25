@@ -1,7 +1,8 @@
 How to set evaluation optimized values:
 
-Harmony: set chordtype dissonance value (position + innermetric weight)
+Harmony: set chord type dissonance value (position + inner metric weight)
 
-Voiceleading: voice leading sizes < 3
+Voice leading: voice leading sizes < 3
 
-melody: interval evaluation based on note position
+melody: interval evaluation based on note position + inner metric weight
+		filter levels apply this evaluation to hyper metric levels
