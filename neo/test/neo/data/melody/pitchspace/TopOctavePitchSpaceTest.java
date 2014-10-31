@@ -1,6 +1,6 @@
 package neo.data.melody.pitchspace;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +29,9 @@ public class TopOctavePitchSpaceTest {
 		pitchSpace.setNotes(notes);
 		harmony.setPitchSpace(pitchSpace);
 		harmony.translateToPitchSpace();
-		assertEquals("pitch not correct", notes.get(3).getPitch(), 28);
-		assertEquals("pitch not correct", notes.get(2).getPitch(), 39);
-		assertEquals("pitch not correct", notes.get(1).getPitch(), 50);
-		assertEquals("pitch not correct", notes.get(0).getPitch(), 73);
+		assertEquals(notes.get(3).getPitch(), 28);
+		assertEquals(notes.get(2).getPitch(), 39);
+		assertEquals(notes.get(1).getPitch(), 50);
+		assertEquals(notes.get(0).getPitch(), 73);
 	}
 }

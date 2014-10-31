@@ -15,6 +15,7 @@ import neo.DefaultConfig;
 import neo.model.harmony.Harmony;
 import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
+import neo.model.note.NoteBuilder;
 import neo.model.note.Scale;
 
 import org.junit.Before;
@@ -44,11 +45,14 @@ public class GeneratorTest extends AbstractTest{
 		
 		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 		harmonicMelodies.add(harmonicMelody().voice(2).pos(0)
+				.harmonyNote(NoteBuilder.note().build())
 				.notes(note().voice(2).pos(0).len(6).build(), 
 					   note().voice(2).pos(6).len(12).build()).build());
 		harmonicMelodies.add(harmonicMelody().voice(2).pos(12)
+				.harmonyNote(NoteBuilder.note().build())
 				.notes(note().voice(2).pos(18).len(6).build()).build());
 		harmonicMelodies.add(harmonicMelody().voice(2).pos(24)
+				.harmonyNote(NoteBuilder.note().build())
 				.notes(note().voice(2).pos(24).len(6).build(),
 						note().voice(2).pos(30).len(6).build()).build());
 		generator.setHarmonicMelodies(harmonicMelodies);

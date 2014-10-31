@@ -152,7 +152,7 @@ public class Generator {
 				endNote = pos + length;
 				notes.add(NoteBuilder.note().pos(pos).len(length).build());
 			}
-			harmonicMelodies.add(harmonicMelodyBuilder.notes(notes).build());
+			harmonicMelodies.add(harmonicMelodyBuilder.notes(notes).harmonyNote(NoteBuilder.note().build()).build());
 		}
 		return harmonicMelodies;
 	}
@@ -171,7 +171,12 @@ public class Generator {
                 for (int j = 1; j < harmonies[i].length - 1; j++) {
                     notes.add(note().voice(melodyVoice).pos(harmonies[i][j]).len(harmonies[i][j + 1] - harmonies[i][j]).build());
                 }
-                harmonicMelodies.add(harmonicMelody().voice(melodyVoice).pos(harmonies[i][0]).notes(notes).build());
+                harmonicMelodies.add(harmonicMelody()
+                		.harmonyNote(note().build())
+                		.voice(melodyVoice)
+                		.pos(harmonies[i][0])
+                		.notes(notes)
+                		.build());
             }
         }
 	}

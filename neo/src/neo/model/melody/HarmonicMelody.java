@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 import neo.model.note.Note;
+import neo.model.note.Scale;
+import neo.util.RandomUtil;
 
 public class HarmonicMelody {
 
@@ -35,6 +37,7 @@ public class HarmonicMelody {
 	
 	private void updateNotesForVoice(int voice){
 		this.melodyNotes.forEach(note -> note.setVoice(voice));
+		this.harmonyNote.setVoice(voice);
 	}
 
 	public List<Note> getMelodyNotes() {
@@ -51,6 +54,36 @@ public class HarmonicMelody {
 
 	public Note getHarmonyNote() {
 		return harmonyNote;
+	}
+	
+	public void mutateHarmonyNoteToPreviousPitchFromScale(Scale scale){
+		int oldPitchClass = harmonyNote.getPitchClass();
+		int newPitchClass = scale.pickPreviousPitchFromScale(oldPitchClass);
+		updateMelodyNotes(oldPitchClass, newPitchClass);
+		harmonyNote.setPitchClass(newPitchClass);
+	}
+	
+	public void mutateMelodyNoteToHarmonyNote(int newPitchClass){
+		if (melodyNotes.size() > 1) {
+			List<Note> melodyNotesWithoutHarmonyNote = getMelodyNotesWithoutHarmonyNote();
+			if (!melodyNotesWithoutHarmonyNote.isEmpty()) {
+				randomUpdateNoteInList(newPitchClass, melodyNotesWithoutHarmonyNote);
+			} else {//all are harmony notes
+				randomUpdateNoteInList(newPitchClass, melodyNotes);
+			}
+		}
+	}
+
+	private void randomUpdateNoteInList(int newPitchClass, List<Note> notes) {
+		Note melodyNote = RandomUtil.getRandomFromList(notes);
+		melodyNote.setPitchClass(newPitchClass);
+	}
+
+	private List<Note> getMelodyNotesWithoutHarmonyNote() {
+		List<Note> notes = melodyNotes.stream()
+				.filter(note -> harmonyNote.getPitchClass() != note.getPitchClass())
+				.collect(toList());
+		return notes;
 	}
 	
 	public List<Note> getNonChordNotes(){
@@ -96,6 +129,10 @@ public class HarmonicMelody {
 	private Note randomNote(List<Note> notes) {
 		int indexNote = random.ints(0, notes.size()).findFirst().getAsInt();
 		return notes.get(indexNote);
+	}
+
+	public void setHarmonyNote(Note harmonyNote) {
+		this.harmonyNote = harmonyNote;
 	}
 	
 }

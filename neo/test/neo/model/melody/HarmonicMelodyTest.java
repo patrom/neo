@@ -1,15 +1,20 @@
 package neo.model.melody;
 
+import static neo.model.harmony.HarmonyBuilder.harmony;
 import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
 import static neo.model.note.NoteBuilder.note;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import neo.model.harmony.Harmony;
+import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,5 +70,28 @@ public class HarmonicMelodyTest {
 		harmonicMelody.updateMelodyPitchesToHarmonyPitch();
 		assertEquals(62, harmonicMelody.getMelodyNotes().get(1).getPitch());
 	}
+	
+	@Test
+	public void testMutateMelodyNoteToHarmonyNote() {  
+		HarmonicMelody harmonicMelody = harmonicMelody().voice(0).pos(0)
+				.harmonyNote(note().pc(0).pos(0).build())
+				.notes(note().pc(0).pos(0).len(6).build(),
+					   note().pc(1).pos(6).len(12).build(),
+					   note().pc(2).pos(18).len(6).build()).build();
+		harmonicMelody.mutateMelodyNoteToHarmonyNote(2);
+		assertTrue(harmonicMelody.getMelodyNotes().stream().map(note -> note.getPitchClass()).anyMatch(pc -> pc == 2));
+	}
+	
+	@Test
+	public void testMutateMelodyNoteToHarmonyNoteWithoutNonChordTones() {  
+		HarmonicMelody harmonicMelody = harmonicMelody().voice(0).pos(0)
+				.harmonyNote(note().pc(0).pos(0).build())
+				.notes(note().pc(0).pos(0).len(6).build(),
+					   note().pc(0).pos(6).len(12).build(),
+					   note().pc(0).pos(18).len(6).build()).build();
+		harmonicMelody.mutateMelodyNoteToHarmonyNote(2);
+		assertTrue(harmonicMelody.getMelodyNotes().stream().map(note -> note.getPitchClass()).anyMatch(pc -> pc == 2));
+	}
+	
 
 }

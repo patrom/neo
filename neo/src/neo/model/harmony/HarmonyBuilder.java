@@ -12,7 +12,6 @@ public class HarmonyBuilder {
 	protected List<HarmonicMelody> melodyNotes = new ArrayList<>();
 	private int length;
 	private double positionWeight;
-	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 
 	public static HarmonyBuilder harmony(){
 		return new HarmonyBuilder();
@@ -51,7 +50,7 @@ public class HarmonyBuilder {
 	}
 	
 	public HarmonyBuilder melodyBuilder(HarmonicMelody harmonicMelody){
-		this.harmonicMelodies.add(harmonicMelody);
+		this.melodyNotes.add(harmonicMelody);
 		return this;
 	}
 

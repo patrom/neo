@@ -1,6 +1,6 @@
 package neo.data.melody.pitchspace;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +44,10 @@ public class UniformPitchSpaceTest {
 		pitchSpace.setNotes(notes);
 		harmony.setPitchSpace(pitchSpace);
 		harmony.translateToPitchSpace();
-		assertEquals("pitch not correct", notes.get(3).getPitch(), 40);
-		assertEquals("pitch not correct", notes.get(2).getPitch(), 51);
-		assertEquals("pitch not correct", notes.get(1).getPitch(), 62);
-		assertEquals("pitch not correct", notes.get(0).getPitch(), 73);
+		assertEquals(notes.get(3).getPitch(), 40);
+		assertEquals(notes.get(2).getPitch(), 51);
+		assertEquals(notes.get(1).getPitch(), 62);
+		assertEquals(notes.get(0).getPitch(), 73);
 	}
 	
 	@Test
@@ -61,10 +61,10 @@ public class UniformPitchSpaceTest {
 		pitchSpace.setNotes(notes);
 		harmony.setPitchSpace(pitchSpace);
 		harmony.translateToPitchSpace();
-		assertEquals("pitch not correct", notes.get(3).getPitch(), 52);
-		assertEquals("pitch not correct", notes.get(2).getPitch(), 62);
-		assertEquals("pitch not correct", notes.get(1).getPitch(), 63);
-		assertEquals("pitch not correct", notes.get(0).getPitch(), 73);
+		assertEquals(notes.get(3).getPitch(), 52);
+		assertEquals(notes.get(2).getPitch(), 62);
+		assertEquals(notes.get(1).getPitch(), 63);
+		assertEquals(notes.get(0).getPitch(), 73);
 	}
 	
 	@Test
@@ -78,10 +78,10 @@ public class UniformPitchSpaceTest {
 		pitchSpace.setNotes(notes);
 		harmony.setPitchSpace(pitchSpace);
 		harmony.translateToPitchSpace();
-		assertEquals("pitch not correct", notes.get(3).getPitch(), 51);
-		assertEquals("pitch not correct", notes.get(2).getPitch(), 52);
-		assertEquals("pitch not correct", notes.get(1).getPitch(), 62);
-		assertEquals("pitch not correct", notes.get(0).getPitch(), 73);
+		assertEquals(notes.get(3).getPitch(), 51);
+		assertEquals(notes.get(2).getPitch(), 52);
+		assertEquals(notes.get(1).getPitch(), 62);
+		assertEquals(notes.get(0).getPitch(), 73);
 	}
 	
 	@Test
@@ -95,10 +95,10 @@ public class UniformPitchSpaceTest {
 		pitchSpace.setNotes(notes);
 		harmony.setPitchSpace(pitchSpace);
 		harmony.translateToPitchSpace();
-		assertEquals("pitch not correct", notes.get(3).getPitch(), 61);
-		assertEquals("pitch not correct", notes.get(2).getPitch(), 64);
-		assertEquals("pitch not correct", notes.get(1).getPitch(), 74);
-		assertEquals("pitch not correct", notes.get(0).getPitch(), 75);
+		assertEquals(notes.get(3).getPitch(), 61);
+		assertEquals(notes.get(2).getPitch(), 64);
+		assertEquals(notes.get(1).getPitch(), 74);
+		assertEquals(notes.get(0).getPitch(), 75);
 	}
 	
 	@Test

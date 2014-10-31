@@ -1,8 +1,7 @@
 package neo.model.harmony;
 
-import static junit.framework.Assert.assertEquals;
-import neo.model.harmony.Chord;
-import neo.model.harmony.ChordType;
+
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -14,7 +13,7 @@ public class ChordTest {
 		chord.addPitchClass(11);
 		chord.addPitchClass(4);
 		chord.addPitchClass(5);
-		assertEquals("Chord type wrong", ChordType.CH3, chord.getChordType());
+		assertEquals(ChordType.CH3, chord.getChordType());
 	}
 	
 	@Test

@@ -33,7 +33,7 @@ public class TonalityFunctionsTest {
 		notes.add(NoteBuilder.note().len(12).pc(9).pitch(69).positionWeight(100.0).innerWeight(100.0).build());
 		notes.add(NoteBuilder.note().len(12).pc(11).pitch(71).positionWeight(100.0).innerWeight(100.0).build());
 		notes.add(NoteBuilder.note().len(12).pc(0).pitch(72).positionWeight(100.0).innerWeight(100.0).build());
-		HarmonicMelody harmonicMelody = new HarmonicMelody(null, notes, 0, 0);
+		HarmonicMelody harmonicMelody = new HarmonicMelody(NoteBuilder.note().build(), notes, 0, 0);
 		harmonicMelodies.add(harmonicMelody);
 		Melody melody = new Melody(harmonicMelodies, 0);
 		melodies.add(melody);
@@ -49,7 +49,7 @@ public class TonalityFunctionsTest {
 		for (int i = 0; i < 12; i++) {
 			notes.add(NoteBuilder.note().len(12).pc(i).pitch(60 + i).positionWeight(100.0).innerWeight(100.0).build());
 		}
-		HarmonicMelody harmonicMelody = new HarmonicMelody(null, notes, 0, 0);
+		HarmonicMelody harmonicMelody = new HarmonicMelody(NoteBuilder.note().build(), notes, 0, 0);
 		harmonicMelodies.add(harmonicMelody);
 		Melody melody = new Melody(harmonicMelodies, 0);
 		melodies.add(melody);
@@ -70,7 +70,7 @@ public class TonalityFunctionsTest {
 		notes.add(NoteBuilder.note().len(12).pc(9).pitch(69).positionWeight(100.0).innerWeight(100.0).build());
 		notes.add(NoteBuilder.note().len(12).pc(11).pitch(71).positionWeight(100.0).innerWeight(100.0).build());
 		notes.add(NoteBuilder.note().len(12).pc(0).pitch(60).positionWeight(100.0).innerWeight(100.0).build());
-		HarmonicMelody harmonicMelody = new HarmonicMelody(null, notes, 0, 0);
+		HarmonicMelody harmonicMelody = new HarmonicMelody(NoteBuilder.note().build(), notes, 0, 0);
 		harmonicMelodies.add(harmonicMelody);
 		Melody melody = new Melody(harmonicMelodies, 0);
 		melodies.add(melody);
