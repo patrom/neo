@@ -47,19 +47,6 @@ public class HarmonyTest {
 	}
 	
 	@Test
-	public void testSwitchHarmonyNote(){
-		Harmony harmony = harmony().notes(0,4,7).build();
-		harmony.swapHarmonyNotes();
-		List<Note> notes = harmony.getNotes();
-		assertTrue(notes.contains(note().pc(0).build()));
-		assertTrue(notes.contains(note().pc(4).build()));
-		assertTrue(notes.contains(note().pc(7).build()));
-		for (HarmonicMelody harmonicMelody  : harmony.getHarmonicMelodies()) {
-			assertTrue(harmonicMelody.getMelodyNotes().contains(harmonicMelody.getHarmonyNote()));
-		}
-	}
-	
-	@Test
 	public void testSearchBestChord() {
 		HarmonyBuilder harmonyBuilder = harmony();
 		harmonyBuilder.melodyBuilder(harmonicMelody().voice(0).pos(0)
@@ -79,25 +66,6 @@ public class HarmonyTest {
 		assertTrue(harmony.getNotes().contains(NoteBuilder.note().pc(0).build()));
 		assertTrue(harmony.getNotes().contains(NoteBuilder.note().pc(4).build()));
 		assertTrue(harmony.getNotes().contains(NoteBuilder.note().pc(7).build()));
-	}
-	
-	@Test
-	public void testMutateMelodyNoteToHarmonyNote() {  
-		HarmonyBuilder harmonyBuilder = harmony();
-		harmonyBuilder.melodyBuilder(harmonicMelody().voice(0).pos(0)
-				.harmonyNote(note().pc(0).pos(0).build())
-				.notes(note().pc(0).pos(0).len(6).build(),
-					   note().pc(0).pos(6).len(12).build(),
-					   note().pc(0).pos(18).len(6).build()).build());
-		harmonyBuilder.melodyBuilder(harmonicMelody().voice(1).pos(0)
-				.harmonyNote(note().pc(4).pos(0).build())
-				.notes(note().pc(4).pos(0).len(12).build(),
-					   note().pc(5).pos(12).len(12).build()).build());
-		harmonyBuilder.melodyBuilder(harmonicMelody().voice(2).pos(0)
-				.harmonyNote(note().pc(7).pos(0).build())
-				.notes(note().pc(7).pos(0).len(24).build()).build());
-		Harmony harmony = harmonyBuilder.build();
-		harmony.mutateMelodyNoteToHarmonyNote();
 	}
 	
 }

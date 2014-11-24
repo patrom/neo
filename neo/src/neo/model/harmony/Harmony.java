@@ -48,7 +48,7 @@ public class Harmony implements Comparable<Harmony>{
 		this.range = range;
 		this.pitchSpace = new UniformPitchSpace(range);
 		this.pitchSpace.setNotes(getNotes());
-		toChord();
+//		toChord();
 	}
 	
 	public void searchBestChord(){
@@ -135,53 +135,11 @@ public class Harmony implements Comparable<Harmony>{
 		this.harmonicMelodies.forEach(harmonicMelody -> harmonicMelody.updateMelodyPitchesToHarmonyPitch());
 	}
 
-	public void mutateHarmonyNoteToPreviousPitchFromScale(Scale scale){
-		HarmonicMelody harmonicMelody = getRandomFromList(harmonicMelodies);
-		harmonicMelody.mutateHarmonyNoteToPreviousPitchFromScale(scale);
-		toChord();
-	}
 	
-	public void mutateMelodyNoteToHarmonyNote(){
-		HarmonicMelody harmonicMelody = getRandomFromList(harmonicMelodies.stream()
-				.filter(h -> h.getMelodyNotes().size() > 1)
-				.collect(toList()));
-		if (harmonicMelody != null) {
-			Note harmonyNote = getRandomFromList(getNotes());
-			harmonicMelody.mutateMelodyNoteToHarmonyNote(harmonyNote.getPitchClass());
-			toChord();
-		}
-	}
-	
-	public void mutateMelodyNoteRandom(Scale scale){
-		List<HarmonicMelody> melodies = harmonicMelodies.stream()
-				.filter(harmonicMelody -> harmonicMelody.getMelodyNotes().size() > 1)
-				.collect(toList());
-		if (!melodies.isEmpty()) {
-			HarmonicMelody harmonicMelody = getRandomFromList(melodies);
-			int newPitchClass = scale.pickRandomPitchClass();
-			harmonicMelody.randomUpdateMelodyNotes(newPitchClass);
-		}
-	}
-	
-	public void swapHarmonyNotes(){
-		HarmonicMelody harmonicMelody = getRandomFromList(harmonicMelodies);
-		HarmonicMelody switchHarmonicMelody = getRandomFromList(harmonicMelodies);
-		if (harmonicMelody.getVoice() != switchHarmonicMelody.getVoice()) {
-			Note harmonyNote = harmonicMelody.getHarmonyNote();
-			Note switchHarmonyNote = switchHarmonicMelody.getHarmonyNote();
-			if (!harmonyNote.equals(switchHarmonyNote)) {
-				int harmonyPitchClass = harmonyNote.getPitchClass();
-				int switchHarmonyPitchClass = switchHarmonyNote.getPitchClass();
-				harmonicMelody.updateMelodyNotes(harmonyPitchClass, switchHarmonyPitchClass);
-				harmonyNote.setPitchClass(switchHarmonyPitchClass);
-				switchHarmonicMelody.updateMelodyNotes(switchHarmonyPitchClass, harmonyPitchClass);
-				switchHarmonyNote.setPitchClass(harmonyPitchClass);
-			}
-		}
-	}
-
-	private <T> T getRandomFromList(List<T> list) {
-		return RandomUtil.getRandomFromList(list);
+	public List<HarmonicMelody> getHarmonicMelodiesWithMultipleMelodyNotes() {
+		return harmonicMelodies.stream()
+					.filter(harmonicMelody -> harmonicMelody.getMelodyNotes().size() > 1)
+					.collect(toList());
 	}
 	
 	public void mutatePitchSpace(){
@@ -218,7 +176,7 @@ public class Harmony implements Comparable<Harmony>{
 		harmonicMelodies.stream()
 			.map(harmonicMelodic -> harmonicMelodic.getHarmonyNote())
 			.forEach(note -> note.setPitchClass((note.getPitchClass() + t) % 12));
-		toChord();
+//		toChord();
 	}
 
 	@Override
@@ -261,10 +219,12 @@ public class Harmony implements Comparable<Harmony>{
 	}
 
 	public double getChordWeight() {
+		toChord();
 		return chord.getWeight();
 	}
 
 	public Chord getChord() {
+		toChord();
 		return chord;
 	}
 

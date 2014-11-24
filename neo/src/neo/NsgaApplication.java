@@ -16,6 +16,9 @@ import neo.generator.MusicProperties;
 import neo.generator.RhythmWeight;
 import neo.model.Motive;
 import neo.nsga.MusicSolutionType;
+import neo.nsga.operator.mutation.HarmonicMelodyMutation;
+import neo.nsga.operator.mutation.melody.MelodyNoteToHarmonyNote;
+import neo.nsga.operator.mutation.melody.OneNoteMutation;
 import neo.out.print.Display;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,12 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	@Autowired
 //	@Qualifier(value="oneNoteMutation")
 	private Operator oneNoteMutation;
+	@Autowired
+	private Operator swapHarmonyNotes;
+	@Autowired
+	private Operator harmonyNoteToPreviousPitchFromScale;
+	@Autowired
+	private Operator melodyNoteToHarmonyNote;
 	@Autowired
 	private Operator pitchSpaceMutation;
 	@Autowired
@@ -68,26 +77,42 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 		musicProperties.threeFour();
 		int[][] harmonies = {{0,12,18,24},{36,30,36,42,60},{72, 72,78,84},{108}};
 		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
-		int[][] harmonies2 = {{0,0,18,24},{36,30,36,42,72},{72, 72,78,108},{108}};
+		int[][] harmonies2 = {{0,0, 6,12,18,24,30,36},{36,36,42,72},{72, 72,78,108},{108}};
 		generator.generateHarmonicMelodiesForVoice(harmonies2, 2);
         generator.generateRhythmWeights(harmonies.length - 1 , musicProperties.getMeasureWeights());
 		generator.generateHarmonyBuilders(harmonies);
 	    Motive motive = generator.generateMotive();
 	    solutionType.setMotive(motive);
 	    
+	    //TODO set default allowed voices to mutate depending on harmony size!
+	    int[] allowedMutationIndexes = {0,1,2,3};
+	    
 	    // Algorithm parameters
 	    int populationSize = 10;
 	    algorithm.setInputParameter("populationSize", populationSize);
-	    algorithm.setInputParameter("maxEvaluations", populationSize * 200);
+	    algorithm.setInputParameter("maxEvaluations", populationSize * 1000);
 	    
 	    // Mutation and Crossover
-	    crossover.setParameter("probabilityCrossover", 1.0);       
+	    crossover.setParameter("probabilityCrossover", 1.0); 
+	    //harmony
+	    harmonyNoteToPreviousPitchFromScale.setParameter("probabilityOneNote", 1.0);
+	    swapHarmonyNotes.setParameter("probabilityOneNote", 1.0);
+	    //melody
+	    melodyNoteToHarmonyNote.setParameter("probabilityOneNote", 0.0);
+	    int[] allowedMutationIndexesMelodyNoteToHarmonyNote = {0,2,3};
+	    ((MelodyNoteToHarmonyNote)melodyNoteToHarmonyNote).setAllowedMelodyMutationIndexes(allowedMutationIndexesMelodyNoteToHarmonyNote);
 	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
+	    int[] allowedMutationIndexesOneNoteMutation = {0,1,3};
+	    ((OneNoteMutation)oneNoteMutation).setAllowedMelodyMutationIndexes(allowedMutationIndexesOneNoteMutation);
+	    //pitch
 	    pitchSpaceMutation.setParameter("probabilityPitchSpace", 1.0);
 	
 	    // Add the operators to the algorithm
 	    algorithm.addOperator("crossover", crossover);
 	    algorithm.addOperator("oneNoteMutation", oneNoteMutation);
+	    algorithm.addOperator("swapHarmonyNotes", swapHarmonyNotes);
+	    algorithm.addOperator("harmonyNoteToPreviousPitchFromScale", harmonyNoteToPreviousPitchFromScale);
+	    algorithm.addOperator("melodyNoteToHarmonyNote", melodyNoteToHarmonyNote);
 	    algorithm.addOperator("pitchSpaceMutation", pitchSpaceMutation);
 	    algorithm.addOperator("selection", SelectionFactory.getSelectionOperator("BinaryTournament2", parameters));
 	

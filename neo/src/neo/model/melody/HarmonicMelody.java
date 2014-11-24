@@ -59,6 +59,7 @@ public class HarmonicMelody {
 	public void mutateHarmonyNoteToPreviousPitchFromScale(Scale scale){
 		int oldPitchClass = harmonyNote.getPitchClass();
 		int newPitchClass = scale.pickPreviousPitchFromScale(oldPitchClass);
+//		int newPitchClass = scale.pickRandomPitchClass();
 		updateMelodyNotes(oldPitchClass, newPitchClass);
 		harmonyNote.setPitchClass(newPitchClass);
 	}

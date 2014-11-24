@@ -114,7 +114,9 @@ public class Generator {
 	
 	private HarmonicMelody copyHarmonicMelody(HarmonicMelody harmonicMelody, Note note) {
 		List<Note> newNotes = copyNotes(harmonicMelody.getMelodyNotes());
-		newNotes.forEach(n -> n.setPitchClass(note.getPitchClass()));
+		//Set only first pitch class to harmony note, others random (repeated note problem)
+		newNotes.forEach(n -> n.setPitchClass(musicProperties.getScale().pickRandomPitchClass()));
+		newNotes.get(0).setPitchClass(note.getPitchClass());
 		return new HarmonicMelody(note.copy(), newNotes, harmonicMelody.getVoice(), harmonicMelody.getPosition());
 	}
 	

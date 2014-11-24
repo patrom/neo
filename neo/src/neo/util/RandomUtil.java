@@ -15,4 +15,7 @@ public class RandomUtil {
 		return random.ints(origin, boundExclusive).findFirst().getAsInt();
 	}
 	
+	public static int random(int size){
+		return random.nextInt(size);
+	}
 }

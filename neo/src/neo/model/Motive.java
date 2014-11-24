@@ -12,7 +12,6 @@ import neo.model.melody.HarmonicMelody;
 import neo.model.melody.Melody;
 import neo.model.note.Note;
 import neo.objective.meter.InnerMetricWeight;
-import neo.util.RandomUtil;
 
 public class Motive {
 
@@ -38,35 +37,6 @@ public class Motive {
 				.collect(toList());
 	}
 	
-	public void mutateHarmony(){
-		Harmony harmony = randomHarmony();
-		harmony.mutateHarmonyNoteToPreviousPitchFromScale(musicProperties.getScale());
-		harmony.mutateMelodyNoteRandom(musicProperties.getMelodyScale());
-		harmony.swapHarmonyNotes();
-		harmony.mutateMelodyNoteToHarmonyNote();
-	}
-	
-	public void mutateHarmonyPitchSpace(){
-		Harmony harmony = randomHarmony();
-		harmony.mutatePitchSpace();
-	}
-	
-	public void mutateNoteToRandom(){
-		Harmony harmony = randomHarmony();
-		harmony.mutateMelodyNoteRandom(musicProperties.getMelodyScale());
-	}
-	
-	private Harmony randomHarmony() {
-		int harmonyIndex = 0;
-		if (musicProperties.isOuterBoundaryIncluded()) {
-			harmonyIndex = RandomUtil.randomInt(0, harmonies.size());
-		} else {
-			harmonyIndex = RandomUtil.randomInt(1, harmonies.size() - 1);
-		}
-		Harmony harmony = harmonies.get(harmonyIndex);
-		return harmony;
-	}
-
 	public void setMusicProperties(MusicProperties musicProperties) {
 		this.musicProperties = musicProperties;
 	}

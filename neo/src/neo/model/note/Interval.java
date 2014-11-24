@@ -25,7 +25,7 @@ public class Interval  {
 //	    put(12, new Interval(12, 0.0, 0.0, 0.0 , 0)); 
 	    
 	    //cope
-	    put(0, new Interval(0, 1.0, 0.2, 0.0, 0)); //melodisch gelijk aan grote secunde
+	    put(0, new Interval(0, 0.5, 0.2, 0.0, 0)); //melodisch gelijk aan grote secunde
 	    put(1, new Interval(1, 0.9, 0.05, 0.2, 2)); //harmonic value for geometric mean!!!!
 	    put(2, new Interval(2, 1.0, 0.2, 0.4 , 4));
 	    put(3, new Interval(3, 0.8, 0.775, 0.6, 6)); 
