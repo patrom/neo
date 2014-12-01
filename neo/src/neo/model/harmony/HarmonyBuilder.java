@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import neo.model.melody.HarmonicMelody;
+import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
+import neo.out.instrument.Instrument;
 
 public class HarmonyBuilder {
 	
@@ -12,6 +14,8 @@ public class HarmonyBuilder {
 	protected List<HarmonicMelody> melodyNotes = new ArrayList<>();
 	private int length;
 	private double positionWeight;
+	
+	private List<Instrument> instruments = new ArrayList<>();
 
 	public static HarmonyBuilder harmony(){
 		return new HarmonyBuilder();
@@ -55,9 +59,10 @@ public class HarmonyBuilder {
 	}
 
 	public Harmony build(){
-		Integer[] range = {5, 6};
-		Harmony harmony = new Harmony(position, length, melodyNotes, range);
+		Harmony harmony = new Harmony(position, length, melodyNotes);
 		harmony.setPositionWeight(positionWeight);
+		Integer[] range = {5, 6};
+		harmony.setPitchSpace(new UniformPitchSpace(range));
 		return harmony;
 	}
 	

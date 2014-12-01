@@ -13,10 +13,10 @@ import jmetal.core.SolutionSet;
 import jmetal.operators.selection.SelectionFactory;
 import neo.generator.Generator;
 import neo.generator.MusicProperties;
-import neo.generator.RhythmWeight;
 import neo.model.Motive;
 import neo.nsga.MusicSolutionType;
-import neo.nsga.operator.mutation.HarmonicMelodyMutation;
+import neo.nsga.operator.mutation.harmony.HarmonyNoteToPreviousPitchFromScale;
+import neo.nsga.operator.mutation.harmony.SwapHarmonyNotes;
 import neo.nsga.operator.mutation.melody.MelodyNoteToHarmonyNote;
 import neo.nsga.operator.mutation.melody.OneNoteMutation;
 import neo.out.print.Display;
@@ -39,14 +39,13 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //	@Qualifier(value="crossover")
 	private Operator crossover;
 	@Autowired
-//	@Qualifier(value="oneNoteMutation")
-	private Operator oneNoteMutation;
+	private OneNoteMutation oneNoteMutation;
 	@Autowired
-	private Operator swapHarmonyNotes;
+	private SwapHarmonyNotes swapHarmonyNotes;
 	@Autowired
-	private Operator harmonyNoteToPreviousPitchFromScale;
+	private HarmonyNoteToPreviousPitchFromScale harmonyNoteToPreviousPitchFromScale;
 	@Autowired
-	private Operator melodyNoteToHarmonyNote;
+	private MelodyNoteToHarmonyNote melodyNoteToHarmonyNote;
 	@Autowired
 	private Operator pitchSpaceMutation;
 	@Autowired
@@ -84,9 +83,6 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    Motive motive = generator.generateMotive();
 	    solutionType.setMotive(motive);
 	    
-	    //TODO set default allowed voices to mutate depending on harmony size!
-	    int[] allowedMutationIndexes = {0,1,2,3};
-	    
 	    // Algorithm parameters
 	    int populationSize = 10;
 	    algorithm.setInputParameter("populationSize", populationSize);
@@ -94,16 +90,25 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    // Mutation and Crossover
 	    crossover.setParameter("probabilityCrossover", 1.0); 
+	    
 	    //harmony
+	    int[] allowedDefaultIndexes = allowedDefaultIndexes();
 	    harmonyNoteToPreviousPitchFromScale.setParameter("probabilityOneNote", 1.0);
+	    harmonyNoteToPreviousPitchFromScale.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
+//	    harmonyNoteToPreviousPitchFromScale.setOuterBoundaryIncluded(false);//default == true;
+	    
 	    swapHarmonyNotes.setParameter("probabilityOneNote", 1.0);
+	    swapHarmonyNotes.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
+	    
 	    //melody
-	    melodyNoteToHarmonyNote.setParameter("probabilityOneNote", 0.0);
+	    melodyNoteToHarmonyNote.setParameter("probabilityOneNote", 1.0);
 	    int[] allowedMutationIndexesMelodyNoteToHarmonyNote = {0,2,3};
-	    ((MelodyNoteToHarmonyNote)melodyNoteToHarmonyNote).setAllowedMelodyMutationIndexes(allowedMutationIndexesMelodyNoteToHarmonyNote);
+	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedMutationIndexesMelodyNoteToHarmonyNote);
+	    
 	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
 	    int[] allowedMutationIndexesOneNoteMutation = {0,1,3};
-	    ((OneNoteMutation)oneNoteMutation).setAllowedMelodyMutationIndexes(allowedMutationIndexesOneNoteMutation);
+	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedMutationIndexesOneNoteMutation);
+	    
 	    //pitch
 	    pitchSpaceMutation.setParameter("probabilityPitchSpace", 1.0);
 	
@@ -123,9 +128,16 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    population.printObjectivesToFile("SOL");
 	    display.view(population, musicProperties.getTempo());
 	}
+
+	private int[] allowedDefaultIndexes() {
+		int[] allowedDefaultIndexes = new int[musicProperties.getChordSize()];
+	    for (int i = 0; i < musicProperties.getChordSize(); i++) {
+			allowedDefaultIndexes[i] = i;
+		}
+		return allowedDefaultIndexes;
+	}
 	
 	private void prepareHarmonies() {
-
 //        rhythmWeightValues = RhythmWeight.generateRhythmWeight(harmonies.length - 1, musicProperties.getMeasureWeights());
     }
 	

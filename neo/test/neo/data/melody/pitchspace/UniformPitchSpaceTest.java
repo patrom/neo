@@ -10,6 +10,7 @@ import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.pitchspace.PitchSpace;
 import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
+import neo.out.instrument.Instrument;
 
 import org.junit.Test;
 

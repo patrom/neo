@@ -13,6 +13,7 @@ import neo.model.Motive;
 import neo.model.harmony.Harmony;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.Melody;
+import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
 
@@ -34,7 +35,8 @@ public class MotiveTest extends AbstractTest{
 					.build();
 		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 		harmonicMelodies.add(harmonicMelody);
-		Harmony harmony = new Harmony(0, 12, harmonicMelodies , musicProperties.getOctaveHighestPitchClass());
+		Harmony harmony = new Harmony(0, 12, harmonicMelodies);
+		harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange()));
 		harmonies.add(harmony);
 		motive = new Motive(harmonies);
 		musicProperties.setChordSize(3);

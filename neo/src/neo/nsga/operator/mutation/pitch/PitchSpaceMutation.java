@@ -3,14 +3,21 @@ package neo.nsga.operator.mutation.pitch;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 import jmetal.core.Solution;
 import jmetal.operators.mutation.Mutation;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import jmetal.util.PseudoRandom;
+import neo.generator.MusicProperties;
 import neo.model.Motive;
 import neo.model.harmony.Harmony;
+import neo.model.melody.pitchspace.BassOctavePitchSpace;
+import neo.model.melody.pitchspace.MiddleOctavePitchSpace;
+import neo.model.melody.pitchspace.PitchSpace;
+import neo.model.melody.pitchspace.TopOctavePitchSpace;
+import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.nsga.MusicVariable;
 import neo.nsga.operator.mutation.melody.OneNoteMutation;
 import neo.util.RandomUtil;
@@ -20,6 +27,9 @@ import org.springframework.stereotype.Component;
 
 @Component(value="pitchSpaceMutation")
 public class PitchSpaceMutation extends Mutation {
+	
+	@Autowired
+	private MusicProperties musicProperties;
 	
 	@Autowired
 	public PitchSpaceMutation(HashMap<String, Object> parameters) {
@@ -38,10 +48,54 @@ public class PitchSpaceMutation extends Mutation {
 		if (PseudoRandom.randDouble() < probability) {
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 			List<Harmony> harmonies = motive.getHarmonies();
-			Harmony harmony = harmonies.get(RandomUtil.random(harmonies.size()));
-			harmony.mutatePitchSpace();
+//			Harmony harmony = harmonies.get(RandomUtil.random(harmonies.size()));
+//			mutatePitchSpace(harmony);
+			IntStream ints = RandomUtil.range(harmonies.size());
+			PitchSpace pitchSpace = randomPitchSpace();
+			ints.forEach(i -> {
+				Harmony harmony = harmonies.get(i);
+				harmony.setPitchSpace(pitchSpace);
+			});
 			LOGGER.fine("pitch space mutated");
 		} 
+	}
+	
+	public void mutatePitchSpace(Harmony harmony){
+		PitchSpace pitchSpace = null;
+		switch (RandomUtil.randomInt(0, musicProperties.getChordSize())) {
+		case 0:
+			pitchSpace = new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			break;
+		case 1:
+			pitchSpace = new BassOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			break;
+		case 2:
+			pitchSpace = new TopOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			break;
+		case 3:
+			pitchSpace = new  MiddleOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			break;
+		}
+		harmony.setPitchSpace(pitchSpace);
+	}
+	
+	public PitchSpace randomPitchSpace(){
+		PitchSpace pitchSpace = null;
+		switch (RandomUtil.randomInt(0, 4)) {
+		case 0:
+			pitchSpace = new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			break;
+		case 1:
+			pitchSpace = new BassOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			break;
+		case 2:
+			pitchSpace = new TopOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			break;
+		case 3:
+			pitchSpace = new  MiddleOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			break;
+		}
+		return pitchSpace;
 	}
 
 	/**

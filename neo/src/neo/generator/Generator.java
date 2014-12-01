@@ -16,6 +16,7 @@ import neo.model.harmony.Harmony;
 import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.HarmonicMelodyBuilder;
+import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
 import neo.model.note.Scale;
@@ -63,11 +64,12 @@ public class Generator {
 		List<Harmony> harmonies = new ArrayList<>();
 		for (HarmonyBuilder harmonyBuilder : harmonyBuilders) {
 			List<Integer> chordPitchClasses = generatePitchClasses();
-			List<Note> notes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
-			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(notes);
-			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies, musicProperties.getOctaveHighestPitchClassRange());
+			List<Note> harmonyNotes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
+			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(harmonyNotes);
+			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
 			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
 			harmony.setPositionWeight(totalWeight);
+			harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange()));
 			harmonies.add(harmony);		
 		}
 		return harmonies;
@@ -159,13 +161,6 @@ public class Generator {
 		return harmonicMelodies;
 	}
 	
-//	private void prepareHarmonies() {
-//		int[][] harmonies = musicProperties.getHarmonies();
-//		generateHarmonicMelodiesForVoice(harmonies, 3);
-//        harmonyBuilders = generateHarmonyBuilders(harmonies);
-//        rhythmWeightValues = RhythmWeight.generateRhythmWeight(harmonies.length - 1, musicProperties.getMeasureWeights());
-//    }
-
 	public void generateHarmonicMelodiesForVoice(int[][] harmonies, int melodyVoice) {
         for (int i = 0; i < harmonies.length; i++) {
             if (harmonies[i].length > 1) {

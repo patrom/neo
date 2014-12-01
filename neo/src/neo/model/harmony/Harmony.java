@@ -2,33 +2,19 @@ package neo.model.harmony;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
-import neo.midi.HarmonyCollector;
 import neo.model.melody.HarmonicMelody;
-import neo.model.melody.pitchspace.BassOctavePitchSpace;
-import neo.model.melody.pitchspace.MiddleOctavePitchSpace;
 import neo.model.melody.pitchspace.PitchSpace;
-import neo.model.melody.pitchspace.TopOctavePitchSpace;
-import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
-import neo.model.note.Scale;
-import neo.util.RandomUtil;
+import neo.out.instrument.Instrument;
 
 public class Harmony implements Comparable<Harmony>{
 	
@@ -41,14 +27,10 @@ public class Harmony implements Comparable<Harmony>{
 	private PitchSpace pitchSpace;
 	private Integer[] range;
 	
-	public Harmony(int position, int length, List<HarmonicMelody> harmonicMelodies, Integer[] range) {
+	public Harmony(int position, int length, List<HarmonicMelody> harmonicMelodies) {
 		this.position = position;
 		this.length = length;
 		this.harmonicMelodies = harmonicMelodies;
-		this.range = range;
-		this.pitchSpace = new UniformPitchSpace(range);
-		this.pitchSpace.setNotes(getNotes());
-//		toChord();
 	}
 	
 	public void searchBestChord(){
@@ -124,7 +106,7 @@ public class Harmony implements Comparable<Harmony>{
 	}
 	
 	private void toChord(){
-		this.chord = new Chord();
+		chord = new Chord();
 		harmonicMelodies.stream()
 			.map(harmonicMelodic -> harmonicMelodic.getHarmonyNote())
 			.forEach(note -> chord.addPitchClass(note.getPitchClass()));
@@ -132,7 +114,30 @@ public class Harmony implements Comparable<Harmony>{
 
 	public void translateToPitchSpace() {
 		pitchSpace.translateToPitchSpace();
-		this.harmonicMelodies.forEach(harmonicMelody -> harmonicMelody.updateMelodyPitchesToHarmonyPitch());
+		harmonicMelodies.forEach(harmonicMelody -> harmonicMelody.updateMelodyPitchesToHarmonyPitch());
+	}
+	
+	public void updateNotesWithInstrumentConstraints(List<Instrument> instruments){
+		for (Instrument instrument : instruments) {
+			harmonicMelodies.stream()
+				.filter(h -> h.getVoice() == instrument.getVoice())
+				.forEach(h -> {
+					Note harmonyNote = h.getHarmonyNote();
+					updatePitch(instrument, harmonyNote);
+					h.getMelodyNotes().forEach(melodyNote -> {updatePitch(instrument, melodyNote);});
+				});
+		}
+	}
+
+	private void updatePitch(Instrument instrument, Note note) {
+		int pitch = note.getPitch();
+		int octave = note.getOctave();
+		while(pitch < instrument.getLowest()){
+			pitch = pitch + 12;
+			octave = octave + 1;
+		}
+		note.setPitch(pitch);
+		note.setOctave(octave);
 	}
 
 	
@@ -142,25 +147,6 @@ public class Harmony implements Comparable<Harmony>{
 					.collect(toList());
 	}
 	
-	public void mutatePitchSpace(){
-		int i = RandomUtil.randomInt(0, 4);
-		switch (i) {
-		case 0:
-			this.pitchSpace = new UniformPitchSpace(range);
-			break;
-		case 1:
-			this.pitchSpace = new BassOctavePitchSpace(range);
-			break;
-		case 2:
-			this.pitchSpace = new TopOctavePitchSpace(range);
-			break;
-		case 3:
-			this.pitchSpace =new  MiddleOctavePitchSpace(range);
-			break;
-		}
-		this.pitchSpace.setNotes(getNotes());
-	}
-
 	public double getPositionWeight() {
 		return positionWeight;
 	}
@@ -208,6 +194,7 @@ public class Harmony implements Comparable<Harmony>{
 	
 	public void setPitchSpace(PitchSpace pitchSpace) {
 		this.pitchSpace = pitchSpace;
+		pitchSpace.setNotes(getNotes());
 	}
 	
 	public int getPosition() {

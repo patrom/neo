@@ -1,9 +1,11 @@
 package neo.generator;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import neo.model.note.Scale;
+import neo.out.instrument.Ensemble;
 import neo.out.instrument.Instrument;
 
 import org.springframework.stereotype.Component;
@@ -15,10 +17,11 @@ public class MusicProperties {
 	private float tempo = 90;
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength = 6;
-	private int chordSize = 4;
+	private int chordSize;
 	private Integer[] octaveHighestPitchClassRange = {5,6};
 	private boolean outerBoundaryIncluded = true;
 	private double[] filterLevels = {0.5};
+	private List<Instrument> instruments;
 	
 	//tonality
 	private Scale scale = new Scale(Scale.MAJOR_SCALE);
@@ -56,6 +59,8 @@ public class MusicProperties {
 		this.measureWeights = measureWeights;
 		this.numerator = 3;
 		this.denominator = 4;
+		this.instruments = Ensemble.getStringQuartet();
+		this.chordSize = instruments.size();
 	}
 	
 	public void fourFour(){
@@ -65,6 +70,8 @@ public class MusicProperties {
 		this.measureWeights = measureWeights;
 	    this.numerator = 4;
 	    this.denominator = 4;
+	    this.instruments = Ensemble.getStringQuartet();
+		this.chordSize = instruments.size();
 	}
 	
 	public String getVoiceLeadingStrategy() {
@@ -234,6 +241,14 @@ public class MusicProperties {
 
 	public void setHarmonies(int[][] harmonies) {
 		this.harmonies = harmonies;
+	}
+
+	public List<Instrument> getInstruments() {
+		return instruments;
+	}
+
+	public void setInstruments(List<Instrument> instruments) {
+		this.instruments = instruments;
 	}
 	
 }

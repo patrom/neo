@@ -11,7 +11,9 @@ import java.util.List;
 import neo.model.Motive;
 import neo.model.harmony.Harmony;
 import neo.model.melody.HarmonicMelody;
+import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
+import neo.out.instrument.Instrument;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +22,8 @@ public class MusicVariableTest {
 
 	private List<Harmony> harmonies = new ArrayList<>();
 	private Motive motive;
+	private Integer[] range = {5};
+	private List<Instrument> instruments;
 	
 	@Before
 	public void setup() {
@@ -30,6 +34,7 @@ public class MusicVariableTest {
 		Harmony harmony = harmony().pos(0).len(24).positionWeight(3.0).build();
 		HarmonicMelody harmonicMelody = harmonicMelody().notes(melodyNotes).harmonyNote(note().pc(0).build()).voice(voice).build();
 		harmony.addHarmonicMelody(harmonicMelody);
+		harmony.setPitchSpace(new UniformPitchSpace(range));
 		harmonies.add(harmony);
 		motive = new Motive(harmonies);
 	}

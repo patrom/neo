@@ -2,6 +2,7 @@ package neo.util;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class RandomUtil {
 	
@@ -18,4 +19,11 @@ public class RandomUtil {
 	public static int random(int size){
 		return random.nextInt(size);
 	}
+	
+	public static IntStream range(int size){
+		int start = randomInt(0, size);
+		int end = randomInt(start + 1, size + 1);
+		return IntStream.range(start, end);
+	}
+	
 }

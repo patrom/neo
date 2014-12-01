@@ -17,8 +17,7 @@ public abstract class AbstractMutation extends Mutation{
 
 	protected HarmonicMelodyMutation harmonicMelodyMutation = new HarmonicMelodyMutation();
 	
-	@Autowired
-	protected HarmonyMutation harmonyMutation;
+	protected HarmonyMutation harmonyMutation = new HarmonyMutation();
 	
 	@Override
 	public abstract Object execute(Object arg0) throws JMException;
@@ -29,5 +28,9 @@ public abstract class AbstractMutation extends Mutation{
 	
 	public void setAllowedHarmonies(List<Harmony> harmonies) {
 		harmonyMutation.randomHarmony(harmonies);
+	}
+	
+	public void setOuterBoundaryIncluded(boolean isOuterBoundaryIncluded) {
+		this.harmonyMutation.setOuterBoundaryIncluded(isOuterBoundaryIncluded);
 	}
 }

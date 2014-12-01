@@ -8,7 +8,7 @@ import neo.util.RandomUtil;
 
 public class HarmonicMelodyMutation {
 
-	private int[] allowedMutationIndexes = {0,1, 2,3};
+	private int[] allowedMutationIndexes;
 	
 	public int getMutationIndex() {
 		int index = RandomUtil.random(allowedMutationIndexes.length);

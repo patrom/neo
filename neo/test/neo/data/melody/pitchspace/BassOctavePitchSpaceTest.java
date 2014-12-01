@@ -12,6 +12,7 @@ import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.pitchspace.BassOctavePitchSpace;
 import neo.model.melody.pitchspace.PitchSpace;
 import neo.model.note.Note;
+import neo.out.instrument.Instrument;
 
 import org.junit.Assert;
 import org.junit.Test;

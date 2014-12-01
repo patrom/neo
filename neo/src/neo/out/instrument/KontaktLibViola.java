@@ -1,8 +1,8 @@
 package neo.out.instrument;
 
-public class KontaktLibAltViolin extends Instrument {
+public class KontaktLibViola extends Instrument {
 
-	public KontaktLibAltViolin(int voice, int channel) {
+	public KontaktLibViola(int voice, int channel) {
 		super(voice, channel);
 		setLowest(48);
 		setHighest(72);

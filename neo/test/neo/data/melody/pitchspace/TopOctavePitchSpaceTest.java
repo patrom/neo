@@ -10,12 +10,14 @@ import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.pitchspace.PitchSpace;
 import neo.model.melody.pitchspace.TopOctavePitchSpace;
 import neo.model.note.Note;
+import neo.out.instrument.Instrument;
 
 import org.junit.Test;
 
 public class TopOctavePitchSpaceTest {
 
 	private List<Note> notes = new ArrayList<>();
+	private List<Instrument> instruments = new ArrayList<>();
 
 	@Test
 	public void testTranslateToPitchSpace() {
