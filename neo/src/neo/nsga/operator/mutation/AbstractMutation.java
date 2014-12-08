@@ -7,8 +7,6 @@ import jmetal.operators.mutation.Mutation;
 import jmetal.util.JMException;
 import neo.model.harmony.Harmony;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public abstract class AbstractMutation extends Mutation{
 
 	public AbstractMutation(HashMap<String, Object> parameters) {

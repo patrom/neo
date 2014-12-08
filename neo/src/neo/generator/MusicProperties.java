@@ -16,7 +16,7 @@ public class MusicProperties {
 	private int harmonyBeatDivider = 12;
 	private float tempo = 90;
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
-	private int minimumLength = 6;
+	private int minimumLength;
 	private int chordSize;
 	private Integer[] octaveHighestPitchClassRange = {5,6};
 	private boolean outerBoundaryIncluded = true;
@@ -53,10 +53,8 @@ public class MusicProperties {
 	private double[] measureWeights;
 	
 	public void threeFour(){
-//		int[][] harmonies = {{0,12,18,24},{36,30,36,42,60},{72, 72,78,84},{108}};//first = harmony position / other melodies (last = length)
-//		this.harmonies = harmonies;
-		double[] measureWeights = {1.0, 0.5, 0.75, 0.5, 0.75, 0.5};// measure must correspond to minimumlength!
-		this.measureWeights = measureWeights;
+		this.minimumLength = 6;
+		this.measureWeights = new double[]{1.0, 0.5, 0.75, 0.5, 0.75, 0.5};// measure must correspond to minimumlength!
 		this.numerator = 3;
 		this.denominator = 4;
 		this.instruments = Ensemble.getStringQuartet();
@@ -64,13 +62,29 @@ public class MusicProperties {
 	}
 	
 	public void fourFour(){
-//		int[][] harmonies = {{0,6,18,24},{48},{96},{144},{192}};
-//		this.harmonies = harmonies;
-		double[] measureWeights = {1.0, 0.5, 0.75, 0.5, 1.0, 0.5, 0.75, 0.5};
-		this.measureWeights = measureWeights;
+		this.minimumLength = 6;
+		this.measureWeights = new double[]{1.0, 0.5, 0.75, 0.5, 1.0, 0.5, 0.75, 0.5};
 	    this.numerator = 4;
 	    this.denominator = 4;
 	    this.instruments = Ensemble.getStringQuartet();
+		this.chordSize = instruments.size();
+	}
+	
+	public void twoFour(){
+		this.minimumLength = 6;
+		this.measureWeights = new double[]{1.0, 0.5, 0.75, 0.5, 1.0, 0.5, 0.75, 0.5};
+		this.numerator = 2;
+		this.denominator = 4;
+		this.instruments = Ensemble.getStringQuartet();
+		this.chordSize = instruments.size();
+	}
+	
+	public void sixEight(){
+		this.minimumLength = 6;
+		this.measureWeights = new double[]{1.0, 0.5, 0.75, 0.5, 0.75, 0.5};
+		this.numerator = 6;
+		this.denominator = 8;
+		this.instruments = Ensemble.getStringQuartet();
 		this.chordSize = instruments.size();
 	}
 	

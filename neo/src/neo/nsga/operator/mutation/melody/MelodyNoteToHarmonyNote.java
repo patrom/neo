@@ -52,7 +52,6 @@ public class MelodyNoteToHarmonyNote extends AbstractMutation{
 		}
 	}
 
-
 	/**
 	 * Executes the operation
 	 * @param object An object containing a solution to mutate

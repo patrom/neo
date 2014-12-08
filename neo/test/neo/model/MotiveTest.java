@@ -16,6 +16,7 @@ import neo.model.melody.Melody;
 import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
+import neo.out.instrument.Ensemble;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,9 +39,9 @@ public class MotiveTest extends AbstractTest{
 		Harmony harmony = new Harmony(0, 12, harmonicMelodies);
 		harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange()));
 		harmonies.add(harmony);
-		motive = new Motive(harmonies);
 		musicProperties.setChordSize(3);
-		motive.setMusicProperties(musicProperties);
+		musicProperties.setInstruments(Ensemble.getStringQuartet());
+		motive = new Motive(harmonies, musicProperties);
 	}
 	
 	@Test

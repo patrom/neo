@@ -18,8 +18,9 @@ public class Motive {
 	private List<Harmony> harmonies;
 	private MusicProperties musicProperties;
 		
-	public Motive(List<Harmony> harmonies) {
+	public Motive(List<Harmony> harmonies, MusicProperties musicProperties) {
 		this.harmonies = harmonies;
+		this.musicProperties = musicProperties;
 	}
 
 	public List<Harmony> getHarmonies() {
@@ -37,9 +38,9 @@ public class Motive {
 				.collect(toList());
 	}
 	
-	public void setMusicProperties(MusicProperties musicProperties) {
-		this.musicProperties = musicProperties;
-	}
+//	public void setMusicProperties(MusicProperties musicProperties) {
+//		this.musicProperties = musicProperties;
+//	}
 
 	public MusicProperties getMusicProperties() {
 		return musicProperties;

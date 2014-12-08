@@ -39,8 +39,7 @@ public class MusicVariable extends Variable {
 			harmonies.add(copyHarmony(harmony));
 		}
 		harmonies.stream().sorted();
-		Motive newMotive = new Motive(harmonies);
-		newMotive.setMusicProperties(motive.getMusicProperties());
+		Motive newMotive = new Motive(harmonies, motive.getMusicProperties());
 		return newMotive;
 	}
 	

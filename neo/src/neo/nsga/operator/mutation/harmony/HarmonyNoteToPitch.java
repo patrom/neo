@@ -11,20 +11,21 @@ import neo.generator.MusicProperties;
 import neo.model.Motive;
 import neo.model.harmony.Harmony;
 import neo.model.melody.HarmonicMelody;
+import neo.model.note.Scale;
 import neo.nsga.MusicVariable;
 import neo.nsga.operator.mutation.AbstractMutation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component(value="harmonyNoteToPreviousPitchFromScale")
-public class HarmonyNoteToPreviousPitchFromScale extends AbstractMutation{
+@Component(value="harmonyNoteToPitch")
+public class HarmonyNoteToPitch extends AbstractMutation{
 
 	@Autowired
 	private MusicProperties musicProperties;
 
 	@Autowired
-	public HarmonyNoteToPreviousPitchFromScale(HashMap<String, Object> parameters) {
+	public HarmonyNoteToPitch(HashMap<String, Object> parameters) {
 		super(parameters);
 	}
 	
@@ -37,17 +38,34 @@ public class HarmonyNoteToPreviousPitchFromScale extends AbstractMutation{
 	public void doMutation(double probability, Solution solution) throws JMException {
 		if (PseudoRandom.randDouble() < probability) {
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
-			mutateHarmonyNoteToPreviousPitchFromScale(motive.getHarmonies());
+			mutateHarmonyNoteToRandomPitch(motive.getHarmonies());
+			mutateHarmonyNoteToPreviousPitch(motive.getHarmonies());
+			mutateHarmonyNoteToNextPitch(motive.getHarmonies());
 		} 
 	}
 
-	private void mutateHarmonyNoteToPreviousPitchFromScale(
-			List<Harmony> harmonies) {
+	private void mutateHarmonyNoteToRandomPitch(List<Harmony> harmonies) {
+		Harmony harmony = harmonyMutation.randomHarmony(harmonies);
+		HarmonicMelody harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
+		Scale scale = musicProperties.getScale();
+		if (harmonicMelody != null) {
+			harmonicMelody.mutateHarmonyNoteToRandomPitch(musicProperties.getScale());
+		}
+	}
+	
+	private void mutateHarmonyNoteToPreviousPitch(List<Harmony> harmonies) {
 		Harmony harmony = harmonyMutation.randomHarmony(harmonies);
 		HarmonicMelody harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
 		if (harmonicMelody != null) {
-			harmonicMelody.mutateHarmonyNoteToPreviousPitchFromScale(musicProperties.getScale());
-//			harmony.toChord();
+			harmonicMelody.mutateHarmonyPreviousNoteToPitch(musicProperties.getScale());
+		}
+	}
+	
+	private void mutateHarmonyNoteToNextPitch(List<Harmony> harmonies) {
+		Harmony harmony = harmonyMutation.randomHarmony(harmonies);
+		HarmonicMelody harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
+		if (harmonicMelody != null) {
+			harmonicMelody.mutateHarmonyPreviousNoteToPitch(musicProperties.getScale());
 		}
 	}
 

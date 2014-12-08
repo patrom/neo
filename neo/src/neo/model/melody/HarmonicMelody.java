@@ -56,10 +56,23 @@ public class HarmonicMelody {
 		return harmonyNote;
 	}
 	
-	public void mutateHarmonyNoteToPreviousPitchFromScale(Scale scale){
+	public void mutateHarmonyNoteToRandomPitch(Scale scale){
 		int oldPitchClass = harmonyNote.getPitchClass();
-//		int newPitchClass = scale.pickPreviousPitchFromScale(oldPitchClass);
 		int newPitchClass = scale.pickRandomPitchClass();
+		updateMelodyNotes(oldPitchClass, newPitchClass);
+		harmonyNote.setPitchClass(newPitchClass);
+	}
+	
+	public void mutateHarmonyPreviousNoteToPitch(Scale scale){
+		int oldPitchClass = harmonyNote.getPitchClass();
+		int newPitchClass = scale.pickPreviousPitchFromScale(oldPitchClass);
+		updateMelodyNotes(oldPitchClass, newPitchClass);
+		harmonyNote.setPitchClass(newPitchClass);
+	}
+	
+	public void mutateHarmonyNextNoteToPitch(Scale scale){
+		int oldPitchClass = harmonyNote.getPitchClass();
+		int newPitchClass = scale.pickNextPitchFromScale(oldPitchClass);
 		updateMelodyNotes(oldPitchClass, newPitchClass);
 		harmonyNote.setPitchClass(newPitchClass);
 	}

@@ -25,6 +25,7 @@ import neo.midi.MidiParser;
 import neo.model.note.Note;
 import neo.out.arrangement.Accompagnement;
 import neo.out.arrangement.Arrangement;
+import neo.out.instrument.Ensemble;
 import neo.out.instrument.Instrument;
 import neo.out.instrument.KontaktLibPiano;
 import neo.out.instrument.KontaktLibViolin;
@@ -70,8 +71,8 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		
-			List<MelodyInstrument> playList = playOnInstruments(midiInfo);
-//			playOnKontakt(melodies, midiInfo.getTempo());
+			List<MelodyInstrument> playList = playOnInstruments(midiInfo, Ensemble.getStringQuartet());
+			playOnKontakt(melodies, midiInfo.getTempo());
 			View.notate(scoreUtilities.createScoreFromMelodyInstrument(playList, midiInfo.getTempo()));
 //			write(melodies, "resources/transform/" + midiFile.getName());
 //			Score score = new Score();
@@ -87,7 +88,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		return list;
 	}
 
-	private List<MelodyInstrument> playOnInstruments(MidiInfo midiInfo) {
+	private List<MelodyInstrument> playOnInstrumentsAccomp(MidiInfo midiInfo) {
 		List<MelodyInstrument> playList = new ArrayList<>();
 		List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		
@@ -114,7 +115,17 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		melodies.get(7).setInstrument(new KontaktLibViolin(0, 1));
 		playList.add(melodies.get(7));
 		return playList;
-		
+	}
+	
+	
+	private List<MelodyInstrument> playOnInstruments(MidiInfo midiInfo, List<Instrument> instruments) {
+		List<MelodyInstrument> playList = new ArrayList<>();
+		List<MelodyInstrument> melodies = midiInfo.getMelodies();
+		for (int i = 0; i < instruments.size(); i++) {
+			melodies.get(i).setInstrument(instruments.get(i));
+			playList.add(melodies.get(i));
+		}
+		return playList;
 	}
 	
 	

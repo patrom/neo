@@ -1,6 +1,5 @@
 package neo.generator;
 
-import static neo.model.harmony.HarmonyBuilder.harmony;
 import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
 import static neo.model.note.NoteBuilder.note;
 
@@ -8,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 import neo.model.Motive;
@@ -16,38 +14,35 @@ import neo.model.harmony.Harmony;
 import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.HarmonicMelodyBuilder;
-import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
 import neo.model.note.Scale;
 import neo.util.RandomUtil;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+public abstract class Generator {
 
-@Component
-public class Generator {
+	protected List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
+	protected int[][] positions;
+	protected Map<Integer, Double> rhythmWeightValues;
+	protected MusicProperties musicProperties;
+	protected List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 	
-	private static Logger LOGGER = Logger.getLogger(Generator.class.getName());
+	public Generator(int[][] positions, MusicProperties musicProperties) {
+		this.positions = positions;
+		this.musicProperties = musicProperties;
+		generateRhythmWeights();
+	}
 	
-	@Autowired
-	private MusicProperties musicProperties;
+	public abstract void generateHarmonyBuilders();
 	
-	private List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
-	private Map<Integer, Double> rhythmWeightValues;
-	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
-
+	public abstract List<Harmony> generateHarmonies();
+	
 	public Motive generateMotive() {
-		Motive motive = new Motive(generateHarmonies());
-		motive.setMusicProperties(musicProperties);
-		return motive;
+		generateHarmonyBuilders();
+		return new Motive(generateHarmonies(), musicProperties);
 	}
 
-	public void generateRhythmWeights(int bars, double[] measureWeights) {
-		rhythmWeightValues = RhythmWeight.generateRhythmWeight(bars, measureWeights);
-	}
-	
-	private HarmonicMelody getHarmonicMelodyForNote(Note harmonyNote){
+	protected HarmonicMelody getHarmonicMelodyForNote(Note harmonyNote){
 		Optional<HarmonicMelody> optional = harmonicMelodies.stream()
 				.filter(harmonicMelody -> harmonicMelody.getVoice() == harmonyNote.getVoice() && harmonicMelody.getPosition() == harmonyNote.getPosition())
 				.findFirst();
@@ -58,60 +53,6 @@ public class Generator {
 			newNote.setPositionWeight(calculatePositionWeight( harmonyNote.getPosition(),  harmonyNote.getLength()));
 			return new HarmonicMelody(newNote, harmonyNote.getVoice(), harmonyNote.getPosition());
 		}
-	}
-
-	public List<Harmony> generateHarmonies(){
-		List<Harmony> harmonies = new ArrayList<>();
-		for (HarmonyBuilder harmonyBuilder : harmonyBuilders) {
-			List<Integer> chordPitchClasses = generatePitchClasses();
-			List<Note> harmonyNotes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
-			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(harmonyNotes);
-			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
-			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
-			harmony.setPositionWeight(totalWeight);
-			harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange()));
-			harmonies.add(harmony);		
-		}
-		return harmonies;
-	}
-
-	private List<HarmonicMelody> getHarmonicMelodies(List<Note> notes) {
-		List<HarmonicMelody> harmonicMelodies = new ArrayList<HarmonicMelody>();
-		for (Note note : notes) {
-			HarmonicMelody harmonicMelody = getHarmonicMelodyForNote(note);
-			harmonicMelodies.add(harmonicMelody);
-		}
-		return harmonicMelodies;
-	}
-	
-	private List<Integer> generatePitchClasses() {
-		IntStream.generate(new Scale(Scale.MAJOR_SCALE)::pickRandomPitchClass)
-			.limit(musicProperties.getChordSize());
-		List<Integer> chordPitchClasses = new ArrayList<>();
-		for (int j = 0; j < musicProperties.getChordSize(); j++) {
-			int pitchClass = musicProperties.getScale().pickRandomPitchClass();
-			chordPitchClasses.add(pitchClass);
-		}
-		return chordPitchClasses;
-	}
-
-	private List<Note> generateNotes(int position, int length , List<Integer> chordPitchClasses) {
-		List<Note> notePositions = new ArrayList<>();
-		int voice = chordPitchClasses.size() - 1;
-		for (Integer pc : chordPitchClasses) {
-			Note notePos = new Note(pc, voice , position, length);
-			notePositions.add(notePos);
-			voice--;
-		}
-		return notePositions;
-	}
-
-	protected double calculatePositionWeight(int position, int length) {
-		double totalWeight = 0;
-		for (int j = 0; j < length; j = j + musicProperties.getMinimumLength()) {
-			totalWeight = totalWeight + rhythmWeightValues.get(position + j);
-		}
-		return totalWeight;
 	}
 	
 	private HarmonicMelody copyHarmonicMelody(HarmonicMelody harmonicMelody, Note note) {
@@ -132,6 +73,49 @@ public class Generator {
 			newNotes.add(newNote);
 		}
 		return newNotes;
+	}
+	
+	protected List<HarmonicMelody> getHarmonicMelodies(List<Note> notes) {
+		List<HarmonicMelody> harmonicMelodies = new ArrayList<HarmonicMelody>();
+		for (Note note : notes) {
+			HarmonicMelody harmonicMelody = getHarmonicMelodyForNote(note);
+			harmonicMelodies.add(harmonicMelody);
+		}
+		return harmonicMelodies;
+	}
+	
+	protected List<Integer> generatePitchClasses() {
+		IntStream.generate(new Scale(Scale.MAJOR_SCALE)::pickRandomPitchClass)
+			.limit(musicProperties.getChordSize());
+		List<Integer> chordPitchClasses = new ArrayList<>();
+		for (int j = 0; j < musicProperties.getChordSize(); j++) {
+			int pitchClass = musicProperties.getScale().pickRandomPitchClass();
+			chordPitchClasses.add(pitchClass);
+		}
+		return chordPitchClasses;
+	}
+
+	protected List<Note> generateNotes(int position, int length , List<Integer> chordPitchClasses) {
+		List<Note> notePositions = new ArrayList<>();
+		int voice = chordPitchClasses.size() - 1;
+		for (Integer pc : chordPitchClasses) {
+			Note notePos = new Note(pc, voice , position, length);
+			notePositions.add(notePos);
+			voice--;
+		}
+		return notePositions;
+	}
+
+	protected double calculatePositionWeight(int position, int length) {
+		double totalWeight = 0;
+		for (int j = 0; j < length; j = j + musicProperties.getMinimumLength()) {
+			totalWeight = totalWeight + rhythmWeightValues.get(position + j);
+		}
+		return totalWeight;
+	}
+	
+	private void generateRhythmWeights() {
+		rhythmWeightValues = RhythmWeight.generateRhythmWeight(positions.length - 1, musicProperties.getMeasureWeights());
 	}
 	
 	public List<HarmonicMelody> generateHarmonicMelodiesForVoice(int[] harmonyPosition, int maxLength, int voice){
@@ -178,13 +162,6 @@ public class Generator {
         }
 	}
 
-	
-	public void generateHarmonyBuilders(int[][] positions){
-		for (int i = 0; i < positions.length - 1; i++) {
-			harmonyBuilders.add(harmony().pos(positions[i][0]).len(positions[i + 1][0] - positions[i][0]));
-		}
-	}
-	
 	public List<HarmonicMelody> generateRandomHarmonicMelody(int[] harmonyPosition, int maxLength, int voice){
 		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 		List<Note> notes = new ArrayList<>();
@@ -212,28 +189,4 @@ public class Generator {
 		return harmonicMelodies;
 	}
 	
-	public List<HarmonyBuilder> getHarmonyBuilders() {
-		return harmonyBuilders;
-	}
-
-	public void setHarmonyBuilders(List<HarmonyBuilder> harmonyBuilders) {
-		this.harmonyBuilders = harmonyBuilders;
-	}
-
-	public Map<Integer, Double> getRhythmWeightValues() {
-		return rhythmWeightValues;
-	}
-
-	public void setRhythmWeightValues(Map<Integer, Double> rhythmWeightValues) {
-		this.rhythmWeightValues = rhythmWeightValues;
-	}
-
-	public List<HarmonicMelody> getHarmonicMelodies() {
-		return harmonicMelodies;
-	}
-
-	public void setHarmonicMelodies(List<HarmonicMelody> harmonicMelodies) {
-		this.harmonicMelodies = harmonicMelodies;
-	}
-
 }

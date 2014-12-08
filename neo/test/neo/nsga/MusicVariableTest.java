@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import neo.generator.MusicProperties;
 import neo.model.Motive;
 import neo.model.harmony.Harmony;
 import neo.model.melody.HarmonicMelody;
@@ -24,6 +25,7 @@ public class MusicVariableTest {
 	private Motive motive;
 	private Integer[] range = {5};
 	private List<Instrument> instruments;
+	private MusicProperties musicProperties;
 	
 	@Before
 	public void setup() {
@@ -36,7 +38,7 @@ public class MusicVariableTest {
 		harmony.addHarmonicMelody(harmonicMelody);
 		harmony.setPitchSpace(new UniformPitchSpace(range));
 		harmonies.add(harmony);
-		motive = new Motive(harmonies);
+		motive = new Motive(harmonies, musicProperties);
 	}
 
 

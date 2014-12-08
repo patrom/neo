@@ -41,7 +41,7 @@ public class OneNoteMutation extends AbstractMutation {
 	public void doMutation(double probability, Solution solution) throws JMException {
 		if (PseudoRandom.randDouble() < probability) {
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
-			mutateMelodyNoteRandom( motive.getHarmonies());
+			mutateMelodyNoteRandom(motive.getHarmonies());
 			LOGGER.fine("one note mutated");
 		} 
 	}

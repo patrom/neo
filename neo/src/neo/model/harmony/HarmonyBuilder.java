@@ -6,17 +6,15 @@ import java.util.List;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
-import neo.out.instrument.Instrument;
 
 public class HarmonyBuilder {
 	
-	protected int position;
-	protected List<HarmonicMelody> melodyNotes = new ArrayList<>();
+	private int position;
+	private List<HarmonicMelody> melodyNotes = new ArrayList<>();
 	private int length;
 	private double positionWeight;
+	private List<Integer> pitchClasses = new ArrayList<>();
 	
-	private List<Instrument> instruments = new ArrayList<>();
-
 	public static HarmonyBuilder harmony(){
 		return new HarmonyBuilder();
 	}
@@ -48,6 +46,13 @@ public class HarmonyBuilder {
 		return this;
 	}
 	
+	public HarmonyBuilder pitchClasses(int ... pitchClass){
+		for (int i = 0; i < pitchClass.length; i++) {
+			pitchClasses.add(pitchClass[i]);	
+		}
+		return this;
+	}
+	
 	public HarmonyBuilder positionWeight(double positionWeight){
 		this.positionWeight = positionWeight;
 		return this;
@@ -72,6 +77,14 @@ public class HarmonyBuilder {
 
 	public int getLength() {
 		return length;
+	}
+	
+	public boolean containsNotes(){
+		return !pitchClasses.isEmpty();
+	}
+	
+	public List<Integer> getPitchClasses() {
+		return pitchClasses;
 	}
 	
 }

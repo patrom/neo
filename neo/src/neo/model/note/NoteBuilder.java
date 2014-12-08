@@ -1,6 +1,5 @@
 package neo.model.note;
 
-import neo.model.harmony.Harmony;
 
 public class NoteBuilder {
 	
