@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 
 import neo.AbstractTest;
 import neo.DefaultConfig;
+import neo.generator.MusicProperties;
 import neo.model.harmony.ChordType;
 import neo.model.note.Interval;
 import neo.model.note.Note;

@@ -10,11 +10,13 @@ import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
+import neo.util.RandomUtil;
 
 public class TonalChordGenerator extends Generator{
 
-	public TonalChordGenerator(int[][] positions,
-			MusicProperties musicProperties) {
+	private List<int[]> chords;
+	
+	public TonalChordGenerator(int[][] positions, MusicProperties musicProperties) {
 		super(positions, musicProperties);
 	}
 
@@ -27,8 +29,21 @@ public class TonalChordGenerator extends Generator{
 		}
 	}
 
-	private int[] pickRandomChords() {
-		return new int[]{0, 0, 4 ,7};
+	protected int[] pickRandomChords() {
+		int[] chord = RandomUtil.getRandomFromList(chords);
+		int size = musicProperties.getChordSize();
+		if (chord.length != size) {
+			int[] newChord = new int[size];
+			for (int i = 0; i < newChord.length - 1; i++) {
+				newChord[i] = chord[i];
+			}
+			for (int i = newChord.length - 1; i < size; i++) {
+				int randomIndex = RandomUtil.random(size - 1);
+				newChord[i] = chord[randomIndex];
+			}
+			return newChord;
+		}
+		return chord;
 	}
 
 	@Override
@@ -45,6 +60,10 @@ public class TonalChordGenerator extends Generator{
 			harmonies.add(harmony);		
 		}
 		return harmonies;
+	}
+
+	public void setChords(List<int[]> chords) {
+		this.chords = chords;
 	}
 
 }

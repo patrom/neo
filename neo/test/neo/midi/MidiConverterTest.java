@@ -1,7 +1,6 @@
 package neo.midi;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import neo.AbstractTest;
 import neo.DefaultConfig;
 import neo.model.harmony.Harmony;
 import neo.model.note.Note;
-import neo.model.note.NoteBuilder;
 
 import org.junit.Before;
 import org.junit.Test;

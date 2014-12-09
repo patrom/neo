@@ -1,45 +1,32 @@
 package neo.nsga.operator.mutation;
 
+import java.util.List;
 import java.util.Optional;
 
 import neo.model.harmony.Harmony;
 import neo.model.melody.HarmonicMelody;
-import neo.util.RandomUtil;
 
 public class HarmonicMelodyMutation {
 
-	private int[] allowedMutationIndexes;
+	private List<Integer> allowedMutationIndexes;
 	
-	public int getMutationIndex() {
-		int index = RandomUtil.random(allowedMutationIndexes.length);
-		return allowedMutationIndexes[index];
+	public Optional<HarmonicMelody> randomHarmonicMelodyWithMultipleNotes(Harmony harmony) {
+		return harmony.getHarmonicMelodies().stream()
+			.filter(harmonicMelody -> harmonicMelody.getMelodyNotes().size() > 1 && allowedMutationIndexes.contains(harmonicMelody.getVoice()))
+			.findAny();
 	}
 	
-	public HarmonicMelody randomHarmonicMelodyWithMultipleNotes(Harmony harmony) {
-		Optional<HarmonicMelody> optional = harmony.getHarmonicMelodies().stream()
-			.filter(harmonicMelody -> harmonicMelody.getMelodyNotes().size() > 1 && harmonicMelody.getVoice() == getMutationIndex())
+	public Optional<HarmonicMelody> randomHarmonicMelody(Harmony harmony) {
+		return harmony.getHarmonicMelodies().stream()
+			.filter(harmonicMelody -> allowedMutationIndexes.contains(harmonicMelody.getVoice()))
 			.findAny();
-		if (optional.isPresent()) {
-			return optional.get();
-		}
-		return null;
-	}
-	
-	public HarmonicMelody randomHarmonicMelody(Harmony harmony) {
-		Optional<HarmonicMelody> optional = harmony.getHarmonicMelodies().stream()
-			.filter(harmonicMelody -> harmonicMelody.getVoice() == getMutationIndex())
-			.findAny();
-		if (optional.isPresent()) {
-			return optional.get();
-		}
-		return null;
 	}
 
-	public int[] getAllowedMutationIndexes() {
+	public List<Integer> getAllowedMutationIndexes() {
 		return allowedMutationIndexes;
 	}
 
-	public void setAllowedMutationIndexes(int[] allowedMutationIndexes) {
+	public void setAllowedMutationIndexes(List<Integer> allowedMutationIndexes) {
 		this.allowedMutationIndexes = allowedMutationIndexes;
 	}
 	

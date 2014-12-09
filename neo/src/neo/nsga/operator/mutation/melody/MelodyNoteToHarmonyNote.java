@@ -2,6 +2,7 @@ package neo.nsga.operator.mutation.melody;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import jmetal.core.Solution;
@@ -45,10 +46,10 @@ public class MelodyNoteToHarmonyNote extends AbstractMutation{
 
 	protected void mutateMelodyNoteToHarmonyNote(List<Harmony> harmonies) {
 		Harmony harmony = harmonies.get(RandomUtil.random(harmonies.size()));
-		HarmonicMelody harmonicMelody = harmonicMelodyMutation.randomHarmonicMelodyWithMultipleNotes(harmony);
-		if (harmonicMelody != null) {
+		Optional<HarmonicMelody> harmonicMelody = harmonicMelodyMutation.randomHarmonicMelodyWithMultipleNotes(harmony);
+		if (harmonicMelody.isPresent()) {
 			Note harmonyNote = RandomUtil.getRandomFromList(harmony.getNotes());
-			harmonicMelody.mutateMelodyNoteToHarmonyNote(harmonyNote.getPitchClass());
+			harmonicMelody.get().mutateMelodyNoteToHarmonyNote(harmonyNote.getPitchClass());
 		}
 	}
 

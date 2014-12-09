@@ -34,7 +34,6 @@ public class MelodiesTest extends AbstractTest{
 	private static Logger LOGGER = Logger.getLogger(FitnessEvaluationTemplate.class.getName());
 	
 	private List<File> midiFiles;
-	private MusicProperties musicProperties = new MusicProperties();
 	@Autowired
 	private MidiParser midiParser;
 	

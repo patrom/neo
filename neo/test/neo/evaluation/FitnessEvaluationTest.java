@@ -29,8 +29,6 @@ public class FitnessEvaluationTest extends AbstractTest{
 	private static Logger LOGGER = Logger.getLogger(FitnessEvaluationTest.class.getName());
 	@Autowired
 	private FitnessEvaluationTemplate fitnessEvaluation;
-	@Autowired
-	private MusicProperties musicProperties;
 	private Motive motive;
 
 	@Before

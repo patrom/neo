@@ -2,6 +2,7 @@ package neo.nsga.operator.mutation.melody;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import jmetal.core.Solution;
@@ -21,9 +22,6 @@ import org.springframework.stereotype.Component;
 
 @Component(value="oneNoteMutation")
 public class OneNoteMutation extends AbstractMutation {
-	
-	@Autowired
-	private MusicProperties musicProperties;
 	
 	@Autowired
 	public OneNoteMutation(HashMap<String, Object> parameters) {
@@ -48,10 +46,10 @@ public class OneNoteMutation extends AbstractMutation {
 
 	private void mutateMelodyNoteRandom(List<Harmony> harmonies) {
 		Harmony harmony = harmonies.get(RandomUtil.random(harmonies.size()));
-		HarmonicMelody harmonicMelody = harmonicMelodyMutation.randomHarmonicMelodyWithMultipleNotes(harmony);
-		if (harmonicMelody != null) {
+		Optional<HarmonicMelody> harmonicMelody = harmonicMelodyMutation.randomHarmonicMelodyWithMultipleNotes(harmony);
+		if (harmonicMelody.isPresent()) {
 			int newPitchClass = musicProperties.getMelodyScale().pickRandomPitchClass();
-			harmonicMelody.randomUpdateMelodyNotes(newPitchClass);
+			harmonicMelody.get().randomUpdateMelodyNotes(newPitchClass);
 		}
 	}
 

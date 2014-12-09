@@ -48,8 +48,6 @@ public class PitchSpaceMutation extends Mutation {
 		if (PseudoRandom.randDouble() < probability) {
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 			List<Harmony> harmonies = motive.getHarmonies();
-//			Harmony harmony = harmonies.get(RandomUtil.random(harmonies.size()));
-//			mutatePitchSpace(harmony);
 			IntStream ints = RandomUtil.range(harmonies.size());
 			PitchSpace pitchSpace = randomPitchSpace();
 			ints.forEach(i -> {
@@ -58,25 +56,6 @@ public class PitchSpaceMutation extends Mutation {
 			});
 			LOGGER.fine("pitch space mutated");
 		} 
-	}
-	
-	public void mutatePitchSpace(Harmony harmony){
-		PitchSpace pitchSpace = null;
-		switch (RandomUtil.randomInt(0, musicProperties.getChordSize())) {
-		case 0:
-			pitchSpace = new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange());
-			break;
-		case 1:
-			pitchSpace = new BassOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
-			break;
-		case 2:
-			pitchSpace = new TopOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
-			break;
-		case 3:
-			pitchSpace = new  MiddleOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
-			break;
-		}
-		harmony.setPitchSpace(pitchSpace);
 	}
 	
 	public PitchSpace randomPitchSpace(){

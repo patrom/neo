@@ -2,6 +2,7 @@ package neo.nsga.operator.mutation.harmony;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import jmetal.core.Solution;
 import jmetal.util.Configuration;
@@ -40,18 +41,18 @@ public class SwapHarmonyNotes extends AbstractMutation{
 
 	private void swapHarmonyNotes(List<Harmony> harmonies) {
 		Harmony harmony = harmonyMutation.randomHarmony(harmonies);
-		HarmonicMelody harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
-		HarmonicMelody switchHarmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
-		if (harmonicMelody != null && switchHarmonicMelody != null &&
-				harmonicMelody.getVoice() != switchHarmonicMelody.getVoice()) {
-			Note harmonyNote = harmonicMelody.getHarmonyNote();
-			Note switchHarmonyNote = switchHarmonicMelody.getHarmonyNote();
+		Optional<HarmonicMelody> harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
+		Optional<HarmonicMelody> switchHarmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
+		if (harmonicMelody.isPresent() && switchHarmonicMelody.isPresent() &&
+				harmonicMelody.get().getVoice() != switchHarmonicMelody.get().getVoice()) {
+			Note harmonyNote = harmonicMelody.get().getHarmonyNote();
+			Note switchHarmonyNote = switchHarmonicMelody.get().getHarmonyNote();
 			if (!harmonyNote.equals(switchHarmonyNote)) {
 				int harmonyPitchClass = harmonyNote.getPitchClass();
 				int switchHarmonyPitchClass = switchHarmonyNote.getPitchClass();
-				harmonicMelody.updateMelodyNotes(harmonyPitchClass, switchHarmonyPitchClass);
+				harmonicMelody.get().updateMelodyNotes(harmonyPitchClass, switchHarmonyPitchClass);
 				harmonyNote.setPitchClass(switchHarmonyPitchClass);
-				switchHarmonicMelody.updateMelodyNotes(switchHarmonyPitchClass, harmonyPitchClass);
+				switchHarmonicMelody.get().updateMelodyNotes(switchHarmonyPitchClass, harmonyPitchClass);
 				switchHarmonyNote.setPitchClass(harmonyPitchClass);
 //				harmony.toChord();
 			}

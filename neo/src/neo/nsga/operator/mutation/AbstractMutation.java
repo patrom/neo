@@ -3,12 +3,18 @@ package neo.nsga.operator.mutation;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import jmetal.operators.mutation.Mutation;
 import jmetal.util.JMException;
+import neo.generator.MusicProperties;
 import neo.model.harmony.Harmony;
 
 public abstract class AbstractMutation extends Mutation{
 
+	@Autowired
+	protected MusicProperties musicProperties;
+	
 	public AbstractMutation(HashMap<String, Object> parameters) {
 		super(parameters);
 	}
@@ -20,7 +26,7 @@ public abstract class AbstractMutation extends Mutation{
 	@Override
 	public abstract Object execute(Object arg0) throws JMException;
 
-	public void setAllowedMelodyMutationIndexes(int[] allowedIndexes) {
+	public void setAllowedMelodyMutationIndexes(List<Integer> allowedIndexes) {
 		harmonicMelodyMutation.setAllowedMutationIndexes(allowedIndexes);
 	}
 	

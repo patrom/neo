@@ -1,6 +1,8 @@
 package neo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -15,6 +17,8 @@ import neo.generator.BeginEndChordGenerator;
 import neo.generator.Generator;
 import neo.generator.MusicProperties;
 import neo.generator.RandomNotesGenerator;
+import neo.generator.TonalChordGenerator;
+import neo.generator.TonalChords;
 import neo.model.Motive;
 import neo.nsga.MusicSolutionType;
 import neo.nsga.operator.mutation.harmony.HarmonyNoteToPitch;
@@ -81,10 +85,12 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //		int[][] harmonies = {{0,0,36},{36,36,72},{72,72,108},{108,108,144}, {144,144,180}};
 //		musicProperties.fourFour();
 //		int[][] harmonies = {{0,0,48},{48,48,96},{96,96,144},{144,144,192}, {192,192,240}};
-		BeginEndChordGenerator beginEndChordGenerator = new BeginEndChordGenerator(harmonies, musicProperties);
-		beginEndChordGenerator.setBeginPitchClasses(new int[]{0,4,7,4});
-		beginEndChordGenerator.setEndPitchClasses(new int[]{0,0,4,7});
-		Generator generator = beginEndChordGenerator;
+//		BeginEndChordGenerator beginEndChordGenerator = new BeginEndChordGenerator(harmonies, musicProperties);
+//		beginEndChordGenerator.setBeginPitchClasses(new int[]{0,4,7,4});
+//		beginEndChordGenerator.setEndPitchClasses(new int[]{0,0,4,7});
+		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
+		tonalChordGenerator.setChords(TonalChords.getTriads());
+		Generator generator = tonalChordGenerator;
 //		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
 //		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
 //		int[][] harmonies2 = {{0,0, 6,12,18,24,30,36},{36,36,42,72},{72, 72,78,108},{108}};
@@ -101,24 +107,22 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    crossover.setParameter("probabilityCrossover", 1.0); 
 	    
 	    //harmony
-	    int[] allowedDefaultIndexes = allowedDefaultIndexes();
+	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
 	    harmonyNoteToPitch.setParameter("probabilityOneNote", 1.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
-	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
+//	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
 	    swapHarmonyNotes.setParameter("probabilityOneNote", 1.0);
 	    swapHarmonyNotes.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 	    
 	    //melody
 	    melodyNoteToHarmonyNote.setParameter("probabilityOneNote", 1.0);
-	    int[] allowedMutationIndexesMelodyNoteToHarmonyNote = {0,2,3};
-	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedMutationIndexesMelodyNoteToHarmonyNote);
-	    melodyNoteToHarmonyNote.setOuterBoundaryIncluded(false);
+	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
+//	    melodyNoteToHarmonyNote.setOuterBoundaryIncluded(false);
 	    
 	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
-	    int[] allowedMutationIndexesOneNoteMutation = {0,1,3};
-	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedMutationIndexesOneNoteMutation);
-	    oneNoteMutation.setOuterBoundaryIncluded(false);
+	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
+//	    oneNoteMutation.setOuterBoundaryIncluded(false);
 	    
 	    //pitch
 	    pitchSpaceMutation.setParameter("probabilityPitchSpace", 1.0);
@@ -140,10 +144,10 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    display.view(population, musicProperties.getTempo());
 	}
 
-	private int[] allowedDefaultIndexes() {
-		int[] allowedDefaultIndexes = new int[musicProperties.getChordSize()];
+	private List<Integer> allowedDefaultIndexes() {
+		List<Integer> allowedDefaultIndexes = new ArrayList<>();
 	    for (int i = 0; i < musicProperties.getChordSize(); i++) {
-			allowedDefaultIndexes[i] = i;
+	    	allowedDefaultIndexes.add(i);
 		}
 		return allowedDefaultIndexes;
 	}

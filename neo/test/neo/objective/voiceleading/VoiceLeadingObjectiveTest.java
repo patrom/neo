@@ -27,8 +27,6 @@ public class VoiceLeadingObjectiveTest extends AbstractTest{
 	
 	@Autowired
 	private Objective voiceLeadingObjective;
-	@Autowired
-	private MusicProperties musicProperties;
 
 	@Before
 	public void setUp() {
