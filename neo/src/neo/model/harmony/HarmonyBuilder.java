@@ -6,6 +6,7 @@ import java.util.List;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.pitchspace.UniformPitchSpace;
 import neo.model.note.Note;
+import neo.out.instrument.Ensemble;
 
 public class HarmonyBuilder {
 	
@@ -67,7 +68,7 @@ public class HarmonyBuilder {
 		Harmony harmony = new Harmony(position, length, melodyNotes);
 		harmony.setPositionWeight(positionWeight);
 		Integer[] range = {5, 6};
-		harmony.setPitchSpace(new UniformPitchSpace(range));
+		harmony.setPitchSpace(new UniformPitchSpace(range, Ensemble.getStringQuartet()));
 		return harmony;
 	}
 	

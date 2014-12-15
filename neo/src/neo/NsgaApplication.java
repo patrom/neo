@@ -77,33 +77,34 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 
 	@Override
 	public void run(String... arg0) throws Exception {
-		musicProperties.sixEight();
-		int[][] harmonies = {{0,0,18,36},{36,36,54,72},{72,72,90,108},{108,108,126,144}, {144,144,162,180}};
+//		musicProperties.sixEight();
+//		int[][] harmonies = {{0,0,18,36},{36,36,54,72},{72,72,90,108},{108,108,126,144}, {144,144,162,180}};
 //		musicProperties.twoFour();
 //		int[][] harmonies = {{0,0,24},{24,24,48},{48,48,72},{72,72,96}, {96,96,120}};
-//		musicProperties.threeFour();
-//		int[][] harmonies = {{0,0,36},{36,36,72},{72,72,108},{108,108,144}, {144,144,180}};
+		musicProperties.threeFour();
+		int[][] harmonies = {{0,0,36},{36,36,72},{72,72,108},{108,108,144}, {144,144,180}};
 //		musicProperties.fourFour();
 //		int[][] harmonies = {{0,0,48},{48,48,96},{96,96,144},{144,144,192}, {192,192,240}};
 		
-		BeginEndChordGenerator beginEndChordGenerator = new BeginEndChordGenerator(harmonies, musicProperties);
-		beginEndChordGenerator.setBeginPitchClasses(new int[]{0,4});
-		beginEndChordGenerator.setEndPitchClasses(new int[]{0,0,4,7});
-		Generator generator = beginEndChordGenerator;
+//		BeginEndChordGenerator beginEndChordGenerator = new BeginEndChordGenerator(harmonies, musicProperties);
+//		beginEndChordGenerator.setBeginPitchClasses(new int[]{0,4});
+//		beginEndChordGenerator.setEndPitchClasses(new int[]{0,0,4,7});
+//		Generator generator = beginEndChordGenerator;
 		
 //		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
 //		tonalChordGenerator.setChords(TonalChords.getTriadsAndSeventhChords());
 //		Generator generator = tonalChordGenerator;
 		
-//		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-//		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
+		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
+		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
+		
 //		int[][] harmonies2 = {{0,0, 6,12,18,24,30,36},{36,36,42,72},{72, 72,78,108},{108}};
 //		generator.generateHarmonicMelodiesForVoice(harmonies2, 2);
 	    Motive motive = generator.generateMotive();
 	    solutionType.setMotive(motive);
 	    
 	    // Algorithm parameters
-	    int populationSize = 10;
+	    int populationSize = 20;
 	    algorithm.setInputParameter("populationSize", populationSize);
 	    algorithm.setInputParameter("maxEvaluations", populationSize * 1000);
 	    
@@ -112,11 +113,11 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 1.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
-	    swapHarmonyNotes.setParameter("probabilitySwap", 1.0);
+	    swapHarmonyNotes.setParameter("probabilitySwap", 0.0);
 	    swapHarmonyNotes.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 	    
 	    //melody

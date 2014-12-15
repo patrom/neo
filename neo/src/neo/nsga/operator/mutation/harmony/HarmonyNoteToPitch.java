@@ -36,33 +36,27 @@ public class HarmonyNoteToPitch extends AbstractMutation{
 		if (PseudoRandom.randDouble() < probability) {
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 			mutateHarmonyNoteToRandomPitch(motive.getHarmonies());
-			mutateHarmonyNoteToPreviousPitch(motive.getHarmonies());
-			mutateHarmonyNoteToNextPitch(motive.getHarmonies());
+//			mutateHarmonyNoteToPreviousPitch(motive.getHarmonies());
+//			mutateHarmonyNoteToNextPitch(motive.getHarmonies());
 		} 
 	}
 
 	private void mutateHarmonyNoteToRandomPitch(List<Harmony> harmonies) {
 		Harmony harmony = harmonyMutation.randomHarmony(harmonies);
-		Optional<HarmonicMelody> harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
-		if (harmonicMelody.isPresent()) {
-			harmonicMelody.get().mutateHarmonyNoteToRandomPitch(musicProperties.getScale());
-		}
+		HarmonicMelody harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
+		harmonicMelody.mutateHarmonyNoteToRandomPitch(musicProperties.getScale());
 	}
 	
 	private void mutateHarmonyNoteToPreviousPitch(List<Harmony> harmonies) {
 		Harmony harmony = harmonyMutation.randomHarmony(harmonies);
-		Optional<HarmonicMelody> harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
-		if (harmonicMelody.isPresent()) {
-			harmonicMelody.get().mutateHarmonyPreviousNoteToPitch(musicProperties.getScale());
-		}
+		HarmonicMelody harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
+		harmonicMelody.mutateHarmonyPreviousNoteToPitch(musicProperties.getScale());
 	}
 	
 	private void mutateHarmonyNoteToNextPitch(List<Harmony> harmonies) {
 		Harmony harmony = harmonyMutation.randomHarmony(harmonies);
-		Optional<HarmonicMelody> harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
-		if (harmonicMelody.isPresent()) {
-			harmonicMelody.get().mutateHarmonyPreviousNoteToPitch(musicProperties.getScale());
-		}
+		HarmonicMelody harmonicMelody = harmonicMelodyMutation.randomHarmonicMelody(harmony);
+		harmonicMelody.mutateHarmonyPreviousNoteToPitch(musicProperties.getScale());
 	}
 
 	/**

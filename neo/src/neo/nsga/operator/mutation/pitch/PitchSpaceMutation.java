@@ -62,16 +62,16 @@ public class PitchSpaceMutation extends Mutation {
 		PitchSpace pitchSpace = null;
 		switch (RandomUtil.randomInt(0, 4)) {
 		case 0:
-			pitchSpace = new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			pitchSpace = new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange(), musicProperties.getInstruments());
 			break;
 		case 1:
-			pitchSpace = new BassOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			pitchSpace = new BassOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange(), musicProperties.getInstruments());
 			break;
 		case 2:
-			pitchSpace = new TopOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			pitchSpace = new TopOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange(), musicProperties.getInstruments());
 			break;
 		case 3:
-			pitchSpace = new  MiddleOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange());
+			pitchSpace = new  MiddleOctavePitchSpace(musicProperties.getOctaveHighestPitchClassRange(), musicProperties.getInstruments());
 			break;
 		}
 		return pitchSpace;

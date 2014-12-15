@@ -2,39 +2,28 @@ package neo.data.melody.pitchspace;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import neo.model.harmony.Harmony;
-import neo.model.harmony.HarmonyBuilder;
+import neo.model.melody.HarmonicMelody;
 import neo.model.melody.pitchspace.MiddleOctavePitchSpace;
 import neo.model.melody.pitchspace.PitchSpace;
-import neo.model.note.Note;
-import neo.out.instrument.Instrument;
 
 import org.junit.Test;
 
-public class MiddleOctavePitchSpaceTest {
+public class MiddleOctavePitchSpaceTest extends PitchSpaceTest{
 
-	private List<Note> notes = new ArrayList<>();
-	private List<Instrument> instruments = new ArrayList<>();
-	
 	@Test
 	public void testTranslateToPitchSpace() {
-		notes.add(new Note(1, 0, 0, 12));
-		notes.add(new Note(2, 1, 0, 12));
-		notes.add(new Note(3, 2, 0, 12));
-		notes.add(new Note(4, 3, 0, 12));
-		Integer[] range = {6};
-		Harmony harmony = HarmonyBuilder.harmony().notes(notes).build();
-		PitchSpace pitchSpace = new MiddleOctavePitchSpace(range);
-		pitchSpace.setNotes(notes);
+		List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(1,2,3,4);
+		Harmony harmony = new Harmony(0, 30, harmonicMelodies);
+		PitchSpace pitchSpace = new MiddleOctavePitchSpace(range, instruments);
 		harmony.setPitchSpace(pitchSpace);
 		harmony.translateToPitchSpace();
-		assertEquals(notes.get(3).getPitch(), 28);
-		assertEquals(notes.get(2).getPitch(), 39);
-		assertEquals(notes.get(1).getPitch(), 62);
-		assertEquals(notes.get(0).getPitch(), 73);
+		assertEquals("pitch not correct", harmonicMelodies.get(3).getHarmonyNote().getPitch(), 64);
+		assertEquals("pitch not correct", harmonicMelodies.get(2).getHarmonyNote().getPitch(), 63);
+		assertEquals("pitch not correct", harmonicMelodies.get(1).getHarmonyNote().getPitch(), 50);
+		assertEquals("pitch not correct", harmonicMelodies.get(0).getHarmonyNote().getPitch(), 37);
 	}
 
 }

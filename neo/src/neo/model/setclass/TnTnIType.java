@@ -10,6 +10,7 @@ import javax.swing.*;
 
 public class TnTnIType extends TnIType {
 
+	public Set[] prime2 = new Set[6];
 	public Set[] prime3 = new Set[12];
 	public Set[] prime4 = new Set[29];
 	public Set[] prime5 = new Set[38];
@@ -87,6 +88,8 @@ public class TnTnIType extends TnIType {
 		char c = name.charAt(0);
 
 		switch (c) {
+		case '2':
+			initPrime2();
 		case '3':
 			initPrime3();
 
@@ -232,6 +235,8 @@ public class TnTnIType extends TnIType {
 		i = 0;
 
 		switch (c) {
+		case 2:
+			initPrime2();
 		case 3:
 			initPrime3();
 			do {
@@ -380,6 +385,22 @@ public class TnTnIType extends TnIType {
 		int i = 1, j = 0;
 
 		switch (tntnitype.length) {
+		case 2:
+			initPrime2();
+			do {
+				if (tntnitype[i] == prime2[j].tntnitype[i])
+					i++;
+				else {
+					j++;
+					i = 1;
+				}
+			} while (i < 2 && j < 6);
+			if (j == 6)
+				break;
+			else {
+				prime = prime2[j];
+				break;
+			}
 		case 3:
 			initPrime3();
 			do {
@@ -504,6 +525,8 @@ public class TnTnIType extends TnIType {
 		int i = 0, j = 0;
 
 		switch (st.length) {
+		case 2:
+			initPrime2();
 		case 3:
 			initPrime3();
 			do {
@@ -626,6 +649,8 @@ public class TnTnIType extends TnIType {
 	public String[][] listPrime(int cardinality) {
 
 		switch (cardinality) {
+		case 2:
+			initPrime2();
 		case 3:
 			initPrime3();
 			String[][] lists3 = new String[12][];
@@ -749,6 +774,48 @@ public class TnTnIType extends TnIType {
 
 	// Initialize Set objects with
 	// Forte names, Tn/TnI type, i-vectors, and M7.
+	public void initPrime2() {
+
+		for (int i = 0; i < 6; i++)
+			prime2[i] = new Set(2);
+
+		prime2[0].name = "2-1";
+		prime2[1].name = "2-2";
+		prime2[2].name = "2-3";
+		prime2[3].name = "2-4";
+		prime2[4].name = "2-5";
+		prime2[5].name = "2-6";
+
+		prime2[0].tntnitype = new int[] { 0, 1 };
+		prime2[1].tntnitype = new int[] { 0, 2 };
+		prime2[2].tntnitype = new int[] { 0, 3 };
+		prime2[3].tntnitype = new int[] { 0, 4 };
+		prime2[4].tntnitype = new int[] { 0, 5 };
+		prime2[5].tntnitype = new int[] { 0, 6 };
+
+		prime2[0].ivector = new int[] { 1, 0, 0, 0, 0, 0 };
+		prime2[1].ivector = new int[] { 0, 1, 0, 0, 0, 0 };
+		prime2[2].ivector = new int[] { 0, 0, 1, 0, 0, 0 };
+		prime2[3].ivector = new int[] { 0, 0, 0, 1, 0, 0 };
+		prime2[4].ivector = new int[] { 0, 0, 0, 0, 1, 0 };
+		prime2[5].ivector = new int[] { 0, 0, 0, 0, 0, 1 };
+
+		prime2[0].m7set = new int[] {};
+		prime2[1].m7set = new int[] {};
+		prime2[2].m7set = new int[] {};
+		prime2[3].m7set = new int[] {};
+		prime2[4].m7set = new int[] {};
+		prime2[5].m7set = new int[] {};
+
+		prime2[0].symmetry = new int[] {};
+		prime2[1].symmetry = new int[] {};
+		prime2[2].symmetry = new int[] {};
+		prime2[3].symmetry = new int[] {};
+		prime2[4].symmetry = new int[] {};
+		prime2[5].symmetry = new int[] {};
+	}
+
+	
 	public void initPrime3() {
 
 		for (int i = 0; i < 12; i++)

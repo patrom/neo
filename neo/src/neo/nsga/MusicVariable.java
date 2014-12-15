@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.springframework.stereotype.Component;
-
 import jmetal.core.Variable;
 import jmetal.util.JMException;
 import neo.model.Motive;
@@ -57,7 +55,7 @@ public class MusicVariable extends Variable {
 		}
 		Harmony copyHarmony = new Harmony(harmony.getPosition(), harmony.getLength(), harmonicMelodies);
 		PitchSpace newPitchSpace = clonePitchClass(harmony.getPitchSpace());
-		newPitchSpace.setNotes(copyHarmony.getNotes());
+		newPitchSpace.setHarmonicMelodies(copyHarmony.getHarmonicMelodies());
 		copyHarmony.setPitchSpace(newPitchSpace);
 		copyHarmony.setPositionWeight(harmony.getPositionWeight());
 		return copyHarmony;
@@ -79,11 +77,11 @@ public class MusicVariable extends Variable {
 		PitchSpace newPitchSpaceStrategy = null;
 		try {
 			Class pitchSpaceStrategyClass = Class.forName(pitchSpace.getClass().getName());
-			Constructor<PitchSpace> constructor = pitchSpaceStrategyClass.getConstructor(Integer[].class);
-			newPitchSpaceStrategy = constructor.newInstance((Object)pitchSpace.getOctaveHighestPitchClassRange());
+			Constructor<PitchSpace> constructor = pitchSpaceStrategyClass.getConstructor(Integer[].class, List.class);
+			newPitchSpaceStrategy = constructor.newInstance((Object)pitchSpace.getOctaveHighestPitchClassRange(), pitchSpace.getInstruments());
 		} catch (InvocationTargetException |IllegalArgumentException |SecurityException | NoSuchMethodException 
 				| ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			throw new IllegalArgumentException("PitchSpace type error: " + pitchSpace.getClass().getName());
+			throw new IllegalArgumentException("PitchSpace not cloneable: " + pitchSpace.getClass().getName());
 		}
 		return newPitchSpaceStrategy;
 	}

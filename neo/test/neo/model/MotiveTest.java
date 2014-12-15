@@ -46,7 +46,7 @@ public class MotiveTest extends AbstractTest{
 		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 		harmonicMelodies.add(harmonicMelody);
 		Harmony harmony = new Harmony(0, 12, harmonicMelodies);
-		harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange()));
+		harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange(), musicProperties.getInstruments()));
 		harmonies.add(harmony);
 		musicProperties.setChordSize(3);
 		musicProperties.setInstruments(Ensemble.getStringQuartet());

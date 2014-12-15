@@ -38,10 +38,6 @@ public class Motive {
 				.collect(toList());
 	}
 	
-//	public void setMusicProperties(MusicProperties musicProperties) {
-//		this.musicProperties = musicProperties;
-//	}
-
 	public MusicProperties getMusicProperties() {
 		return musicProperties;
 	}
@@ -49,7 +45,6 @@ public class Motive {
 	private List<Melody> extractMelodies(){
 		List<Melody> melodies = new ArrayList<>();
 		harmonies.stream().forEach(harmony -> harmony.translateToPitchSpace());
-		harmonies.stream().forEach(harmony -> harmony.updateNotesWithInstrumentConstraints(musicProperties.getInstruments()));
 		for (int i = 0; i < musicProperties.getChordSize(); i++) {
 			Melody melody = new Melody(getMelodyForVoice(i), i);
 			melodies.add(melody);

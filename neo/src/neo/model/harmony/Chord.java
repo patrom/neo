@@ -2,6 +2,7 @@ package neo.model.harmony;
 
 import java.util.Set;
 
+import neo.model.note.Interval;
 import neo.model.setclass.PcSetUnorderedProperties;
 
 import com.google.common.collect.Multiset;
@@ -13,6 +14,11 @@ public class Chord {
 	private int voiceLeadingZone;
 
 	public double getWeight() {
+//		chordType = getChordType();
+//		if (chordType.equals(ChordType.CH2)) {
+//			int[] set = toPrimitiveSet(getPitchClassSet());
+//			return Interval.getEnumInterval(set[0] - set[1]).getHarmonicValue();
+//		}
 		return getChordType().getDissonance();
 	}
 
@@ -42,14 +48,18 @@ public class Chord {
 	}
 	
 	public PcSetUnorderedProperties getPcSetUnorderedProperties(){
-		Set<Integer> pitchClassSet = getPitchClassSet();
+		int[] set = toPrimitiveSet(getPitchClassSet());
+		return new PcSetUnorderedProperties(set);
+	}
+
+	private int[] toPrimitiveSet(Set<Integer> pitchClassSet) {
 		int[] set = new int[pitchClassSet.size()];
 		int i = 0;
 		for (Integer pc : pitchClassSet) {
 			set[i] = pc;
 			i++;
 		}
-		return new PcSetUnorderedProperties(set);
+		return set;
 	}
 
 	private ChordType extractChordType() {
@@ -187,8 +197,8 @@ public class Chord {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Type: ");
 		builder.append(getChordType());
-//		builder.append(", Set: ");
-//		builder.append(getForteName());
+		builder.append(", Set: ");
+		builder.append(getForteName());
 		return builder.toString();
 	}
 

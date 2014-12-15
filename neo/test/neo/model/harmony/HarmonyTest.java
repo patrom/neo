@@ -5,16 +5,7 @@ import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
 import static neo.model.note.NoteBuilder.note;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Collections;
-import java.util.List;
-
-import neo.model.melody.HarmonicMelody;
-import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
-import neo.out.instrument.Ensemble;
-import neo.out.instrument.Instrument;
-import neo.out.instrument.KontaktLibCello;
 
 import org.junit.Test;
 
@@ -38,25 +29,6 @@ public class HarmonyTest {
 		assertEquals(0, harmony.getNotes().get(1).getPitchClass());
 		assertEquals(3, harmony.getNotes().get(2).getPitchClass());
 		assertTrue(harmony.getChord().getPitchClassMultiSet().contains(8));
-	}
-	
-	@Test
-	public void updateNotesWithInstrumentConstraints() {
-		HarmonyBuilder harmonyBuilder = harmony();
-		harmonyBuilder.melodyBuilder(harmonicMelody().voice(0)
-				.harmonyNote(note().pitch(20).build())
-				.notes(note().pitch(36).build(),
-					   note().pitch(38).build(),
-					   note().pitch(25).build())
-				.build());
-		Harmony harmony = harmonyBuilder.build();
-		List<Instrument> instruments = Collections.singletonList(new KontaktLibCello(0, 1));
-		harmony.updateNotesWithInstrumentConstraints(instruments);
-		assertEquals(44, harmony.getNotes().get(0).getPitch());
-		List<Note> melodyNotes = harmony.getHarmonicMelodies().get(0).getMelodyNotes();
-		assertEquals(36, melodyNotes.get(0).getPitch());
-		assertEquals(38, melodyNotes.get(1).getPitch());
-		assertEquals(37, melodyNotes.get(2).getPitch());
 	}
 	
 	@Test
