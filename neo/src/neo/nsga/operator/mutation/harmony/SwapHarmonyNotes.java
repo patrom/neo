@@ -67,9 +67,9 @@ public class SwapHarmonyNotes extends AbstractMutation{
 	 */
 	public Object execute(Object object) throws JMException {
 		Solution solution = (Solution) object;
-		Double probability = (Double) getParameter("probabilityOneNote");
+		Double probability = (Double) getParameter("probabilitySwap");
 		if (probability == null) {
-			Configuration.logger_.severe("probabilityOneNote: probability not " +
+			Configuration.logger_.severe("probabilitySwap: probability not " +
 			"specified");
 			Class cls = java.lang.String.class;
 			String name = cls.getName();

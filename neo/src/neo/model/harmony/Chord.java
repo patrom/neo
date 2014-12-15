@@ -11,7 +11,6 @@ public class Chord {
 	private Multiset<Integer> pitchClassMultiSet = TreeMultiset.create();
 	private ChordType chordType;
 	private int voiceLeadingZone;
-	private String setClassName;
 
 	public double getWeight() {
 		return getChordType().getDissonance();
@@ -35,6 +34,14 @@ public class Chord {
 	}
 	
 	public String getForteName() {
+		return getPcSetUnorderedProperties().getForteName();
+	}
+	
+	public String[] getSetClassProperties() {
+		return getPcSetUnorderedProperties().getSetClassProperties();
+	}
+	
+	public PcSetUnorderedProperties getPcSetUnorderedProperties(){
 		Set<Integer> pitchClassSet = getPitchClassSet();
 		int[] set = new int[pitchClassSet.size()];
 		int i = 0;
@@ -42,9 +49,7 @@ public class Chord {
 			set[i] = pc;
 			i++;
 		}
-		PcSetUnorderedProperties pcSetCalculator = new PcSetUnorderedProperties(set);
-		this.setClassName = pcSetCalculator.getForteName();
-		return setClassName;
+		return new PcSetUnorderedProperties(set);
 	}
 
 	private ChordType extractChordType() {
@@ -175,6 +180,16 @@ public class Chord {
 			}
 		}
 		return ChordType.CH3;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Type: ");
+		builder.append(getChordType());
+//		builder.append(", Set: ");
+//		builder.append(getForteName());
+		return builder.toString();
 	}
 
 }

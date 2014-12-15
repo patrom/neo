@@ -73,9 +73,9 @@ public class HarmonyNoteToPitch extends AbstractMutation{
 	 */
 	public Object execute(Object object) throws JMException {
 		Solution solution = (Solution) object;
-		Double probability = (Double) getParameter("probabilityOneNote");
+		Double probability = (Double) getParameter("probabilityHarmonyNoteToPitch");
 		if (probability == null) {
-			Configuration.logger_.severe("probabilityOneNote: probability not " +
+			Configuration.logger_.severe("probabilityHarmonyNoteToPitch: probability not " +
 			"specified");
 			Class cls = java.lang.String.class;
 			String name = cls.getName();

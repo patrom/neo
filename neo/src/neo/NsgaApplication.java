@@ -85,12 +85,16 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //		int[][] harmonies = {{0,0,36},{36,36,72},{72,72,108},{108,108,144}, {144,144,180}};
 //		musicProperties.fourFour();
 //		int[][] harmonies = {{0,0,48},{48,48,96},{96,96,144},{144,144,192}, {192,192,240}};
-//		BeginEndChordGenerator beginEndChordGenerator = new BeginEndChordGenerator(harmonies, musicProperties);
-//		beginEndChordGenerator.setBeginPitchClasses(new int[]{0,4,7,4});
-//		beginEndChordGenerator.setEndPitchClasses(new int[]{0,0,4,7});
-		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
-		tonalChordGenerator.setChords(TonalChords.getTriads());
-		Generator generator = tonalChordGenerator;
+		
+		BeginEndChordGenerator beginEndChordGenerator = new BeginEndChordGenerator(harmonies, musicProperties);
+		beginEndChordGenerator.setBeginPitchClasses(new int[]{0,4});
+		beginEndChordGenerator.setEndPitchClasses(new int[]{0,0,4,7});
+		Generator generator = beginEndChordGenerator;
+		
+//		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
+//		tonalChordGenerator.setChords(TonalChords.getTriadsAndSeventhChords());
+//		Generator generator = tonalChordGenerator;
+		
 //		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
 //		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
 //		int[][] harmonies2 = {{0,0, 6,12,18,24,30,36},{36,36,42,72},{72, 72,78,108},{108}};
@@ -108,19 +112,19 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityOneNote", 1.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
-	    swapHarmonyNotes.setParameter("probabilityOneNote", 1.0);
+	    swapHarmonyNotes.setParameter("probabilitySwap", 1.0);
 	    swapHarmonyNotes.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 	    
 	    //melody
-	    melodyNoteToHarmonyNote.setParameter("probabilityOneNote", 1.0);
+	    melodyNoteToHarmonyNote.setParameter("probabilityMelodyNoteToHarmonyNote", 0.0);
 	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    melodyNoteToHarmonyNote.setOuterBoundaryIncluded(false);
 	    
-	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
+	    oneNoteMutation.setParameter("probabilityOneNote", 0.0);
 	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    oneNoteMutation.setOuterBoundaryIncluded(false);
 	    

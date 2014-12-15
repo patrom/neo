@@ -16,8 +16,7 @@ public class BeginEndChordGenerator  extends Generator{
 	private int[] beginPitchClasses;
 	private int[] endPitchClasses;
 	
-	public BeginEndChordGenerator(int[][] positions,
-			MusicProperties musicProperties) {
+	public BeginEndChordGenerator(int[][] positions, MusicProperties musicProperties) {
 		super(positions, musicProperties);
 	}
 

@@ -1,3 +1,8 @@
+// TnIType.java, used for
+// JDubiel.java: computer program for pc-set analysis
+// by Akira Takaoka, akira@music.columbia.edu
+// Copyright (C) 1994-2010 Akira Takaoka
+// All rights reserved.
 package neo.model.setclass;
 
 public class PcSetUnorderedProperties {

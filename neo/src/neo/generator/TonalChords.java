@@ -13,7 +13,7 @@ public class TonalChords {
 		chords.add(new int[]{5, 9 ,0});
 		chords.add(new int[]{7, 11 ,2});
 		chords.add(new int[]{9, 0 ,4});
-		chords.add(new int[]{11, 4 ,5});
+		chords.add(new int[]{11, 2 ,5});
 		return chords;
 	}
 	
@@ -25,7 +25,7 @@ public class TonalChords {
 		chords.add(new int[]{5, 9 ,0, 4});
 		chords.add(new int[]{7, 11 ,2, 5});
 		chords.add(new int[]{9, 0 ,4, 7});
-		chords.add(new int[]{11, 4 ,5 ,9});
+		chords.add(new int[]{11, 2 ,5 ,9});
 		return chords;
 	}
 	

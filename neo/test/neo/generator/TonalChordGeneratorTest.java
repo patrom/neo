@@ -3,6 +3,8 @@ package neo.generator;
 import static org.junit.Assert.assertTrue;
 import neo.AbstractTest;
 import neo.DefaultConfig;
+import neo.model.harmony.Chord;
+import neo.model.harmony.ChordType;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +31,14 @@ public class TonalChordGeneratorTest extends AbstractTest{
 	@Test
 	public void testPickRandomChords() {
 		tonalChordGenerator = new TonalChordGenerator(positions, musicProperties);
+		tonalChordGenerator.setChords(TonalChords.getTriads());
 		int[] chord = tonalChordGenerator.pickRandomChords();
 		assertTrue(chord.length == musicProperties.getChordSize());
+		Chord ch = new Chord();
+		for (int j = 0; j < chord.length; j++) {
+			ch.addPitchClass(chord[j]);
+		}
+		assertTrue(ch.getChordType() != ChordType.CH3 || ch.getChordType() != ChordType.CH2);
 	}
 
 }
