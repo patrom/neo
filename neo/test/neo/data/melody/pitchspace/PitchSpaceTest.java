@@ -13,7 +13,7 @@ import neo.out.instrument.Instrument;
 public abstract class PitchSpaceTest {
 
 	protected List<Instrument> instruments = Ensemble.getStringQuartet();
-	protected Integer[] range = {6};
+	protected Integer[] range = {0};
 	
 	protected List<HarmonicMelody> getHarmonicMelodies(int voice0, int voice1, int voice2, int voice3) {
 		List<HarmonicMelody> harmonicMelodies = new ArrayList<>();

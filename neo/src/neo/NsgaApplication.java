@@ -14,6 +14,7 @@ import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
 import jmetal.operators.selection.SelectionFactory;
 import neo.generator.BeginEndChordGenerator;
+import neo.generator.DiffSizeGenerator;
 import neo.generator.Generator;
 import neo.generator.MusicProperties;
 import neo.generator.RandomNotesGenerator;
@@ -91,15 +92,17 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //		beginEndChordGenerator.setEndPitchClasses(new int[]{0,0,4,7});
 //		Generator generator = beginEndChordGenerator;
 		
-//		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
-//		tonalChordGenerator.setChords(TonalChords.getTriadsAndSeventhChords());
-//		Generator generator = tonalChordGenerator;
+		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
+		tonalChordGenerator.setChords(TonalChords.getTriadsAndSeventhAndSecDominantChords(0));
+		Generator generator = tonalChordGenerator;
 		
-		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
+//		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
+//		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
 		
 //		int[][] harmonies2 = {{0,0, 6,12,18,24,30,36},{36,36,42,72},{72, 72,78,108},{108}};
 //		generator.generateHarmonicMelodiesForVoice(harmonies2, 2);
+		
+//		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
 	    Motive motive = generator.generateMotive();
 	    solutionType.setMotive(motive);
 	    
@@ -113,11 +116,11 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 1.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
-	    swapHarmonyNotes.setParameter("probabilitySwap", 0.0);
+	    swapHarmonyNotes.setParameter("probabilitySwap", 1.0);
 	    swapHarmonyNotes.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 	    
 	    //melody

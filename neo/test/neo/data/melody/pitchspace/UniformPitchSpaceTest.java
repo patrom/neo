@@ -34,6 +34,19 @@ public class UniformPitchSpaceTest extends PitchSpaceTest {
 		assertEquals("pitch not correct", melodyNotes.get(1).getPitch(), 48);
 		assertEquals("pitch not correct", melodyNotes.get(2).getPitch(), 51);
 	}
+	
+	@Test
+	public void testTranslateToPitchSpaceSamePitchClassRange() {
+		List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(0,0,0,0);
+		Harmony harmony = new Harmony(0, 30, harmonicMelodies);
+		PitchSpace pitchSpace = new UniformPitchSpace(new Integer[]{1}, instruments);
+		harmony.setPitchSpace(pitchSpace);
+		harmony.translateToPitchSpace();
+		assertEquals("pitch not correct", harmonicMelodies.get(3).getHarmonyNote().getPitch(), 60);
+		assertEquals("pitch not correct", harmonicMelodies.get(2).getHarmonyNote().getPitch(), 60);
+		assertEquals("pitch not correct", harmonicMelodies.get(1).getHarmonyNote().getPitch(), 48);
+		assertEquals("pitch not correct", harmonicMelodies.get(0).getHarmonyNote().getPitch(), 48);
+	}
 
 	@Test
 	public void testTranslateToPitchSpaceNoCrossing() {

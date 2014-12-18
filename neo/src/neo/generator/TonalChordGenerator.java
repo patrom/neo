@@ -56,7 +56,7 @@ public class TonalChordGenerator extends Generator{
 			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
 			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
 			harmony.setPositionWeight(totalWeight);
-			harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveHighestPitchClassRange(), musicProperties.getInstruments()));
+			harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveLowestPitchClassRange(), musicProperties.getInstruments()));
 			harmonies.add(harmony);		
 		}
 		return harmonies;

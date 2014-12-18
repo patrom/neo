@@ -18,7 +18,7 @@ public class MusicProperties {
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength;
 	private int chordSize;
-	private Integer[] octaveHighestPitchClassRange = {5,6};
+	private Integer[] octaveLowestPitchClassRange = {0};
 	private boolean outerBoundaryIncluded = true;
 	private double[] filterLevels = {0.5};
 	private List<Instrument> instruments;
@@ -41,7 +41,7 @@ public class MusicProperties {
 	//score
 	private int numerator = 3;
 	private int denominator = 4;
-	private int keySignature = 0;
+	private int keySignature = 0;//1 = 1 kruis / -1 = 1 bemol
 	
 	//MOGA
 	private int populationSize;
@@ -159,24 +159,31 @@ public class MusicProperties {
 		range.setHighest(high);
 		return range;
 	}
+	
 	public int getHarmonyBeatDivider() {
 		return harmonyBeatDivider;
 	}
+	
 	public void setHarmonyBeatDivider(int harmonyBeatDivider) {
 		this.harmonyBeatDivider = harmonyBeatDivider;
 	}
+	
 	public float getTempo() {
 		return tempo;
 	}
+	
 	public void setTempo(float tempo) {
 		this.tempo = tempo;
 	}
+	
 	public int getMinimumLength() {
 		return minimumLength;
 	}
+	
 	public void setMinimumLength(int minimumLength) {
 		this.minimumLength = minimumLength;
 	}
+	
 	public int getChordSize() {
 		return chordSize;
 	}
@@ -184,51 +191,56 @@ public class MusicProperties {
 	public void setChordSize(int chordSize) {
 		this.chordSize = chordSize;
 	}
-	public Integer[] getOctaveHighestPitchClass() {
-		return octaveHighestPitchClassRange;
-	}
 	
-	public void setOctaveHighestPitchClass(Integer[] octaveHighestPitchClass) {
-		this.octaveHighestPitchClassRange = octaveHighestPitchClass;
-	}
 	public void setScale(Scale scale) {
 		this.scale = scale;
 	}
 	
-	public Integer[] getOctaveHighestPitchClassRange() {
-		return octaveHighestPitchClassRange;
+	public Integer[] getOctaveLowestPitchClassRange() {
+		return octaveLowestPitchClassRange;
 	}
+	
 	public void setOctaveHighestPitchClassRange(
 			Integer[] octaveHighestPitchClassRange) {
-		this.octaveHighestPitchClassRange = octaveHighestPitchClassRange;
+		this.octaveLowestPitchClassRange = octaveHighestPitchClassRange;
 	}
+	
 	public Scale getMelodyScale() {
 		return melodyScale;
 	}
+	
 	public void setMelodyScale(Scale melodyScale) {
 		this.melodyScale = melodyScale;
 	}
+	
 	public boolean isOuterBoundaryIncluded() {
 		return outerBoundaryIncluded;
 	}
+	
 	public void setOuterBoundaryIncluded(boolean outerBoundaryIncluded) {
 		this.outerBoundaryIncluded = outerBoundaryIncluded;
 	}
+	
 	public double[] getFilterLevels() {
 		return filterLevels;
 	}
+	
 	public void setFilterLevels(double[] filterLevels) {
 		this.filterLevels = filterLevels;
 	}
+	
 	public int getDenominator() {
 		return denominator;
 	}
+	
 	public void setDenominator(int denominator) {
 		this.denominator = denominator;
 	}
+	
 	public int getKeySignature() {
 		return keySignature;
 	}
+	
 	public void setKeySignature(int keySignature) {
 		this.keySignature = keySignature;
 	}

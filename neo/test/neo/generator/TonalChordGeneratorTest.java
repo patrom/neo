@@ -31,7 +31,7 @@ public class TonalChordGeneratorTest extends AbstractTest{
 	@Test
 	public void testPickRandomChords() {
 		tonalChordGenerator = new TonalChordGenerator(positions, musicProperties);
-		tonalChordGenerator.setChords(TonalChords.getTriads());
+		tonalChordGenerator.setChords(TonalChords.getTriads(0));
 		int[] chord = tonalChordGenerator.pickRandomChords();
 		assertTrue(chord.length == musicProperties.getChordSize());
 		Chord ch = new Chord();

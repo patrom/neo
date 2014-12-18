@@ -70,6 +70,7 @@ public class ScoreUtilities implements JMC{
 		score.setTempo(tempo);
 		score.setNumerator(musicProperties.getNumerator());
 		score.setDenominator(musicProperties.getDenominator());
+		score.setKeySignature(musicProperties.getKeySignature());
 		return score;
 	}
 	

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -13,8 +12,6 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
 import javax.swing.JFrame;
 
-import jm.music.data.Score;
-import jm.util.Read;
 import jm.util.View;
 import neo.generator.MusicProperties;
 import neo.midi.HarmonyInstrument;

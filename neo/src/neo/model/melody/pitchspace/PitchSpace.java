@@ -1,7 +1,6 @@
 package neo.model.melody.pitchspace;
 
 import java.util.List;
-import java.util.Optional;
 
 import neo.model.melody.HarmonicMelody;
 import neo.model.note.Note;
@@ -10,46 +9,37 @@ import neo.util.RandomUtil;
 
 public abstract class PitchSpace {
 
-	protected Integer[] octaveHighestPitchClassRange;
+	protected Integer[] octaveLowestPitchClassRange;
 	protected int octaveHighestPitchClass;
 	protected int size;
 	protected List<HarmonicMelody> harmonicMelodies;
 	protected List<Instrument> instruments;
 
-	public PitchSpace(Integer[] octaveHighestPitchClassRange, List<Instrument> instruments) {
-		this.octaveHighestPitchClassRange = octaveHighestPitchClassRange;
+	public PitchSpace(Integer[] octaveLowestPitchClassRange, List<Instrument> instruments) {
+		this.octaveLowestPitchClassRange = octaveLowestPitchClassRange;
 		this.octaveHighestPitchClass = randomIntRange();
 		this.instruments = instruments;
 	}
 
 	public abstract void translateToPitchSpace();
 	
-	public int getOctaveHighestPitchClass() {
-		return octaveHighestPitchClass;
-	}
-	
-	public void setHarmonicMelodies(List<HarmonicMelody> notes) {
-		this.harmonicMelodies = notes;
-		this.size = notes.size();
-	}
-	
-	public void mutateOctaveHighestPitchClass(){
-		this.octaveHighestPitchClass = randomIntRange();
-	}
-
 	private int randomIntRange() {
-		return RandomUtil.randomInt(octaveHighestPitchClassRange[0], octaveHighestPitchClassRange[octaveHighestPitchClassRange.length - 1] + 1);
+		return RandomUtil.randomInt(octaveLowestPitchClassRange[0], octaveLowestPitchClassRange[octaveLowestPitchClassRange.length - 1] + 1);
 	}
 
 	protected void setPitchLowestNote() {
 		HarmonicMelody harmonicMelody = getHarmonicMelody(0);
 		Instrument instrument = getInstrument(0);
 		int octave = instrument.getLowest() / 12;
-		int pc = instrument.getLowest() % 12;
 		int pitch = harmonicMelody.getHarmonyNote().getPitchClass() + (octave * 12);
 		while (pitch < instrument.getLowest()) {
 			pitch = pitch + 12;
 			octave = octave + 1;
+		}
+		int addOctave = randomIntRange();
+		if (addOctave > 0) {
+			pitch = pitch + (addOctave * 12);
+			octave = octave + addOctave;
 		}
 		Note harmonyNote = harmonicMelody.getHarmonyNote();
 		harmonyNote.setPitch(pitch);
@@ -98,11 +88,20 @@ public abstract class PitchSpace {
 	}
 	
 	public Integer[] getOctaveHighestPitchClassRange() {
-		return octaveHighestPitchClassRange;
+		return octaveLowestPitchClassRange;
 	}
 	
 	public List<Instrument> getInstruments() {
 		return instruments;
+	}
+	
+	public int getOctaveHighestPitchClass() {
+		return octaveHighestPitchClass;
+	}
+	
+	public void setHarmonicMelodies(List<HarmonicMelody> notes) {
+		this.harmonicMelodies = notes;
+		this.size = notes.size();
 	}
 
 }
