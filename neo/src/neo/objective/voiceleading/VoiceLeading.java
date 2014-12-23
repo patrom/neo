@@ -1,99 +1,20 @@
 package neo.objective.voiceleading;
 
-import java.util.Collection;
-import java.util.logging.Logger;
+import static java.lang.System.arraycopy;
 
-import neo.nsga.NSGAII;
+import java.util.logging.Logger;
 
 import com.google.common.collect.ArrayTable;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
 import com.google.common.collect.Table;
-import com.google.common.collect.TreeMultiset;
 
 public class VoiceLeading {
 	
 	private static Logger LOGGER = Logger.getLogger(VoiceLeading.class.getName());
 	
-	private static int mod = 12;
 	private static int optimalSize = 9999;
-
-	public static void main(String[] args) {
-		Multiset<Integer> sourceSet = TreeMultiset.create();
-		sourceSet.add(11);
-		sourceSet.add(2);
-		sourceSet.add(7);
-//		sourceSet.add(11);
-	
-		Multiset<Integer> targetSet = TreeMultiset.create();
-		targetSet.add(0);
-		targetSet.add(4);
-		targetSet.add(7);
-//		targetSet.add(11);
-
-//		for (int i = 0; i < 12; i++) {
-//			Iterator<Integer> iterator = targetSet.iterator();
-//			while (iterator.hasNext()) {
-//				Integer integer = (Integer) iterator.next();
-//				targetSet.remove(integer);
-//				targetSet.add((++integer) % mod);
-//			}
-			
-			VoiceLeadingSize minimalVoiceLeadingSize = caculateSize(sourceSet, targetSet);
-			LOGGER.info(minimalVoiceLeadingSize.getVlSource().toString());
-			LOGGER.info(minimalVoiceLeadingSize.getVlTarget().toString());
-			LOGGER.info(String.valueOf(minimalVoiceLeadingSize.getSize()));
-			
-//		}
-		
-
-//		List<Integer> source = new ArrayList<>();
-//		source.add(0);
-//		source.add(4);
-//		source.add(7);
-//		source.add(0);
-////		source.add(4);
-//
-//
-//		List<Integer> target = new ArrayList<>();
-//		target.add(2);
-//		target.add(6);
-//		target.add(9);
-//		target.add(2);
-////		target.add(4);
-
-//		boolean beginWithDifferentSamePitchClass = true;
-//		int i = 0;
-//		while (beginWithDifferentSamePitchClass && i < source.size()) {
-//			if (source.get(0).equals(target.get(0))) {
-//				beginWithDifferentSamePitchClass = false;
-//			}else{
-//				Collections.rotate(source, 1);
-//			}
-//			i++;
-//		}
-//		if (!beginWithDifferentSamePitchClass) {
-//			addFirstPitchClass(source, target);
-//		}
-		
-		
-//		Integer[] chordPitchClasses = new Integer[chordB.size()];
-//		chordPitchClasses = chordB.toArray(chordPitchClasses);
-		
-//		for (int i = 0; i < chordPitchClasses.length; i++) {
-//			for (int j = i + 1; j < chordPitchClasses.length + i; j++) {
-//				int interval = chordPitchClasses[(j) % chordPitchClasses.length] - chordPitchClasses[i];
-//				int intervalPC = (interval + 12) % 12;
-//				System.out.print(intervalPC + ",");
-//			}
-//			System.out.println();
-//		}
-//
-//		Table<Integer, Integer, Integer> TMatrix = createTMatrix(chordA, chordB);
-//		System.out.println(TMatrix.toString());
-	}
-
 
 	public static VoiceLeadingSize caculateSize(Multiset<Integer> sourceSet,
 			Multiset<Integer> targetSet) {
@@ -219,9 +140,9 @@ public class VoiceLeading {
 
 	public static void rotateArray(Integer[] array, int index){
 		Integer[] result = new Integer[array.length];
-	    System.arraycopy(array, index, result, 0, array.length - index);
-	    System.arraycopy(array, 0, result, array.length - index, index);
-	    System.arraycopy(result, 0, array, 0, array.length);
+	    arraycopy(array, index, result, 0, array.length - index);
+	    arraycopy(array, 0, result, array.length - index, index);
+	    arraycopy(result, 0, array, 0, array.length);
 	}
 	
 	

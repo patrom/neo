@@ -34,11 +34,11 @@ public class TonalChordGenerator extends Generator{
 		int size = musicProperties.getChordSize();
 		if (chord.length != size) {
 			int[] newChord = new int[size];
-			for (int i = 0; i < newChord.length - 1; i++) {
+			for (int i = 0; i < chord.length; i++) {
 				newChord[i] = chord[i];
 			}
-			for (int i = newChord.length - 1; i < size; i++) {
-				int randomIndex = RandomUtil.random(size - 1);
+			for (int i = chord.length; i < size; i++) {
+				int randomIndex = RandomUtil.random(chord.length);
 				newChord[i] = chord[randomIndex];
 			}
 			return newChord;

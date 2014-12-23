@@ -1,10 +1,14 @@
 package neo;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
 
@@ -66,7 +70,8 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	
 	public static AtomicInteger COUNTER = new AtomicInteger();
 	
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws IOException {
+		deleteMidiFiles();
 		for (int i = 0; i < 2; i++) {
 			LOGGER.info("RUN: " + i + " START");
 			SpringApplication app = new SpringApplication(NsgaApplication.class);
@@ -163,5 +168,12 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	private void prepareHarmonies() {
 //        rhythmWeightValues = RhythmWeight.generateRhythmWeight(harmonies.length - 1, musicProperties.getMeasureWeights());
     }
+	
+	private static void deleteMidiFiles() throws IOException{
+		List<File> midiFiles = Files.list(new File("C:/Dev/git/neo/neo/resources/midi").toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		for (File file : midiFiles) {
+			file.delete();
+		}
+	}
 	
 }

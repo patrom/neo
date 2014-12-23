@@ -62,7 +62,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	}
 	
 	public void playMidiFilesOnKontaktFor() throws IOException, InvalidMidiDataException, InterruptedException {
-		List<File> midiFiles = Files.list(new File(PlayApplication.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		List<File> midiFiles = Files.list(new File("C:/Dev/git/neo/neo/resources/midi").toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
@@ -135,7 +135,9 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	}
 
 	public void playMidiFilesOnKontaktFor(Instrument instrument) throws IOException, InvalidMidiDataException, InterruptedException {
-		List<File> midiFiles = Files.list(new File(PlayApplication.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		
+//		List<File> midiFiles = Files.list(new File(PlayApplication.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		List<File> midiFiles = Files.list(new File("C:/Dev/git/neo/neo/resources/midi").toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);

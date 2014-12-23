@@ -1,5 +1,8 @@
 package neo.out.print;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -82,7 +85,7 @@ public class Display {
 			melodies.forEach(h ->  LOGGER.info(h.getMelodieNotes() + ", "));
 			Score score = scoreUtilities.createScoreMelodies(melodies, tempo);
 			score.setTitle(id);
-//			Write.midi(score, "resources/midi/" + id + ".mid");	
+			Write.midi(score, "resources/midi/" + id + ".mid");	
 			View.notate(score);	
 		}
 		
@@ -90,7 +93,7 @@ public class Display {
 			LocalDateTime currentDateTime = LocalDateTime.now();
 			return currentDateTime.format(DateTimeFormatter.ofPattern("ddMM_HHmm"));
 		}
-
+		
 //		private static void printVextab(List<Harmony> harmonies) {
 //			String vexTab = ScoreUtilities.createVexTab(harmonies, inputProps);
 //			LOGGER.info(vexTab);
