@@ -290,21 +290,28 @@ public class AxisDyadArray {
 	}
 	
 	public boolean containsAxisDyadChord(List<Integer> chord){
+		if (chord.isEmpty()) {
+			return false;
+		}
 		List<List<Integer>> axisDyadChords = getAllAxisDyadChords();
+//		return axisDyadChords.stream()
+//				.anyMatch(list -> list.containsAll(chord) && chord.containsAll(list));
 		return axisDyadChords.stream()
-				.anyMatch(list -> list.containsAll(chord) && chord.containsAll(list));
+				.anyMatch(list -> list.containsAll(chord));
 	}
 	
-	public boolean containsAllAxisDyadChord(List<List<Integer>> chords){
+	public boolean containsAllAxisDyadChords(List<List<Integer>> chords){
 		if (chords.isEmpty()) {
 			return false;
 		}
-		for (List<Integer> chord : chords) {
-			if (!containsAxisDyadChord(chord)) {
-				return false;
-			}
-		}
-		return true;
+		return chords.stream().allMatch(chord -> {return containsAxisDyadChord(chord);});
+//		System.out.println("match: " + match);
+//		for (List<Integer> chord : chords) {
+//			if (!containsAxisDyadChord(chord)) {
+//				return false;
+//			}
+//		}
+//		return true;
 	}
 	
 	public boolean containsSumTetraChord(List<Integer> chord){
@@ -314,10 +321,36 @@ public class AxisDyadArray {
 				.anyMatch(list -> list.containsAll(chord) && chord.containsAll(list));
 	}
 	
+	public boolean containsAllSumTetraChords(List<List<Integer>> chords){
+		if (chords.isEmpty()) {
+			return false;
+		}
+		for (List<Integer> chord : chords) {
+			if (!containsSumTetraChord(chord)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public boolean containsCyclicChord(List<Integer> chord){
 		List<List<Integer>> cyclicChord = getAllCyclicChords();
 		return cyclicChord.stream()
 				.anyMatch(list -> list.containsAll(chord) && chord.containsAll(list));
+	}
+	
+	public boolean containsAllCyclicChords(List<List<Integer>> chords){
+		if (chords.isEmpty()) {
+			return false;
+		}
+//		boolean match = chords.stream().allMatch(chord -> {return containsCyclicChord(chord);});
+//		System.out.println("match: " + match);
+		for (List<Integer> chord : chords) {
+			if (!containsCyclicChord(chord)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -27,26 +28,66 @@ public class AxisDyadArrayTest {
 	public void allAxisDyadArray(){
 		List<Integer> chord = new ArrayList<>();
 		chord.add(2);
-		chord.add(4);
-		chord.add(10);
+		chord.add(1);
+		chord.add(0);
+		chord.add(9);
 		
-		for (int i = 0; i < 12; i++) {
-			for (int j = 0; j < 24; j++) {
-				AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(IntervalCycle.P_IC7, 0), 0,
-						new CyclicSet(IntervalCycle.P_IC7, i), j);
+//		for (int i = 0; i < 12; i++) {
+//			for (int j = 0; j < 24; j++) {
+				AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(IntervalCycle.P_IC5, 0), 0,
+						new CyclicSet(IntervalCycle.P_IC4_2, 1), 0);
 				System.out.print(axisDyadArray);
 				System.out.println(axisDyadArray.printArray());
+//				List<List<Integer>> chords = axisDyadArray.getAllSumTetraChordsLeft();
+//				for (List<Integer> list : chords) {
+//					System.out.println(list);
+//				}
+//				List<List<Integer>> chords2 = axisDyadArray.getAllSumTetraChordsRight();
+//				for (List<Integer> list : chords2) {
+//					System.out.println(list);
+//				}
 				System.out.println(axisDyadArray.containsSumTetraChord(chord));
-			}
-		}
+//			}
+//		}
 	}
 	
 	@Test
 	public void allArraysInRange(){
-		List<Integer> chord = new ArrayList<>();
-		chord.add(2);
-		chord.add(4);
-		chord.add(10);
+		List<List<Integer>> chords = new ArrayList<List<Integer>>();
+//		List<Integer> chord = new ArrayList<>();
+//		chord.add(2);
+//		chord.add(8);
+//		chord.add(10);
+//		chord.add(7);
+//		chords.add(chord);
+//		
+		List<Integer> chord2 = new ArrayList<>();
+		chord2.add(7);
+		chord2.add(2);
+		chord2.add(10);
+		chord2.add(8);
+		chords.add(chord2);
+		
+		List<Integer> chord3 = new ArrayList<>();
+		chord3.add(7);
+		chord3.add(3);
+		chord3.add(0);
+		chord3.add(10);
+		chords.add(chord3);
+		
+		List<Integer> chord4 = new ArrayList<>();
+		chord4.add(7);
+		chord4.add(11);
+		chord4.add(8);
+		chord4.add(3);
+		chords.add(chord4);
+		
+		List<Integer> chord5 = new ArrayList<>();
+		chord5.add(7);
+		chord5.add(0);
+		chord5.add(9);
+		chord5.add(6);
+		chords.add(chord5);
 		
 		EnumSet<IntervalCycle> set = EnumSet.range(IntervalCycle.P_IC1, IntervalCycle.P_IC7);
 		for (IntervalCycle intervalCycle : set) {
@@ -56,14 +97,14 @@ public class AxisDyadArrayTest {
 						AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(intervalCycle, 0), 0,
 								new CyclicSet(intervalCycle2, i), 0);
 //						System.out.print(axisDyadArray);
-//						if (axisDyadArray.containsSumTetraChord(chord)) {
-//							System.out.print(axisDyadArray);
-//							System.out.println();
-//						}
-						if (axisDyadArray.isCognateSet()) {
+						if (axisDyadArray.containsAllAxisDyadChords(chords)) {
 							System.out.print(axisDyadArray);
 							System.out.println();
 						}
+//						if (axisDyadArray.isCognateSet()) {
+//							System.out.print(axisDyadArray);
+//							System.out.println();
+//						}
 //						System.out.println(axisDyadArray.printArray());
 //					}
 //					System.out.println("-----------------------------------------------------------------------");
@@ -249,7 +290,7 @@ public class AxisDyadArrayTest {
 		chord.add(5);
 		chord.add(9);
 		chords.add(chord);
-		assertTrue(axisDyadArray.containsAllAxisDyadChord(chords));
+		assertTrue(axisDyadArray.containsAllAxisDyadChords(chords));
 	}
 
 	@Test
