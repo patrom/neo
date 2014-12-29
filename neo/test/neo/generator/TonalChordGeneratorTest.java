@@ -25,7 +25,7 @@ public class TonalChordGeneratorTest extends AbstractTest{
 	public void setUp() throws Exception {
 		positions = new int[][]{{0,0,48},{48,48,96},{96,96,144},{144,144,192}, {192,192,240}};
 		musicProperties.setMeasureWeights(new double[]{1.0, 0.5, 0.75, 0.5, 1.0, 0.5, 0.75, 0.5});
-		musicProperties.setChordSize(4);
+		musicProperties.setChordSize(6);
 	}
 
 	@Test
