@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -68,7 +69,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		
-			List<MelodyInstrument> playList = playOnInstruments(midiInfo, Ensemble.getStringQuartet());
+			List<MelodyInstrument> playList = playOnInstruments(midiInfo, Ensemble.getPiano(4));
 			playOnKontakt(melodies, midiInfo.getTempo());
 			View.notate(scoreUtilities.createScoreFromMelodyInstrument(playList, midiInfo.getTempo()));
 //			write(melodies, "resources/transform/" + midiFile.getName());
@@ -116,13 +117,18 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	
 	
 	private List<MelodyInstrument> playOnInstruments(MidiInfo midiInfo, List<Instrument> instruments) {
-		List<MelodyInstrument> playList = new ArrayList<>();
 		List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		for (int i = 0; i < instruments.size(); i++) {
-			melodies.get(i).setInstrument(instruments.get(i));
-			playList.add(melodies.get(i));
+			MelodyInstrument melodyInstrument = melodies.get(i);
+			arrangement.transpose(melodyInstrument.getNotes(), 12);//kontakt voice octave too low for string quartet!
+			Optional<Instrument> instrument = instruments.stream().filter(instr -> instr.getVoice() == melodyInstrument.getVoice()).findFirst();
+			if (instrument.isPresent()) {
+				melodyInstrument.setInstrument(instrument.get());
+			}else{
+				throw new IllegalArgumentException("Instrument for voice " + i + " is missing!");
+			}
 		}
-		return playList;
+		return melodies;
 	}
 	
 	
