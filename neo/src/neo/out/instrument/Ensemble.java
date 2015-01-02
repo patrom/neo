@@ -8,10 +8,10 @@ public class Ensemble {
 
 	public static List<Instrument> getStringQuartet(){
 		List<Instrument> stringQuartet = new ArrayList<Instrument>();
-		stringQuartet.add(new KontaktLibViolin(3, 1));
-		stringQuartet.add(new KontaktLibViolin(2, 1));
-		stringQuartet.add(new KontaktLibViola(1, 2));
-		stringQuartet.add(new KontaktLibCello(0, 3));
+		stringQuartet.add(new KontaktLibViolin(3, 0));
+		stringQuartet.add(new KontaktLibViolin(2, 0));
+		stringQuartet.add(new KontaktLibViola(1, 1));
+		stringQuartet.add(new KontaktLibCello(0, 2));
 		return stringQuartet;
 	}
 	
@@ -31,6 +31,14 @@ public class Ensemble {
 		voices.add(new KontaktLibPiano(2, 1));
 		voices.add(new KontaktLibPiano(1, 1));
 		voices.add(new KontaktLibPiano(0, 1));
+		return voices;
+	}
+	
+	public static List<Instrument> getPiano(int totalVoices){
+		List<Instrument> voices = new ArrayList<Instrument>();
+		for (int i = 0; i < totalVoices; i++) {
+			voices.add(new KontaktLibPiano(i, 0));
+		}
 		return voices;
 	}
 }
