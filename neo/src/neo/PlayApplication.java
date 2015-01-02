@@ -63,14 +63,16 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	}
 	
 	public void playMidiFilesOnKontaktFor() throws IOException, InvalidMidiDataException, InterruptedException {
-		List<File> midiFiles = Files.list(new File("C:/Dev/git/neo/neo/resources/midi").toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		// "C:/Users/prombouts/git/neo/neo/resources/midi"
+		// "C:/Dev/git/neo/neo/resources/midi"
+		List<File> midiFiles = Files.list(new File("C:/Users/prombouts/git/neo/neo/resources/midi").toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		
 			List<MelodyInstrument> playList = playOnInstruments(midiInfo, Ensemble.getPiano(4));
-			playOnKontakt(melodies, midiInfo.getTempo());
+			playOnKontakt(playList, midiInfo.getTempo());
 			View.notate(scoreUtilities.createScoreFromMelodyInstrument(playList, midiInfo.getTempo()));
 //			write(melodies, "resources/transform/" + midiFile.getName());
 //			Score score = new Score();
@@ -117,6 +119,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	
 	
 	private List<MelodyInstrument> playOnInstruments(MidiInfo midiInfo, List<Instrument> instruments) {
+		List<MelodyInstrument> playList = new ArrayList<>();
 		List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		for (int i = 0; i < instruments.size(); i++) {
 			MelodyInstrument melodyInstrument = melodies.get(i);
@@ -124,11 +127,12 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			Optional<Instrument> instrument = instruments.stream().filter(instr -> instr.getVoice() == melodyInstrument.getVoice()).findFirst();
 			if (instrument.isPresent()) {
 				melodyInstrument.setInstrument(instrument.get());
+				playList.add(melodyInstrument);
 			}else{
 				throw new IllegalArgumentException("Instrument for voice " + i + " is missing!");
 			}
 		}
-		return melodies;
+		return playList;
 	}
 	
 	
