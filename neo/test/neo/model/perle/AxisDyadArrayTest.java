@@ -32,10 +32,10 @@ public class AxisDyadArrayTest {
 		chord.add(0);
 		chord.add(9);
 		
-//		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 24; i++) {
 //			for (int j = 0; j < 24; j++) {
-				AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(IntervalCycle.P_IC5, 0), 0,
-						new CyclicSet(IntervalCycle.P_IC4_2, 1), 0);
+				AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(IntervalCycle.P_IC7, 0), 0,
+						new CyclicSet(IntervalCycle.P_IC7, 9), i);
 				System.out.print(axisDyadArray);
 				System.out.println(axisDyadArray.printArray());
 //				List<List<Integer>> chords = axisDyadArray.getAllSumTetraChordsLeft();
@@ -46,59 +46,105 @@ public class AxisDyadArrayTest {
 //				for (List<Integer> list : chords2) {
 //					System.out.println(list);
 //				}
-				System.out.println(axisDyadArray.containsSumTetraChord(chord));
+//				System.out.println(axisDyadArray.containsSumTetraChord(chord));
 //			}
-//		}
+		}
+	}
+	
+	private List<Integer> toChord(int...notes ){
+		List<Integer> chords = new ArrayList<Integer>();
+		for (int i = 0; i < notes.length; i++) {
+			chords.add(new Integer(notes[i]));
+		}
+		return chords;
 	}
 	
 	@Test
 	public void allArraysInRange(){
 		List<List<Integer>> chords = new ArrayList<List<Integer>>();
-//		List<Integer> chord = new ArrayList<>();
-//		chord.add(2);
-//		chord.add(8);
-//		chord.add(10);
-//		chord.add(7);
-//		chords.add(chord);
+		
+		//ms 23
+//		List<Integer> chordB = new ArrayList<>();
+//		chords.add(toChord(1,11,4));
+//		chords.add(toChord(6,1,9,4));
+//		chords.add(toChord(6,0,9,4));
+//		chords.add(toChord(2,11,7,4));
+//		chords.add(toChord(1,9,6,4));
+//		chords.add(toChord(7,0,9,4));
+//		chords.add(toChord(4,11,9,2));
+//		chords.add(toChord(4,11,7,2));
+//		chords.add(toChord(10,7,2));
+//		chords.add(toChord(9,5,2));
+//		chords.add(toChord(4,7,2));
+//		chords.add(toChord(11,7,8,6));
+//		chords.add(toChord(3,1,6));
+//		chords.add(toChord(3,11,6));
+//		chords.add(toChord(11,6,2));
+//		chords.add(toChord(1,9,6));
+		
+		//ms 26
+//		chords.add(toChord(4,1,9,6));
+//		chords.add(toChord(3,1,6));
+//		chords.add(toChord(10,1,3,6));
+//		chords.add(toChord(0,1,3,6));
+//		chords.add(toChord(8,3,11,6));
+//		chords.add(toChord(7,3,11,6));
+//		chords.add(toChord(9,2,11,6));
 //		
-		List<Integer> chord2 = new ArrayList<>();
-		chord2.add(7);
-		chord2.add(2);
-		chord2.add(10);
-		chord2.add(8);
-		chords.add(chord2);
+//		chords.add(toChord(7,11,8,6));
+//		chords.add(toChord(3,11,8,6));
+//		chords.add(toChord(4,1,9,6));
+//		chords.add(toChord(8,1,11,4));
+//		chords.add(toChord(4,0,9));
+//		
+//		chords.add(toChord(2,11,7,4));
+//		chords.add(toChord(4,1,9,6));
+//		chords.add(toChord(2,11,7,4));
+//		chords.add(toChord(4,11,7,4));
+//		chords.add(toChord(4,11,7,2));
+//		chords.add(toChord(5,10,7,2));
+//		chords.add(toChord(8,10,7,2));
+//		
+//		chords.add(toChord(0,9,5,2));
+//		chords.add(toChord(11,7,4,2));
+//		chords.add(toChord(6,2));
 		
-		List<Integer> chord3 = new ArrayList<>();
-		chord3.add(7);
-		chord3.add(3);
-		chord3.add(0);
-		chord3.add(10);
-		chords.add(chord3);
+		//ms 34
+		chords.add(toChord(3,8,5));
+		chords.add(toChord(6,8,5));
+		chords.add(toChord(3,7,11));
+		chords.add(toChord(3,7,10));
+		chords.add(toChord(2,5,9));
 		
-		List<Integer> chord4 = new ArrayList<>();
-		chord4.add(7);
-		chord4.add(11);
-		chord4.add(8);
-		chord4.add(3);
-		chords.add(chord4);
+		chords.add(toChord(1,5,8));
+		chords.add(toChord(1,4,9));
+		chords.add(toChord(1,4,10));
+		chords.add(toChord(1,4,6));
+		chords.add(toChord(1,4,9,5));
 		
-		List<Integer> chord5 = new ArrayList<>();
-		chord5.add(7);
-		chord5.add(0);
-		chord5.add(9);
-		chord5.add(6);
-		chords.add(chord5);
+		chords.add(toChord(10,5,4));
+		chords.add(toChord(9,5,4,6));
+		chords.add(toChord(10,5,4,2));
+		
+		chords.add(toChord(1,8,10,4));
+		
+		chords.add(toChord(6,1,5,9));
+		
+		chords.add(toChord(0,9,2,4,7));
+		
+		chords.add(toChord(11,3,8,6));
 		
 		EnumSet<IntervalCycle> set = EnumSet.range(IntervalCycle.P_IC1, IntervalCycle.P_IC7);
 		for (IntervalCycle intervalCycle : set) {
 			for (IntervalCycle intervalCycle2 : set) {
 				for (int i = 0; i < intervalCycle2.getIntervalCycle().length; i++) {
-//					for (int j = 0; j < intervalCycle.getIntervalCycle().length; j++) {
-						AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(intervalCycle, 0), 0,
+					for (int j = 0; j < intervalCycle.getIntervalCycle().length; j++) {
+						AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(intervalCycle, j), 0,
 								new CyclicSet(intervalCycle2, i), 0);
 //						System.out.print(axisDyadArray);
 						if (axisDyadArray.containsAllAxisDyadChords(chords)) {
 							System.out.print(axisDyadArray);
+							System.out.print(axisDyadArray.printArray());
 							System.out.println();
 						}
 //						if (axisDyadArray.isCognateSet()) {
@@ -106,7 +152,7 @@ public class AxisDyadArrayTest {
 //							System.out.println();
 //						}
 //						System.out.println(axisDyadArray.printArray());
-//					}
+					}
 //					System.out.println("-----------------------------------------------------------------------");
 				}
 //				System.out.println("------------------------------------------------------");

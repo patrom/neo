@@ -294,8 +294,6 @@ public class AxisDyadArray {
 			return false;
 		}
 		List<List<Integer>> axisDyadChords = getAllAxisDyadChords();
-//		return axisDyadChords.stream()
-//				.anyMatch(list -> list.containsAll(chord) && chord.containsAll(list));
 		return axisDyadChords.stream()
 				.anyMatch(list -> list.containsAll(chord));
 	}
@@ -305,13 +303,6 @@ public class AxisDyadArray {
 			return false;
 		}
 		return chords.stream().allMatch(chord -> {return containsAxisDyadChord(chord);});
-//		System.out.println("match: " + match);
-//		for (List<Integer> chord : chords) {
-//			if (!containsAxisDyadChord(chord)) {
-//				return false;
-//			}
-//		}
-//		return true;
 	}
 	
 	public boolean containsSumTetraChord(List<Integer> chord){
@@ -325,12 +316,7 @@ public class AxisDyadArray {
 		if (chords.isEmpty()) {
 			return false;
 		}
-		for (List<Integer> chord : chords) {
-			if (!containsSumTetraChord(chord)) {
-				return false;
-			}
-		}
-		return true;
+		return chords.stream().allMatch(chord -> {return containsSumTetraChord(chord);});
 	}
 	
 	public boolean containsCyclicChord(List<Integer> chord){
@@ -343,14 +329,7 @@ public class AxisDyadArray {
 		if (chords.isEmpty()) {
 			return false;
 		}
-//		boolean match = chords.stream().allMatch(chord -> {return containsCyclicChord(chord);});
-//		System.out.println("match: " + match);
-		for (List<Integer> chord : chords) {
-			if (!containsCyclicChord(chord)) {
-				return false;
-			}
-		}
-		return true;
+		return chords.stream().allMatch(chord -> {return containsCyclicChord(chord);});
 	}
 	
 	@Override
