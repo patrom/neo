@@ -1,35 +1,23 @@
 package neo.out.print;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import javax.sound.midi.InvalidMidiDataException;
 
 import jm.music.data.Score;
 import jm.util.View;
-import jm.util.Write;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.util.JMException;
 import neo.NsgaApplication;
 import neo.model.Motive;
 import neo.model.harmony.Harmony;
-import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.Melody;
-import neo.model.note.Note;
-import neo.model.note.NoteBuilder;
 import neo.nsga.MusicSolution;
 import neo.nsga.MusicVariable;
 
@@ -85,7 +73,7 @@ public class Display {
 			melodies.forEach(h ->  LOGGER.info(h.getMelodieNotes() + ", "));
 			Score score = scoreUtilities.createScoreMelodies(melodies, tempo);
 			score.setTitle(id);
-			Write.midi(score, "resources/midi/" + id + ".mid");	
+//			Write.midi(score, "resources/midi/" + id + ".mid");	
 			View.notate(score);	
 		}
 		

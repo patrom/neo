@@ -43,9 +43,7 @@ public abstract class Generator {
 	}
 
 	protected HarmonicMelody getHarmonicMelodyForNote(Note harmonyNote){
-		Optional<HarmonicMelody> optional = harmonicMelodies.stream()
-				.filter(harmonicMelody -> harmonicMelody.getVoice() == harmonyNote.getVoice() && harmonicMelody.getPosition() == harmonyNote.getPosition())
-				.findFirst();
+		Optional<HarmonicMelody> optional = getHarmonicMelodyForVoiceAndPosition(harmonyNote.getVoice(), harmonyNote.getPosition());
 		if (optional.isPresent()) {
 			return copyHarmonicMelody(optional.get(), harmonyNote);
 		} else {
@@ -53,6 +51,13 @@ public abstract class Generator {
 			newNote.setPositionWeight(calculatePositionWeight( harmonyNote.getPosition(),  harmonyNote.getLength()));
 			return new HarmonicMelody(newNote, harmonyNote.getVoice(), harmonyNote.getPosition());
 		}
+	}
+	
+	protected Optional<HarmonicMelody> getHarmonicMelodyForVoiceAndPosition(int voice, int position) {
+		Optional<HarmonicMelody> optional = harmonicMelodies.stream()
+				.filter(harmonicMelody -> harmonicMelody.getVoice() == voice && harmonicMelody.getPosition() == position)
+				.findFirst();
+		return optional;
 	}
 	
 	private HarmonicMelody copyHarmonicMelody(HarmonicMelody harmonicMelody, Note note) {
@@ -82,6 +87,18 @@ public abstract class Generator {
 			harmonicMelodies.add(harmonicMelody);
 		}
 		return harmonicMelodies;
+	}
+	
+	protected HarmonicMelody getHarmonicMelody(int position,
+			int voice, Note harmonyNote) {
+		Optional<HarmonicMelody> optional = getHarmonicMelodyForVoiceAndPosition(voice, position);
+		if (optional.isPresent()) {
+			return copyHarmonicMelody(optional.get(), harmonyNote);
+		} else {
+			Note newNote = harmonyNote.copy();
+			newNote.setPositionWeight(calculatePositionWeight( harmonyNote.getPosition(),  harmonyNote.getLength()));
+			return new HarmonicMelody(newNote, harmonyNote.getVoice(), harmonyNote.getPosition());
+		}
 	}
 	
 	protected List<Integer> generatePitchClasses() {
@@ -188,5 +205,5 @@ public abstract class Generator {
 		}
 		return harmonicMelodies;
 	}
-	
+
 }

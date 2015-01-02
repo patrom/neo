@@ -17,6 +17,7 @@ public class Motive {
 
 	private List<Harmony> harmonies;
 	private MusicProperties musicProperties;
+	private List<Melody> melodies;
 		
 	public Motive(List<Harmony> harmonies, MusicProperties musicProperties) {
 		this.harmonies = harmonies;
@@ -28,7 +29,7 @@ public class Motive {
 	}
 	
 	public List<Melody> getMelodies() {
-		return extractMelodies();
+		return melodies;
 	}
 	
 	protected List<HarmonicMelody> getMelodyForVoice(int voice){
@@ -42,18 +43,20 @@ public class Motive {
 		return musicProperties;
 	}
 	
-	private List<Melody> extractMelodies(){
-		List<Melody> melodies = new ArrayList<>();
+	public void extractMelodies(){
+		this.melodies = new ArrayList<>();
+		harmonies.stream()
+			.flatMap(harmony -> harmony.getHarmonicMelodies().stream())
+			.flatMap(hm -> hm.getMelodyNotes().stream())
+			.forEach(note -> note.setPitch(0));
 		harmonies.stream().forEach(harmony -> harmony.translateToPitchSpace());
 		for (int i = 0; i < musicProperties.getChordSize(); i++) {
 			Melody melody = new Melody(getMelodyForVoice(i), i);
 			melodies.add(melody);
 		}
-		return melodies;
 	}
 	
 	public void updateInnerMetricWeightMelodies() {
-		List<Melody> melodies = extractMelodies();
 		for (Melody melody : melodies) {
 			List<Note> notes = melody.getMelodieNotes();
 			updateInnerMetricWeightNotes(notes);

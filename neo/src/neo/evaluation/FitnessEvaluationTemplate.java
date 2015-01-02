@@ -23,6 +23,7 @@ public class FitnessEvaluationTemplate {
 	private Objective tonalityObjective;
 
 	public FitnessObjectiveValues evaluate(Motive motive) {
+		motive.extractMelodies();
 		motive.updateInnerMetricWeightMelodies();
 		motive.updateInnerMetricWeightHarmonies();
 		return evaluateObjectives(motive);

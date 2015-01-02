@@ -47,26 +47,22 @@ public class ScoreUtilities implements JMC{
 		Part[] scoreParts = new Part[melodies.size() * 2];
 		int voice = 0;
 		for (Melody melody : melodies) {
-			List<neo.model.note.Note> notes = melody.getHarmonyNotes();
-			Phrase phrase = createPhrase(notes);	
-			Part part = new Part(phrase);
-			scoreParts[voice] = part;
-			voice++;	
-		}
-		for (Melody melody : melodies) {
 			List<neo.model.note.Note> notes = melody.getMelodieNotes();
 			Phrase phrase = createPhrase(notes);	
 			Part part = new Part(phrase);
 			scoreParts[voice] = part;
 			voice++;	
 		}
-		
+		for (Melody melody : melodies) {
+			List<neo.model.note.Note> notes = melody.getHarmonyNotes();
+			Phrase phrase = createPhrase(notes);	
+			Part part = new Part(phrase);
+			scoreParts[voice] = part;
+			voice++;	
+		}
 		for (int i = scoreParts.length - 1; i > -1; i--) {
 			score.add(scoreParts[i]);
 		}
-		
-//		double r = randomTempo();
-//		//tempo between 50 - 150
 		score.setTempo(tempo);
 		score.setNumerator(musicProperties.getNumerator());
 		score.setDenominator(musicProperties.getDenominator());
@@ -78,7 +74,6 @@ public class ScoreUtilities implements JMC{
 		Score score = new Score();
 		Part[] scoreParts = new Part[melodies.size()];
 		int voice = 0;
-
 		for (MelodyInstrument melody : melodies) {
 			List<neo.model.note.Note> notes = melody.getNotes();
 			Phrase phrase = createPhrase(notes);	
@@ -86,13 +81,9 @@ public class ScoreUtilities implements JMC{
 			scoreParts[voice] = part;
 			voice++;	
 		}
-		
 		for (int i = scoreParts.length - 1; i > -1; i--) {
 			score.add(scoreParts[i]);
 		}
-		
-//		double r = randomTempo();
-//		//tempo between 50 - 150
 		score.setTempo(tempo);
 		score.setNumerator(musicProperties.getNumerator());
 		score.setDenominator(musicProperties.getDenominator());

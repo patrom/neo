@@ -21,6 +21,7 @@ import neo.generator.BeginEndChordGenerator;
 import neo.generator.DiffSizeGenerator;
 import neo.generator.Generator;
 import neo.generator.MusicProperties;
+import neo.generator.PerleChordGenerator;
 import neo.generator.RandomNotesGenerator;
 import neo.generator.TonalChordGenerator;
 import neo.generator.TonalChords;
@@ -88,7 +89,9 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //		musicProperties.twoFour();
 //		int[][] harmonies = {{0,0,24},{24,24,48},{48,48,72},{72,72,96}, {96,96,120}};
 		musicProperties.threeFour();
-		int[][] harmonies = {{0,0,36},{36,36,72},{72,72,108},{108,108,144}, {144,144,180}};
+		int[][] harmonies = {{0,0, 12, 18,24, 48},{36, 48,60},{72,60,84,108},{108,108,144}, {144,144,180}};
+//		int[][] harmonies = {{0,0,36},{36,36,72},{72,72,108},{108,108,144}, {144,144,180}};
+
 //		musicProperties.fourFour();
 //		int[][] harmonies = {{0,0,48},{48,48,96},{96,96,144},{144,144,192}, {192,192,240}};
 		
@@ -97,17 +100,19 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //		beginEndChordGenerator.setEndPitchClasses(new int[]{0,0,4,7});
 //		Generator generator = beginEndChordGenerator;
 		
-		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
-		tonalChordGenerator.setChords(TonalChords.getTriadsAndSeventhAndSecDominantChords(0));
-		Generator generator = tonalChordGenerator;
+//		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
+//		tonalChordGenerator.setChords(TonalChords.getTriads(0));
+//		Generator generator = tonalChordGenerator;
 		
-//		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-//		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
+		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
+		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
 		
-//		int[][] harmonies2 = {{0,0, 6,12,18,24,30,36},{36,36,42,72},{72, 72,78,108},{108}};
-//		generator.generateHarmonicMelodiesForVoice(harmonies2, 2);
+//		int[][] harmonies2 = {{0,12,36},{36,48,72},{72,72,96,108},{108,108,144}, {144,144,180}};
+//		generator.generateHarmonicMelodiesForVoice(harmonies2, 0);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
+//		Generator generator = new PerleChordGenerator(harmonies, musicProperties);
+//		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
 	    Motive motive = generator.generateMotive();
 	    solutionType.setMotive(motive);
 	    
@@ -121,7 +126,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 1.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
@@ -129,11 +134,11 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    swapHarmonyNotes.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 	    
 	    //melody
-	    melodyNoteToHarmonyNote.setParameter("probabilityMelodyNoteToHarmonyNote", 0.0);
+	    melodyNoteToHarmonyNote.setParameter("probabilityMelodyNoteToHarmonyNote", 1.0);
 	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    melodyNoteToHarmonyNote.setOuterBoundaryIncluded(false);
 	    
-	    oneNoteMutation.setParameter("probabilityOneNote", 0.0);
+	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
 	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    oneNoteMutation.setOuterBoundaryIncluded(false);
 	    

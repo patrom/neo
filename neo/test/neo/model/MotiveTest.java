@@ -1,8 +1,8 @@
 package neo.model;
 
-import static junit.framework.Assert.assertEquals;
 import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
 import static neo.model.note.NoteBuilder.note;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
@@ -10,8 +10,6 @@ import java.util.List;
 
 import neo.AbstractTest;
 import neo.DefaultConfig;
-import neo.generator.MusicProperties;
-import neo.model.Motive;
 import neo.model.harmony.Harmony;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.Melody;
@@ -23,7 +21,6 @@ import neo.out.instrument.Ensemble;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationContextLoader;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -36,6 +33,8 @@ public class MotiveTest extends AbstractTest{
 
 	@Before
 	public void setUp(){
+		musicProperties.setChordSize(3);
+		musicProperties.setInstruments(Ensemble.getStringQuartet());
 		List<Harmony> harmonies = new ArrayList<>();
 		HarmonicMelody harmonicMelody = harmonicMelody()
 					.harmonyNote(note().pc(0).ocatve(5).build())
@@ -48,13 +47,12 @@ public class MotiveTest extends AbstractTest{
 		Harmony harmony = new Harmony(0, 12, harmonicMelodies);
 		harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveLowestPitchClassRange(), musicProperties.getInstruments()));
 		harmonies.add(harmony);
-		musicProperties.setChordSize(3);
-		musicProperties.setInstruments(Ensemble.getStringQuartet());
 		motive = new Motive(harmonies, musicProperties);
 	}
 	
 	@Test
 	public void testGetMelodies(){
+		motive.extractMelodies();
 		List<Melody> melodies = motive.getMelodies();
 		assertFalse(melodies.isEmpty());
 		assertEquals(2, melodies.get(0).getMelodieNotes().size());
@@ -85,6 +83,13 @@ public class MotiveTest extends AbstractTest{
 		System.out.println(notes);
 	}
 	
-	
+	@Test
+	public void extractMelodies(){
+		motive.extractMelodies();
+		List<Melody> melodies = motive.getMelodies();
+		assertFalse(melodies.isEmpty());
+		assertEquals(2, melodies.get(0).getMelodieNotes().size());
+		assertEquals(5, melodies.get(0).getMelodieNotes().get(1).getPitchClass());
+	}
 
 }
