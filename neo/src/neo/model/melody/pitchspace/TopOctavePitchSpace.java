@@ -40,6 +40,10 @@ public class TopOctavePitchSpace extends PitchSpace {
 				pitch = pitch + 12;
 				octave++;
 			}
+			while (pitch > instrument.getHighest()) {
+				pitch = pitch - 12;
+				octave--;
+			}
 			note.setPitch(pitch);
 			note.setOctave(octave);
 			harmonicMelody.updateMelodyPitchesToHarmonyPitch();

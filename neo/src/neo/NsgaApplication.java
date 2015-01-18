@@ -99,9 +99,9 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 		
 //		BeginEndChordGener¢r = beginEndChordGenerator;
 		
-//		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
-//		tonalChordGenerator.setChords(TonalChords.getTriads(0));
-//		Generator generator = tonalChordGenerator;
+		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
+		tonalChordGenerator.setChords(TonalChords.getTriads(0));
+		Generator generator = tonalChordGenerator;
 		
 //		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
 //		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
@@ -110,8 +110,8 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //		generator.generateHarmonicMelodiesForVoice(harmonies, 2);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
-		Generator generator = new PerleChordGenerator(harmonies, musicProperties);
-		generator.generateHarmonicMelodiesForVoice(harmonies, 5);
+//		Generator generator = new PerleChordGenerator(harmonies, musicProperties);
+//		generator.generateHarmonicMelodiesForVoice(harmonies, 5);
 	    Motive motive = generator.generateMotive();
 	    solutionType.setMotive(motive);
 	    

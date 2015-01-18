@@ -34,6 +34,15 @@ public class Ensemble {
 		return voices;
 	}
 	
+	public static List<Instrument> getChoir(){
+		List<Instrument> voices = new ArrayList<Instrument>();
+		voices.add(new KontaktLibSoprano(3, 0));
+		voices.add(new KontaktLibAlto(2, 1));
+		voices.add(new KontaktLibTenor(1, 2));
+		voices.add(new KontaktLibBass(0, 3));
+		return voices;
+	}
+	
 	public static List<Instrument> getPiano(int totalVoices){
 		List<Instrument> voices = new ArrayList<Instrument>();
 		for (int i = 0; i < totalVoices; i++) {
