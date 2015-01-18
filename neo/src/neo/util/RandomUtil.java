@@ -12,6 +12,10 @@ public class RandomUtil {
 		return list.get(randomInt(0, list.size()));
 	}
 	
+	public static int getRandomFromIntArray(int[] array){
+		return array[random(array.length)];
+	}
+	
 	public static int randomInt(int origin, int boundExclusive){
 		return random.ints(origin, boundExclusive).findFirst().getAsInt();
 	}

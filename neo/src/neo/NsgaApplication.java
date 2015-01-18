@@ -72,7 +72,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	public static AtomicInteger COUNTER = new AtomicInteger();
 	
 	public static void main(final String[] args) throws IOException {
-		deleteMidiFiles();
+//		deleteMidiFiles();
 		for (int i = 0; i < 2; i++) {
 			LOGGER.info("RUN: " + i + " START");
 			SpringApplication app = new SpringApplication(NsgaApplication.class);
@@ -95,24 +95,21 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //		musicProperties.fourFour();
 //		int[][] harmonies = {{0,0,48},{48,48,96},{96,96,144},{144,144,192}, {192,192,240}};
 		
-//		BeginEndChordGenerator beginEndChordGenerator = new BeginEndChordGenerator(harmonies, musicProperties);
-//		beginEndChordGenerator.setBeginPitchClasses(new int[]{0,4});
-//		beginEndChordGenerator.setEndPitchClasses(new int[]{0,0,4,7});
-//		Generator generator = beginEndChordGenerator;
+//		BeginEndChordGener¢r = beginEndChordGenerator;
 		
 //		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
 //		tonalChordGenerator.setChords(TonalChords.getTriads(0));
 //		Generator generator = tonalChordGenerator;
 		
-		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
+//		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
+//		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
 		
 //		int[][] harmonies2 = {{0,12,36},{36,48,72},{72,72,96,108},{108,108,144}, {144,144,180}};
-//		generator.generateHarmonicMelodiesForVoice(harmonies2, 0);
+//		generator.generateHarmonicMelodiesForVoice(harmonies, 2);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
-//		Generator generator = new PerleChordGenerator(harmonies, musicProperties);
-//		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
+		Generator generator = new PerleChordGenerator(harmonies, musicProperties);
+		generator.generateHarmonicMelodiesForVoice(harmonies, 5);
 	    Motive motive = generator.generateMotive();
 	    solutionType.setMotive(motive);
 	    
@@ -126,7 +123,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 1.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
@@ -138,7 +135,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    melodyNoteToHarmonyNote.setOuterBoundaryIncluded(false);
 	    
-	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
+	    oneNoteMutation.setParameter("probabilityOneNote", 0.0);
 	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    oneNoteMutation.setOuterBoundaryIncluded(false);
 	    

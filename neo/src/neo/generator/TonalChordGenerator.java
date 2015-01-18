@@ -1,7 +1,5 @@
 package neo.generator;
 
-import static neo.model.harmony.HarmonyBuilder.harmony;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,6 @@ import neo.model.harmony.Harmony;
 import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.pitchspace.UniformPitchSpace;
-import neo.model.note.Note;
 import neo.util.RandomUtil;
 
 public class TonalChordGenerator extends Generator{
@@ -20,48 +17,52 @@ public class TonalChordGenerator extends Generator{
 		super(positions, musicProperties);
 	}
 
-	@Override
-	public void generateHarmonyBuilders() {
-		for (int i = 0; i < positions.length - 1; i++) {
-			HarmonyBuilder harmonyBuilder = harmony().pos(positions[i][0]).len(positions[i + 1][0] - positions[i][0]);
-			harmonyBuilder.pitchClasses(pickRandomChords());
-			harmonyBuilders.add(harmonyBuilder);
-		}
-	}
-
-	protected int[] pickRandomChords() {
+	protected int[] pickRandomChord() {
 		int[] chord = RandomUtil.getRandomFromList(chords);
 		int size = musicProperties.getChordSize();
 		if (chord.length < size) {
-			int[] newChord = new int[size];
-			for (int i = 0; i < chord.length; i++) {
-				newChord[i] = chord[i];
-			}
-			for (int i = chord.length; i < size; i++) {
-				int randomIndex = RandomUtil.random(chord.length);
-				newChord[i] = chord[randomIndex];
-			}
-			return newChord;
+			return expandChordToSize(chord, size);
 		}
 		return chord;
 	}
 
+//	@Override
+//	public List<Harmony> generateHarmonies() {
+//		List<Harmony> harmonies = new ArrayList<>();
+//		for (HarmonyBuilder harmonyBuilder :harmonyBuilders) {
+//			List<Integer> chordPitchClasses = harmonyBuilder.getPitchClasses();
+//			List<Note> harmonyNotes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
+//			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(harmonyNotes);
+//			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
+//			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
+//			harmony.setPositionWeight(totalWeight);
+//			harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveLowestPitchClassRange(), musicProperties.getInstruments()));
+//			harmonies.add(harmony);		
+//		}
+//		return harmonies;
+//	}
+	
 	@Override
-	public List<Harmony> generateHarmonies() {
+	public List<Harmony> generateHarmonies(){
 		List<Harmony> harmonies = new ArrayList<>();
-		for (HarmonyBuilder harmonyBuilder :harmonyBuilders) {
-			List<Integer> chordPitchClasses = harmonyBuilder.getPitchClasses();
-			List<Note> harmonyNotes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
-			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(harmonyNotes);
+		for (HarmonyBuilder harmonyBuilder : harmonyBuilders) {
+			int[] chord = pickRandomChord();
+			List<HarmonicMelody> harmonicMelodies = new ArrayList<>(); 
+			for (int voice = 0; voice < musicProperties.getChordSize(); voice++) {
+				HarmonicMelody harmonicMelody = getHarmonicMelody(
+						harmonyBuilder.getPosition(), voice, harmonyBuilder.getLength(), chord[voice]);
+				harmonicMelody.updateHarmonyAndMelodyNotes(chord[voice], n -> n.setPitchClass(RandomUtil.getRandomFromIntArray(chord)));
+				harmonicMelodies.add(harmonicMelody);
+			}
 			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
 			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
 			harmony.setPositionWeight(totalWeight);
 			harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveLowestPitchClassRange(), musicProperties.getInstruments()));
-			harmonies.add(harmony);		
+			harmonies.add(harmony);	
 		}
 		return harmonies;
 	}
-
+	
 	public void setChords(List<int[]> chords) {
 		this.chords = chords;
 	}

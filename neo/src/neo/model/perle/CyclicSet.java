@@ -31,7 +31,7 @@ public class CyclicSet {
 			cyclicSet[i + 1] = iCycle[j];
 		}
 	}
-	
+
 	public int[] getCyclicSet(){
 		return cyclicSet;
 	}

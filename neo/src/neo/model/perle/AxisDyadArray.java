@@ -3,6 +3,7 @@ package neo.model.perle;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import neo.util.Util;
@@ -129,6 +130,86 @@ public class AxisDyadArray {
 		return pitchClasses;
 	}
 	
+	public List<Integer> getTonicAxisDyadChord(int axisDyadPosition){
+		if(topCyclicSet.getCyclicInterval() == bottomCyclicSet.getCyclicInterval()){
+			if(axisDyadDuplicatesTonicSum(axisDyadPosition) 
+					&& axisDyadInTrichordalSegment(axisDyadPosition)
+					&& sameCyclicIntervalContainsTetradicSegment(axisDyadPosition)){
+				return getAxisDyadChord(axisDyadPosition);
+			}
+		}else{
+			if(axisDyadDuplicatesTonicSum(axisDyadPosition) 
+					&& axisDyadInTrichordalSegment(axisDyadPosition)){
+				return getAxisDyadChord(axisDyadPosition);
+			}
+		}
+		return Collections.EMPTY_LIST;
+	}
+	
+	private boolean axisDyadInTrichordalSegment(int axisDyadPosition){
+		List<Integer> axisDyad = new ArrayList<>();
+		axisDyad.add(topCycle[axisDyadPosition]);
+		axisDyad.add(bottomCycle[axisDyadPosition]);
+		List<Integer> upperTriChord = getCycleTriChord(axisDyadPosition, topCycle);
+		List<Integer> bottomTriChord = getCycleTriChord(axisDyadPosition, bottomCycle);
+		if (upperTriChord.containsAll(axisDyad) || bottomTriChord.containsAll(axisDyad)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean sameCyclicIntervalContainsTetradicSegment(int axisDyadPosition) {
+		List<Integer> cyclicChord = getCyclicChord(axisDyadPosition);
+		List<Integer> upperLeftTetraChord = getLeftCycleTetraChord(axisDyadPosition, topCycle);
+		List<Integer> upperRightTetraChord = getRightCycleTetraChord(axisDyadPosition, topCycle);
+		List<Integer> bottomLeftTetraChord = getLeftCycleTetraChord(axisDyadPosition, bottomCycle);
+		List<Integer> bottomRightTetraChord = getRightCycleTetraChord(axisDyadPosition, bottomCycle);
+		if (cyclicChord.containsAll(upperLeftTetraChord) || cyclicChord.containsAll(upperRightTetraChord)
+				|| cyclicChord.containsAll(bottomLeftTetraChord) || cyclicChord.containsAll(bottomRightTetraChord)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean axisDyadDuplicatesTonicSum(int axisDyadPosition) {
+		int topLeftTonicSum = topCyclicSet.getLeftTonicSum();
+		int topRightTonicSum = topCyclicSet.getRightTonicSum();
+		int bottomLeftTonicSum = bottomCyclicSet.getLeftTonicSum();
+		int bottomRightTonicSum = bottomCyclicSet.getRightTonicSum();
+		int axisDyadSum = (topCycle[axisDyadPosition] + bottomCycle[axisDyadPosition]) % 12;
+		if (axisDyadSum == topLeftTonicSum || axisDyadSum == topRightTonicSum 
+				|| axisDyadSum == bottomLeftTonicSum || axisDyadSum == bottomRightTonicSum) {
+			return true;
+		}
+		return false;
+	}
+
+	private List<Integer> getLeftCycleTetraChord(int axisDyadPosition, int[] cycle) {
+		List<Integer> upperLeftTetraChord = new ArrayList<>();
+		upperLeftTetraChord.add(((axisDyadPosition - 2) < 0)?cycle[cycle.length - 1]:cycle[axisDyadPosition - 2]);
+		upperLeftTetraChord.add(cycle[axisDyadPosition - 1]);
+		upperLeftTetraChord.add(cycle[axisDyadPosition]);
+		upperLeftTetraChord.add(cycle[(axisDyadPosition + 1) % cycle.length]);
+		return upperLeftTetraChord;
+	}
+	
+	private List<Integer> getCycleTriChord(int axisDyadPosition, int[] cycle) {
+		List<Integer> trichordalChord = new ArrayList<>();
+		trichordalChord.add(cycle[axisDyadPosition - 1]);
+		trichordalChord.add(cycle[axisDyadPosition]);
+		trichordalChord.add(cycle[(axisDyadPosition + 1) % cycle.length]);
+		return trichordalChord;
+	}
+
+	private List<Integer> getRightCycleTetraChord(int axisDyadPosition, int[] cycle) {
+		List<Integer> upperRightTetraChord = new ArrayList<>();
+		upperRightTetraChord.add(cycle[axisDyadPosition - 1]);
+		upperRightTetraChord.add(cycle[axisDyadPosition]);
+		upperRightTetraChord.add(cycle[(axisDyadPosition + 1) % cycle.length]);
+		upperRightTetraChord.add(cycle[(axisDyadPosition + 2) % cycle.length]);
+		return upperRightTetraChord;
+	}
+	
 	/**
 	 * @param axisDyadPosition position in array
 	 */
@@ -180,6 +261,17 @@ public class AxisDyadArray {
 			allChords.add(getAxisDyadChord(i));
 		}
 		return allChords;
+	}
+	
+	public List<List<Integer>> getAllTonicAxisDyadChords(){
+		List<List<Integer>> tonicAxisDyadChords = new ArrayList<List<Integer>>();
+		for (int i = 1; i < topCycle.length; i = i + 2) {
+			List<Integer> tonicAxisDyadChord = getTonicAxisDyadChord(i);
+			if (!tonicAxisDyadChord.isEmpty()) {
+				tonicAxisDyadChords.add(tonicAxisDyadChord);
+			}
+		}
+		return tonicAxisDyadChords;
 	}
 	
 	public List<List<Integer>> getAllCyclicChords(){
@@ -286,7 +378,10 @@ public class AxisDyadArray {
 	}
 	
 	public void inverse(int step){
-		//TODO
+		topCyclicSet.inverse(step);
+		topCycle = topCyclicSet.getCyclicSet();
+		bottomCyclicSet.inverse(step);
+		bottomCycle = bottomCyclicSet.getCyclicSet();
 	}
 	
 	public boolean containsAxisDyadChord(List<Integer> chord){

@@ -25,6 +25,18 @@ public class AxisDyadArrayTest {
 	}
 	
 	@Test
+	public void allTonicAxisDyadChords(){
+		AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(IntervalCycle.P_IC1, 5), 0,
+				new CyclicSet(IntervalCycle.P_IC1, 3), 0);
+		System.out.print(axisDyadArray);
+		System.out.println(axisDyadArray.printArray());
+		List<List<Integer>> tonicAxisDyadChords = axisDyadArray.getAllTonicAxisDyadChords();
+		for (List<Integer> list : tonicAxisDyadChords) {
+			System.out.println(list);
+		}
+	}
+	
+	@Test
 	public void allAxisDyadArray(){
 		List<Integer> chord = new ArrayList<>();
 		chord.add(2);
@@ -301,9 +313,8 @@ public class AxisDyadArrayTest {
 
 	@Test
 	public void testInverse() {
-		//TODO: implement
 		axisDyadArray.inverse(1);
-		assertEquals("p2p9/p4p11", axisDyadArray.getName());
+		assertEquals("p2p7/p0p5", axisDyadArray.getName());
 	}
 
 	@Test
@@ -313,7 +324,7 @@ public class AxisDyadArrayTest {
 		chord.add(4);
 		chord.add(7);
 		chord.add(5);
-		assertFalse(axisDyadArray.containsAxisDyadChord(chord));
+//		assertFalse(axisDyadArray.containsAxisDyadChord(chord));
 		chord.add(9);
 		assertTrue(axisDyadArray.containsAxisDyadChord(chord));
 	}

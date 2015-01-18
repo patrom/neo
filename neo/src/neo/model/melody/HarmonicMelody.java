@@ -149,4 +149,11 @@ public class HarmonicMelody {
 		this.harmonyNote = harmonyNote;
 	}
 	
+	//set random melody (chord tones) notes (avoid repeated notes), only first note = harmony note
+	public void updateHarmonyAndMelodyNotes(int harmonyPitch, Consumer<Note> updateMelodyPitchClasses){
+		melodyNotes.forEach(updateMelodyPitchClasses);
+		melodyNotes.get(0).setPitchClass(harmonyPitch);
+		harmonyNote.setPitchClass(harmonyPitch);
+	}
+	
 }

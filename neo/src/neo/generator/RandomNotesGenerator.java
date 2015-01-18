@@ -1,29 +1,18 @@
 package neo.generator;
 
-import static neo.model.harmony.HarmonyBuilder.harmony;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import neo.model.harmony.Harmony;
 import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.pitchspace.UniformPitchSpace;
-import neo.model.note.Note;
 
 public class RandomNotesGenerator extends Generator{
 
 	public RandomNotesGenerator(int[][] positions,
 			MusicProperties musicProperties) {
 		super(positions, musicProperties);
-	}
-
-	@Override
-	public void generateHarmonyBuilders(){
-		for (int i = 0; i < positions.length - 1; i++) {
-			harmonyBuilders.add(harmony().pos(positions[i][0]).len(positions[i + 1][0] - positions[i][0]));
-		}
 	}
 
 //	@Override
@@ -42,16 +31,15 @@ public class RandomNotesGenerator extends Generator{
 //		return harmonies;
 //	}
 	
-
 	@Override
 	public List<Harmony> generateHarmonies(){
 		List<Harmony> harmonies = new ArrayList<>();
 		for (HarmonyBuilder harmonyBuilder : harmonyBuilders) {
 			List<HarmonicMelody> harmonicMelodies = new ArrayList<>(); 
-			for (int i = 0; i < musicProperties.getChordSize(); i++) {
+			for (int voice = 0; voice < musicProperties.getChordSize(); voice++) {
 				int pitchClass = musicProperties.getScale().pickRandomPitchClass();
-				Note harmonyNote = new Note(pitchClass, i , harmonyBuilder.getPosition(), harmonyBuilder.getLength());
-				HarmonicMelody harmonicMelody = getHarmonicMelody(harmonyBuilder.getPosition(), i, harmonyNote);
+				HarmonicMelody harmonicMelody = getHarmonicMelody(harmonyBuilder.getPosition(), voice, harmonyBuilder.getLength(), pitchClass);
+				harmonicMelody.updateHarmonyAndMelodyNotes(pitchClass, n -> n.setPitchClass(musicProperties.getScale().pickRandomPitchClass()));
 				harmonicMelodies.add(harmonicMelody);
 			}
 			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
@@ -62,5 +50,5 @@ public class RandomNotesGenerator extends Generator{
 		}
 		return harmonies;
 	}
-
+	
 }

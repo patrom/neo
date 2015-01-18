@@ -7,21 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import neo.model.harmony.Harmony;
-import neo.model.harmony.HarmonyBuilder;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.pitchspace.UniformPitchSpace;
-import neo.model.note.Note;
 
 public class DiffSizeGenerator extends Generator{
 
 	public DiffSizeGenerator(int[][] positions, MusicProperties musicProperties) {
 		super(positions, musicProperties);
-	}
-
-	@Override
-	public void generateHarmonyBuilders() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
