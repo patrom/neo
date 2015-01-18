@@ -50,6 +50,8 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	private Arrangement arrangement;
 	@Autowired
 	private ScoreUtilities scoreUtilities;
+	@Autowired
+	private String midiFilesPath;
 	
 	public static void main(final String[] args) {
 	 	SpringApplication app = new SpringApplication(PlayApplication.class);
@@ -63,9 +65,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	}
 	
 	public void playMidiFilesOnKontaktFor() throws IOException, InvalidMidiDataException, InterruptedException {
-		// "C:/Users/prombouts/git/neo/neo/resources/midi"
-		// "C:/Dev/git/neo/neo/resources/midi"
-		List<File> midiFiles = Files.list(new File("C:/Users/prombouts/git/neo/neo/resources/midi").toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		List<File> midiFiles = Files.list(new File(midiFilesPath).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
@@ -145,9 +145,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	}
 
 	public void playMidiFilesOnKontaktFor(Instrument instrument) throws IOException, InvalidMidiDataException, InterruptedException {
-		
-//		List<File> midiFiles = Files.list(new File(PlayApplication.class.getResource("/midi").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
-		List<File> midiFiles = Files.list(new File("C:/Dev/git/neo/neo/resources/midi").toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		List<File> midiFiles = Files.list(new File(midiFilesPath).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File midiFile : midiFiles) {
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);

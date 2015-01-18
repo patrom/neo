@@ -68,11 +68,12 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	private MusicProperties musicProperties;
 	@Autowired
 	private HashMap<String, Object> parameters;
+	@Autowired
+	private String midiFilesPath;
 	
 	public static AtomicInteger COUNTER = new AtomicInteger();
 	
 	public static void main(final String[] args) throws IOException {
-//		deleteMidiFiles();
 		for (int i = 0; i < 2; i++) {
 			LOGGER.info("RUN: " + i + " START");
 			SpringApplication app = new SpringApplication(NsgaApplication.class);
@@ -84,6 +85,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 
 	@Override
 	public void run(String... arg0) throws Exception {
+		deleteMidiFiles(midiFilesPath);
 //		musicProperties.sixEight();
 //		int[][] harmonies = {{0,0,18,36},{36,36,54,72},{72,72,90,108},{108,108,126,144}, {144,144,162,180}};
 //		musicProperties.twoFour();
@@ -171,8 +173,8 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //        rhythmWeightValues = RhythmWeight.generateRhythmWeight(harmonies.length - 1, musicProperties.getMeasureWeights());
     }
 	
-	private static void deleteMidiFiles() throws IOException{
-		List<File> midiFiles = Files.list(new File("C:/Dev/git/neo/neo/resources/midi").toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+	private void deleteMidiFiles(String midiFilesPath) throws IOException{
+		List<File> midiFiles = Files.list(new File(midiFilesPath).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File file : midiFiles) {
 			file.delete();
 		}
