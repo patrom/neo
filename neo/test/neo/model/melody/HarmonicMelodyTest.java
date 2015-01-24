@@ -1,6 +1,5 @@
 package neo.model.melody;
 
-import static neo.model.harmony.HarmonyBuilder.harmony;
 import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
 import static neo.model.note.NoteBuilder.note;
 import static org.junit.Assert.assertEquals;
@@ -8,13 +7,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import neo.model.harmony.Harmony;
-import neo.model.harmony.HarmonyBuilder;
-import neo.model.melody.HarmonicMelody;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
+import neo.model.note.Scale;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,6 +42,7 @@ public class HarmonicMelodyTest {
 	public void testUpdateMelodyNotesIntInt() {
 		harmonicMelody.updateMelodyNotes(2, 4);
 		assertEquals(4, harmonicMelody.getMelodyNotes().get(1).getPitchClass());
+		assertTrue(harmonicMelody.getMelodyNotes().stream().noneMatch(n -> n.getPitch() == 0));
 	}
 
 	@Test
@@ -63,34 +60,56 @@ public class HarmonicMelodyTest {
 				.build();
 		harmonicMelody.randomUpdateMelodyNotes(4);
 		assertEquals(true, harmonicMelody.getMelodyNotes().contains(harmonyNote));
+		assertTrue(harmonicMelody.getMelodyNotes().stream().noneMatch(n -> n.getPitch() == 0));
 	}
 
 	@Test
 	public void testUpdateMelodyPitchesToHarmonyPitch() {
+		Note harmonyNote = note().pc(0).pitch(60).ocatve(5).build();
+		harmonicMelody = harmonicMelody()
+				.notes(note().pc(0).pitch(0).ocatve(5).build(), note().pc(2).pitch(0).ocatve(5).build())
+				.harmonyNote(harmonyNote)
+				.build();
 		harmonicMelody.updateMelodyPitchesToHarmonyPitch();
-		assertEquals(62, harmonicMelody.getMelodyNotes().get(1).getPitch());
+		assertEquals(harmonyNote.getPitch(), harmonicMelody.getMelodyNotes().get(0).getPitch());
+		assertTrue(harmonicMelody.getMelodyNotes().stream().noneMatch(n -> n.getPitch() == 0));
 	}
 	
 	@Test
 	public void testMutateMelodyNoteToHarmonyNote() {  
 		HarmonicMelody harmonicMelody = harmonicMelody().voice(0).pos(0)
 				.harmonyNote(note().pc(0).pos(0).build())
-				.notes(note().pc(0).pos(0).len(6).build(),
-					   note().pc(1).pos(6).len(12).build(),
-					   note().pc(2).pos(18).len(6).build()).build();
+				.notes(note().pc(3).pos(0).len(6).build(),
+					   note().pc(0).pos(6).len(12).build(),
+					   note().pc(1).pos(18).len(6).build()).build();
 		harmonicMelody.mutateMelodyNoteToHarmonyNote(2);
 		assertTrue(harmonicMelody.getMelodyNotes().stream().map(note -> note.getPitchClass()).anyMatch(pc -> pc == 2));
 	}
 	
 	@Test
-	public void testMutateMelodyNoteToHarmonyNoteWithoutNonChordTones() {  
-		HarmonicMelody harmonicMelody = harmonicMelody().voice(0).pos(0)
-				.harmonyNote(note().pc(0).pos(0).build())
-				.notes(note().pc(0).pos(0).len(6).build(),
-					   note().pc(0).pos(6).len(12).build(),
-					   note().pc(0).pos(18).len(6).build()).build();
-		harmonicMelody.mutateMelodyNoteToHarmonyNote(2);
-		assertTrue(harmonicMelody.getMelodyNotes().stream().map(note -> note.getPitchClass()).anyMatch(pc -> pc == 2));
+	public void testMutateHarmonyNextNoteToPitch() {  
+		harmonicMelody.mutateHarmonyNextNoteToPitch(new Scale(Scale.MAJOR_SCALE));
+		assertEquals(2, harmonicMelody.getHarmonyNote().getPitchClass());
+	}
+	
+	@Test
+	public void testMutateHarmonyPreviousNoteToPitch() {  
+		harmonicMelody.mutateHarmonyPreviousNoteToPitch(new Scale(Scale.MAJOR_SCALE));
+		assertEquals(11, harmonicMelody.getHarmonyNote().getPitchClass());
+	}
+	
+	@Test
+	public void testUpdateHarmonyAndMelodyNotes() {  
+		harmonicMelody.updateHarmonyAndMelodyNotes(4, n -> n.setPitchClass(3));
+		assertEquals(4, harmonicMelody.getMelodyNotes().get(0).getPitchClass());
+		assertEquals(3, harmonicMelody.getMelodyNotes().get(1).getPitchClass());
+	}
+	
+	@Test
+	public void testMutateHarmonyNoteToRandomPitch() {  
+		harmonicMelody.mutateHarmonyNoteToRandomPitch(new Scale(Scale.MAJOR_SCALE));
+		assertTrue(harmonicMelody.getMelodyNotes().stream()
+				.anyMatch(note -> note.getPitchClass() == harmonicMelody.getHarmonyNote().getPitchClass()));
 	}
 	
 
