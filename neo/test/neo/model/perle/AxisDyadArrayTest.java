@@ -74,6 +74,14 @@ public class AxisDyadArrayTest {
 	@Test
 	public void allArraysInRange(){
 		List<List<Integer>> chords = new ArrayList<List<Integer>>();
+		//ms1
+//		chords.add(toChord(11,8,3,7));
+//		chords.add(toChord(0,9,4,7));
+//		chords.add(toChord(0,9,4,6));
+//		chords.add(toChord(11,8,3,6));
+//		chords.add(toChord(10,7,2,8));
+//		chords.add(toChord(8,4,1,11));
+//		chords.add(toChord(8,3,0,5));
 		
 		//ms 23
 //		List<Integer> chordB = new ArrayList<>();

@@ -3,6 +3,7 @@ package neo.model.setclass;
 import static java.util.stream.Collectors.toSet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +66,24 @@ public class PcSetUnorderedPropertiesTest extends AbstractTest{
 		set[2] = 7;
 		pcSetUnorderedProperties = new PcSetUnorderedProperties(set);
 		Assert.assertEquals("3-11", pcSetUnorderedProperties.getForteName());
+	}
+	
+	private PcSetUnorderedProperties toPcSetUnorderedProperties(int...notes ){
+		return new PcSetUnorderedProperties(notes);
+	}
+	
+	@Test
+	public void testSetClasses(){
+		//Perle String quartet 5 ms 1
+		List<PcSetUnorderedProperties> sets = new ArrayList<>();
+		sets.add(toPcSetUnorderedProperties(11,8,3,7));
+		sets.add(toPcSetUnorderedProperties(0,9,4,7));
+		sets.add(toPcSetUnorderedProperties(0,9,4,6));
+		sets.add(toPcSetUnorderedProperties(11,8,3,6));
+		sets.add(toPcSetUnorderedProperties(10,7,2,8));
+		sets.add(toPcSetUnorderedProperties(8,4,1,11));
+		sets.add(toPcSetUnorderedProperties(8,3,0,5));
+		sets.forEach(s -> LOGGER.info(s.getForteName()));
 	}
 
 }
