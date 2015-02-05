@@ -17,11 +17,8 @@ import jmetal.core.Operator;
 import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
 import jmetal.operators.selection.SelectionFactory;
-import neo.generator.BeginEndChordGenerator;
-import neo.generator.DiffSizeGenerator;
 import neo.generator.Generator;
 import neo.generator.MusicProperties;
-import neo.generator.PerleChordGenerator;
 import neo.generator.RandomNotesGenerator;
 import neo.generator.TonalChordGenerator;
 import neo.generator.TonalChords;
@@ -74,7 +71,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	public static AtomicInteger COUNTER = new AtomicInteger();
 	
 	public static void main(final String[] args) throws IOException {
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 1; i++) {
 			LOGGER.info("RUN: " + i + " START");
 			SpringApplication app = new SpringApplication(NsgaApplication.class);
 		    app.setShowBanner(false);
@@ -86,32 +83,21 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	@Override
 	public void run(String... arg0) throws Exception {
 		deleteMidiFiles(midiFilesPath);
-//		musicProperties.sixEight();
-//		int[][] harmonies = {{0,0,18,36},{36,36,54,72},{72,72,90,108},{108,108,126,144}, {144,144,162,180}};
-//		musicProperties.twoFour();
-//		int[][] harmonies = {{0,0,24},{24,24,48},{48,48,72},{72,72,96}, {96,96,120}};
 		musicProperties.threeFour();
-		int[][] harmonies = {{0,0, 12, 18,24, 48},{36, 48,60},{72,60,84,108},{108,108,144}, {144,144,180}};
-//		int[][] harmonies = {{0,0,36},{36,36,72},{72,72,108},{108,108,144}, {144,144,180}};
-
-//		musicProperties.fourFour();
-//		int[][] harmonies = {{0,0,48},{48,48,96},{96,96,144},{144,144,192}, {192,192,240}};
+		int[] harmonies = {0,36,72,108,144};
+		int[][] melodies = {{0, 12, 24, 36},{0, 12, 24, 36},{0, 12, 24, 36},{0, 12, 24, 36},{}};
 		
-//		BeginEndChordGener¢r = beginEndChordGenerator;
+//		BeginEndChordGenerator generator = beginEndChordGenerator;
 		
-		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
-		tonalChordGenerator.setChords(TonalChords.getTriads(0));
-		Generator generator = tonalChordGenerator;
+//		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
+//		tonalChordGenerator.setChords(TonalChords.getTriads(0));
+//		Generator generator = tonalChordGenerator;
 		
-//		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-//		generator.generateHarmonicMelodiesForVoice(harmonies, 3);
-		
-//		int[][] harmonies2 = {{0,12,36},{36,48,72},{72,72,96,108},{108,108,144}, {144,144,180}};
-//		generator.generateHarmonicMelodiesForVoice(harmonies, 2);
+		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
+		generator.generateHarmonicMelodiesForVoice(melodies, 3);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
 //		Generator generator = new PerleChordGenerator(harmonies, musicProperties);
-//		generator.generateHarmonicMelodiesForVoice(harmonies, 5);
 	    Motive motive = generator.generateMotive();
 	    solutionType.setMotive(motive);
 	    
@@ -125,7 +111,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 1.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
@@ -137,7 +123,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    melodyNoteToHarmonyNote.setOuterBoundaryIncluded(false);
 	    
-	    oneNoteMutation.setParameter("probabilityOneNote", 0.0);
+	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
 	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    oneNoteMutation.setOuterBoundaryIncluded(false);
 	    

@@ -160,7 +160,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 		notes.add(note().pc(7).pos(12).len(6).positionWeight(1.0).build());
 		notes.add(note().pc(0).pos(18).len(6).positionWeight(0.5).build());
 		double value = melodicObjective.evaluateTriadicValueMelody(notes);
-		assertEquals(ChordType.MAJOR.getDissonance(), value, 0);
+		assertEquals(0.8, value, 0);
 	}
 
 

@@ -36,6 +36,10 @@ public class Scale {
 	private Random random = new Random(System.currentTimeMillis());
 	private int[] scale;
 	
+	public Scale() {
+		
+	}
+	
 	public Scale(int[] scale) {
 		this.scale = scale;
 	}

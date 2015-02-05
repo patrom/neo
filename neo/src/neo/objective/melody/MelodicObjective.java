@@ -11,15 +11,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import org.springframework.stereotype.Component;
-
 import neo.model.Motive;
+import neo.model.dissonance.Dissonance;
+import neo.model.dissonance.TonalDissonance;
 import neo.model.harmony.Chord;
 import neo.model.harmony.ChordType;
 import neo.model.melody.Melody;
 import neo.model.note.Interval;
 import neo.model.note.Note;
 import neo.objective.Objective;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class MelodicObjective extends Objective {
@@ -66,6 +68,7 @@ public class MelodicObjective extends Objective {
 	protected double evaluateTriadicValueMelody(Collection<Note> notes) {
 		Note[] notePositions = notes.toArray(new Note[notes.size()]);
 		double harmonicValue = 0;
+		Dissonance dissonance = new TonalDissonance();
 		for (int i = 0; i < notePositions.length - 2; i++) {
 				Note firstNote = notePositions[i];
 				Note secondNote = notePositions[i + 1];
@@ -74,8 +77,8 @@ public class MelodicObjective extends Objective {
 				chord.addPitchClass(firstNote.getPitchClass());
 				chord.addPitchClass(secondNote.getPitchClass());
 				chord.addPitchClass(thirdNote.getPitchClass());
-				if (chord.getChordType().equals(ChordType.MAJOR) || chord.getChordType().equals(ChordType.MINOR)) {
-					harmonicValue = harmonicValue + ChordType.MAJOR.getDissonance();
+				if ("3-11".equals(chord.getForteName())) {
+					harmonicValue = harmonicValue + dissonance.getDissonance(chord);
 				}
 		}
 		return (harmonicValue == 0)? 0:harmonicValue/(notePositions.length - 2);

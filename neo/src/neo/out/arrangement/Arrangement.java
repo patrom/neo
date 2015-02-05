@@ -7,11 +7,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import neo.midi.HarmonyInstrument;
+import neo.midi.HarmonyPosition;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
 
@@ -63,10 +64,10 @@ public class Arrangement {
 		return rhythmicNotes;
 	}
 	
-	public List<Note> accompagnement(List<HarmonyInstrument> harmonyPositions, List<Integer[]> compPatterns, Accompagnement[] compStrategy) {
+	public List<Note> accompagnement(List<HarmonyPosition> harmonyPositions, List<Integer[]> compPatterns, Accompagnement[] compStrategy) {
 		List<Note> transformedList = new ArrayList<>();
 		int j = 0;
-		for (HarmonyInstrument harmonyPosition : harmonyPositions) {
+		for (HarmonyPosition harmonyPosition : harmonyPositions) {
 			Accompagnement compStr = compStrategy[j % compStrategy.length];
 			List<List<Note>> rhythmNotes = compStr.applyAccompagnement(harmonyPosition.getNotes());
 			Integer[] compPattern = compPatterns.get(j % compPatterns.size());
@@ -85,6 +86,51 @@ public class Arrangement {
 		}
 		transformedList.sort(Comparator.comparing(Note::getPosition));
 		return transformedList;
+	}
+	
+	public List<Note> getAccompagnement(List<Note> melodyNotes, List<HarmonyPosition> harmonyPositions, List<List<Note>> patterns, int minimumLength){
+		List<Note> pattern = updatePatternPositions(harmonyPositions, patterns);
+		return createAcc(melodyNotes, pattern, minimumLength);
+	}
+	
+	public List<Note> updatePatternPositions(List<HarmonyPosition> harmonyPositions, List<List<Note>> patterns){
+		List<Note> melodyPattern = new ArrayList<>();
+		for (int i = 0; i < patterns.size(); i++) {
+			List<Note> notes = patterns.get(i);
+			HarmonyPosition harmonyPosition = harmonyPositions.get(i);
+			for (Note note : notes) {
+				Note newNote = note.copy();
+				newNote.setPosition(note.getPosition() + harmonyPosition.getPosition());
+				melodyPattern.add(newNote);
+			}
+		}
+		return melodyPattern;
+	}
+	
+	public List<Note> createAcc(List<Note> melodyNotes, List<Note> compPattern, int minimumLength){
+		int position = 0;
+		int tempPosition = 0;
+		List<Note> notes = new ArrayList<Note>();
+		for (Note note : melodyNotes) {
+			while ((position + note.getLength()) > tempPosition) {
+				Optional<Note> patternNote = getPatternNote(compPattern, tempPosition);
+				if (patternNote.isPresent()) {
+					Note newNote = patternNote.get().copy();
+					newNote.setPitch(note.getPitch());
+					newNote.setPitchClass(note.getPitchClass());
+					newNote.setOctave(note.getOctave());
+					newNote.setLength(minimumLength);
+					notes.add(newNote);
+				}
+				tempPosition = tempPosition + minimumLength;
+			}
+			position = tempPosition;
+		}
+		return notes;
+	}
+
+	private Optional<Note> getPatternNote(List<Note> compPattern, int position) {
+		return compPattern.stream().filter(note -> note.getPosition() == position).findFirst();
 	}
 	
 }

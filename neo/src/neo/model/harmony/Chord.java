@@ -1,26 +1,19 @@
 package neo.model.harmony;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
-import neo.model.note.Interval;
 import neo.model.setclass.PcSetUnorderedProperties;
+import neo.nsga.operator.mutation.AbstractMutation;
 
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
 
 public class Chord {
+	
 	private Multiset<Integer> pitchClassMultiSet = TreeMultiset.create();
 	private ChordType chordType;
 	private int voiceLeadingZone;
-
-	public double getWeight() {
-//		chordType = getChordType();
-//		if (chordType.equals(ChordType.CH2)) {
-//			int[] set = toPrimitiveSet(getPitchClassSet());
-//			return Interval.getEnumInterval(set[0] - set[1]).getHarmonicValue();
-//		}
-		return getChordType().getDissonance();
-	}
 
 	public ChordType getChordType() {
 		this.chordType = extractChordType();
@@ -40,7 +33,11 @@ public class Chord {
 	}
 	
 	public String getForteName() {
-		return getPcSetUnorderedProperties().getForteName();
+		if (getPitchClassSet().size() < 2) {
+			return "";
+		} else {
+			return getPcSetUnorderedProperties().getForteName();
+		}
 	}
 	
 	public String[] getSetClassProperties() {
@@ -172,7 +169,7 @@ public class Chord {
 			} else if (secondInterval == 4) {
 				return ChordType.AUGM;
 			} else if (secondInterval == 5) {
-				return ChordType.MINOR;
+				return ChordType.MINOR_1;
 			} else if (secondInterval == 6) {
 				return ChordType.DOM;
 			}

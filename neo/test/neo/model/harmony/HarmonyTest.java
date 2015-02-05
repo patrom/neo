@@ -5,6 +5,8 @@ import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
 import static neo.model.note.NoteBuilder.note;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import neo.model.dissonance.TonalDissonance;
+import neo.model.melody.HarmonicMelody;
 import neo.model.note.NoteBuilder;
 
 import org.junit.Test;
@@ -47,10 +49,30 @@ public class HarmonyTest {
 				.harmonyNote(note().pc(7).pos(0).build())
 				.notes(note().pc(7).pos(0).len(24).build()).build());
 		Harmony harmony = harmonyBuilder.build();
-		harmony.searchBestChord();
+		harmony.searchBestChord(new TonalDissonance());
 		assertTrue(harmony.getNotes().contains(NoteBuilder.note().pc(0).build()));
 		assertTrue(harmony.getNotes().contains(NoteBuilder.note().pc(4).build()));
 		assertTrue(harmony.getNotes().contains(NoteBuilder.note().pc(7).build()));
+	}
+	
+	@Test
+	public void testReplaceHarmonicMelody(){
+		HarmonyBuilder harmonyBuilder = harmony();
+		harmonyBuilder.melodyBuilder(harmonicMelody().voice(0).pos(0)
+				.harmonyNote(note().pc(0).pos(0).build())
+				.notes(note().pc(0).pos(0).len(6).build(),
+					   note().pc(1).pos(6).len(12).build(),
+					   note().pc(3).pos(18).len(6).build()).build());
+		Harmony harmony = harmonyBuilder.build();
+		
+		HarmonicMelody harmonicMelody = harmonicMelody().voice(0).pos(0)
+				.harmonyNote(note().pc(4).pos(0).build())
+				.notes(note().pc(4).pos(0).len(12).build(),
+					   note().pc(5).pos(12).len(12).build()).build();
+		harmony.replaceHarmonicMelody(harmonicMelody);
+		
+		assertEquals(harmony.getHarmonicMelodies().get(0).getMelodyNotes().get(0).getPitchClass(), 4);
+		assertEquals(harmony.getHarmonicMelodies().get(0).getMelodyNotes().size(), 2);
 	}
 	
 }

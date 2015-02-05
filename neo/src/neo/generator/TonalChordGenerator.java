@@ -13,7 +13,7 @@ public class TonalChordGenerator extends Generator{
 
 	private List<int[]> chords;
 	
-	public TonalChordGenerator(int[][] positions, MusicProperties musicProperties) {
+	public TonalChordGenerator(int[] positions, MusicProperties musicProperties) {
 		super(positions, musicProperties);
 	}
 
@@ -26,22 +26,6 @@ public class TonalChordGenerator extends Generator{
 		return chord;
 	}
 
-//	@Override
-//	public List<Harmony> generateHarmonies() {
-//		List<Harmony> harmonies = new ArrayList<>();
-//		for (HarmonyBuilder harmonyBuilder :harmonyBuilders) {
-//			List<Integer> chordPitchClasses = harmonyBuilder.getPitchClasses();
-//			List<Note> harmonyNotes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
-//			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(harmonyNotes);
-//			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
-//			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
-//			harmony.setPositionWeight(totalWeight);
-//			harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveLowestPitchClassRange(), musicProperties.getInstruments()));
-//			harmonies.add(harmony);		
-//		}
-//		return harmonies;
-//	}
-	
 	@Override
 	public List<Harmony> generateHarmonies(){
 		List<Harmony> harmonies = new ArrayList<>();

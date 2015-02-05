@@ -11,6 +11,7 @@ import javax.sound.midi.InvalidMidiDataException;
 
 import jm.music.data.Score;
 import jm.util.View;
+import jm.util.Write;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.util.JMException;
@@ -73,7 +74,7 @@ public class Display {
 			melodies.forEach(h ->  LOGGER.info(h.getMelodieNotes() + ", "));
 			Score score = scoreUtilities.createScoreMelodies(melodies, tempo);
 			score.setTitle(id);
-//			Write.midi(score, "resources/midi/" + id + ".mid");	
+			Write.midi(score, "resources/midi/" + id + ".mid");	
 			View.notate(score);	
 		}
 		

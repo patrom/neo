@@ -12,7 +12,7 @@ import neo.model.melody.pitchspace.UniformPitchSpace;
 
 public class DiffSizeGenerator extends Generator{
 
-	public DiffSizeGenerator(int[][] positions, MusicProperties musicProperties) {
+	public DiffSizeGenerator(int[] positions, MusicProperties musicProperties) {
 		super(positions, musicProperties);
 	}
 

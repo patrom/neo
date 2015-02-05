@@ -41,11 +41,26 @@ public class MidiInfo {
 		this.melodies = melodies;
 	}
 	
-	public List<HarmonyInstrument> getHarmonyPositions(int chordSize){
+	public List<HarmonyPosition> getHarmonyPositions(int chordSize){
 		List<Note> harmonyNotes = new ArrayList<>();
 		for (int i = 0; i < chordSize; i++) {
 			harmonyNotes.addAll(melodies.get(i).getNotes());
 		}
+		return harmonyNotes.stream()
+		 .filter(note -> note.getVoice() != 0)
+		 .collect(Collectors.collectingAndThen(
+				 	groupingBy(note -> note.getPosition(), HarmonyCollector.toHarmonyCollector()),
+				 			(value) -> { 
+				 				return value.values().stream()
+				 						.flatMap(h -> h.stream())
+				 						.sorted()
+				 						.collect(Collectors.toList());}
+				 	));
+	}
+	
+	public List<HarmonyPosition> getHarmonyPositionsForVoice(int voice){
+		List<Note> harmonyNotes = new ArrayList<>();
+		harmonyNotes.addAll(melodies.get(voice).getNotes());
 		return harmonyNotes.stream()
 		 .filter(note -> note.getVoice() != 0)
 		 .collect(Collectors.collectingAndThen(

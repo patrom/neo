@@ -12,15 +12,15 @@ import java.util.stream.Collector;
 
 import neo.model.note.Note;
 
-public class HarmonyCollector implements Collector<Note, HarmonyInstrument, List<HarmonyInstrument>>{
+public class HarmonyCollector implements Collector<Note, HarmonyPosition, List<HarmonyPosition>>{
 
 	@Override
-	public Supplier<HarmonyInstrument> supplier() {
-		return HarmonyInstrument::new;
+	public Supplier<HarmonyPosition> supplier() {
+		return HarmonyPosition::new;
 	}
 
 	@Override
-	public BiConsumer<HarmonyInstrument, Note> accumulator() {
+	public BiConsumer<HarmonyPosition, Note> accumulator() {
 		return (harmony, note) -> { 
 				harmony.setPosition(note.getPosition());
 				harmony.addNote(note);
@@ -28,7 +28,7 @@ public class HarmonyCollector implements Collector<Note, HarmonyInstrument, List
 	}
 
 	@Override
-	public BinaryOperator<HarmonyInstrument> combiner() {
+	public BinaryOperator<HarmonyPosition> combiner() {
 		return (left, right) -> {
             left.setNotes(right.getNotes());
             return left;
@@ -36,9 +36,9 @@ public class HarmonyCollector implements Collector<Note, HarmonyInstrument, List
 	}
 
 	@Override
-	public Function<HarmonyInstrument, List<HarmonyInstrument>> finisher() {
+	public Function<HarmonyPosition, List<HarmonyPosition>> finisher() {
 		return (harmony) -> {
-				List<HarmonyInstrument> list = new ArrayList<>();
+				List<HarmonyPosition> list = new ArrayList<>();
 				list.add(harmony);
 				return list;
 			};
@@ -49,7 +49,7 @@ public class HarmonyCollector implements Collector<Note, HarmonyInstrument, List
 		return EnumSet.of(Characteristics.UNORDERED);
 	}
 	
-	public static <T> Collector<Note, HarmonyInstrument, List<HarmonyInstrument>> toHarmonyCollector() {
+	public static <T> Collector<Note, HarmonyPosition, List<HarmonyPosition>> toHarmonyCollector() {
 	    return new HarmonyCollector();
 	}
 

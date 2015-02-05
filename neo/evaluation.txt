@@ -1,6 +1,8 @@
 How to set evaluation optimized values:
 
 Harmony: set chord type dissonance value (position + inner metric weight)
+		Dissonance set in harmony objective (annotation)
+		Decorator set in NSGA
 
 Voice leading: voice leading sizes < 3
 

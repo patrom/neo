@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 
 import jm.util.View;
 import neo.generator.MusicProperties;
-import neo.midi.HarmonyInstrument;
+import neo.midi.HarmonyPosition;
 import neo.midi.MelodyInstrument;
 import neo.midi.MidiDevicesUtil;
 import neo.midi.MidiInfo;
@@ -23,6 +23,7 @@ import neo.midi.MidiParser;
 import neo.model.note.Note;
 import neo.out.arrangement.Accompagnement;
 import neo.out.arrangement.Arrangement;
+import neo.out.arrangement.Pattern;
 import neo.out.instrument.Ensemble;
 import neo.out.instrument.Instrument;
 import neo.out.instrument.KontaktLibPiano;
@@ -71,7 +72,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		
-			List<MelodyInstrument> playList = playOnInstruments(midiInfo, Ensemble.getPiano(4));
+			List<MelodyInstrument> playList = playOnInstruments(midiInfo, Ensemble.getPianoAndViolin());
 			playOnKontakt(playList, midiInfo.getTempo());
 			View.notate(scoreUtilities.createScoreFromMelodyInstrument(playList, midiInfo.getTempo()));
 //			write(melodies, "resources/transform/" + midiFile.getName());
@@ -87,13 +88,20 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		list.add(harmonyNotes);
 		return list;
 	}
+	
+	private MelodyInstrument getAccomp(List<Note> melodies, List<HarmonyPosition> harmonyPositions, int voice) {
+		List<List<Note>> patterns = new ArrayList<>();
+		harmonyPositions.forEach(h -> patterns.add(Pattern.waltz(12, 12)));
+		List<Note> accompagnement = arrangement.getAccompagnement(melodies, harmonyPositions, patterns, 12);
+		return new MelodyInstrument(accompagnement, voice);
+	}
 
 	private List<MelodyInstrument> playOnInstrumentsAccomp(MidiInfo midiInfo) {
 		List<MelodyInstrument> playList = new ArrayList<>();
 		List<MelodyInstrument> melodies = midiInfo.getMelodies();
 		
 		//accompagnement
-		List<HarmonyInstrument> harmonyPositions = midiInfo.getHarmonyPositions(musicProperties.getChordSize());
+		List<HarmonyPosition> harmonyPositions = midiInfo.getHarmonyPositions(musicProperties.getChordSize());
 		Integer[] compPattern = {6,12,18,24};
 		List<Integer[]> compPatterns = new ArrayList<Integer[]>();
 		compPatterns.add(compPattern);

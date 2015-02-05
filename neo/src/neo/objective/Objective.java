@@ -12,4 +12,5 @@ public abstract class Objective {
 	protected MusicProperties musicProperties;
 
 	public abstract double evaluate(Motive motive);
+
 }
