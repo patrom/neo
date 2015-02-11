@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 public class Instrument {
 
 	protected int voice;
@@ -7,6 +9,7 @@ public class Instrument {
 	protected int highest;
 	protected int channel;
 	protected boolean keySwitch;
+	protected GeneralMidi generalMidi;
 	
 	public Instrument(int voice, int channel) {
 		this.voice = voice;
@@ -52,6 +55,12 @@ public class Instrument {
 	}
 	public void setKeySwitch(boolean keySwitch) {
 		this.keySwitch = keySwitch;
+	}
+	public GeneralMidi getGeneralMidi() {
+		return generalMidi;
+	}
+	public void setGeneralMidi(GeneralMidi generalMidi) {
+		this.generalMidi = generalMidi;
 	}
 	
 }

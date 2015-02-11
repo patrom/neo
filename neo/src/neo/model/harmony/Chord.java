@@ -1,10 +1,8 @@
 package neo.model.harmony;
 
 import java.util.Set;
-import java.util.logging.Logger;
 
 import neo.model.setclass.PcSetUnorderedProperties;
-import neo.nsga.operator.mutation.AbstractMutation;
 
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
@@ -14,6 +12,7 @@ public class Chord {
 	private Multiset<Integer> pitchClassMultiSet = TreeMultiset.create();
 	private ChordType chordType;
 	private int voiceLeadingZone;
+	private int root = -1;
 
 	public ChordType getChordType() {
 		this.chordType = extractChordType();
@@ -147,7 +146,7 @@ public class Chord {
 		return ChordType.CH4;	
 	}
 
-	private static ChordType getTriadicChordType(Integer[] chord) {
+	private ChordType getTriadicChordType(Integer[] chord) {
 		int firstInterval = chord[1] - chord[0];
 		if (firstInterval == 1) {
 			return ChordType.CH3;
@@ -159,24 +158,30 @@ public class Chord {
 			if (secondInterval == 3 || secondInterval == 6) {
 				return ChordType.HALFDIM;
 			} else if (secondInterval == 4) {
+				root = chord[0];
 				return ChordType.MINOR;
 			} else if (secondInterval == 5) {
+				root = chord[2];
 				return ChordType.MAJOR;
 			}
 		} else if (firstInterval == 4) {
 			if (secondInterval == 3) {
+				root = chord[0];
 				return ChordType.MAJOR;
 			} else if (secondInterval == 4) {
 				return ChordType.AUGM;
 			} else if (secondInterval == 5) {
-				return ChordType.MINOR_1;
+				root = chord[2];
+				return ChordType.MINOR;
 			} else if (secondInterval == 6) {
 				return ChordType.DOM;
 			}
 		} else if (firstInterval == 5) {
 			if (secondInterval == 3) {
+				root = chord[1];
 				return ChordType.MINOR;
 			} else if (secondInterval == 4) {
+				root = chord[1];
 				return ChordType.MAJOR;
 			}
 		} else if (firstInterval == 6) {
@@ -196,7 +201,17 @@ public class Chord {
 		builder.append(getChordType());
 		builder.append(", Set: ");
 		builder.append(getForteName());
+		builder.append(", root: ");
+		builder.append(getRoot());
 		return builder.toString();
+	}
+
+	public int getVoiceLeadingZone() {
+		return voiceLeadingZone;
+	}
+
+	public int getRoot() {
+		return root;
 	}
 
 }

@@ -26,8 +26,8 @@ public class Ensemble {
 	
 	public static List<Instrument> getPianoAndViolin(){
 		List<Instrument> voices = new ArrayList<Instrument>();
-		voices.add(new KontaktLibViolin(3, 1));
-		voices.add(new KontaktLibPiano(4, 0));
+		voices.add(new KontaktLibViolin(4, 1));
+		voices.add(new KontaktLibPiano(3, 0));
 		voices.add(new KontaktLibPiano(2, 0));
 		voices.add(new KontaktLibPiano(1, 0));
 		voices.add(new KontaktLibPiano(0, 0));

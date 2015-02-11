@@ -98,7 +98,7 @@ public class ArrangementTest extends JFrame{
 		compPattern.add(note().pos(48).build());
 		compPattern.add(note().pos(60).build());
 		int minimumLength = 6;
-		List<Note> accompagnement = arrangement.createAcc(melodyNotes, compPattern, minimumLength);
+		List<Note> accompagnement = arrangement.createAccompForPattern(melodyNotes, compPattern, minimumLength);
 		accompagnement.forEach(note -> LOGGER.info("pos: " + note.getPosition() + ", pitch: " + note.getPitch() + ", len: " + note.getLength()));
 		assertEquals(48, accompagnement.get(2).getPosition());
 		assertEquals(minimumLength, accompagnement.get(2).getLength());

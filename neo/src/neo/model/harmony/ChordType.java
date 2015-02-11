@@ -9,7 +9,6 @@ public enum ChordType {
 	CH3(3),
 	MAJOR(3),
 	MINOR(3),
-	MINOR_1(3),
 	HALFDIM(3),
 	AUGM(3),
 	DOM(3),

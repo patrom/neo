@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 
 public class KontaktLibDoublebass extends Instrument {
 
@@ -8,6 +10,7 @@ public class KontaktLibDoublebass extends Instrument {
 		setLowest(28);
 		setHighest(67);
 		setKeySwitch(true);
+		setGeneralMidi(GeneralMidi.CONTRABASS);
 	}
 
 	@Override

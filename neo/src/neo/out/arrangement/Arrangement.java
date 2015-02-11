@@ -5,16 +5,13 @@ import static neo.model.note.NoteBuilder.note;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import neo.midi.HarmonyPosition;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class Arrangement {
@@ -88,9 +85,9 @@ public class Arrangement {
 		return transformedList;
 	}
 	
-	public List<Note> getAccompagnement(List<Note> melodyNotes, List<HarmonyPosition> harmonyPositions, List<List<Note>> patterns, int minimumLength){
+	public List<Note> getAccompagnement(List<Note> melodyNotes, List<HarmonyPosition> harmonyPositions, List<List<Note>> patterns, int minimumLengthNote){
 		List<Note> pattern = updatePatternPositions(harmonyPositions, patterns);
-		return createAcc(melodyNotes, pattern, minimumLength);
+		return createAccompForPattern(melodyNotes, pattern, minimumLengthNote);
 	}
 	
 	public List<Note> updatePatternPositions(List<HarmonyPosition> harmonyPositions, List<List<Note>> patterns){
@@ -107,7 +104,7 @@ public class Arrangement {
 		return melodyPattern;
 	}
 	
-	public List<Note> createAcc(List<Note> melodyNotes, List<Note> compPattern, int minimumLength){
+	public List<Note> createAccompForPattern(List<Note> melodyNotes, List<Note> compPattern, int minimumLengthNote){
 		int position = 0;
 		int tempPosition = 0;
 		List<Note> notes = new ArrayList<Note>();
@@ -119,10 +116,10 @@ public class Arrangement {
 					newNote.setPitch(note.getPitch());
 					newNote.setPitchClass(note.getPitchClass());
 					newNote.setOctave(note.getOctave());
-					newNote.setLength(minimumLength);
+					newNote.setLength(minimumLengthNote);
 					notes.add(newNote);
 				}
-				tempPosition = tempPosition + minimumLength;
+				tempPosition = tempPosition + minimumLengthNote;
 			}
 			position = tempPosition;
 		}

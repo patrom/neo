@@ -8,3 +8,6 @@ Voice leading: voice leading sizes < 3
 
 melody: interval evaluation based on note position + inner metric weight
 		filter levels apply this evaluation to hyper metric levels
+		
+Accompagnement:
+Pattern needs to have same length as harmony

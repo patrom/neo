@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -15,6 +17,7 @@ import javax.swing.JFrame;
 
 import jm.util.View;
 import neo.generator.MusicProperties;
+import neo.midi.GeneralMidi;
 import neo.midi.HarmonyPosition;
 import neo.midi.MelodyInstrument;
 import neo.midi.MidiDevicesUtil;
@@ -70,19 +73,42 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		for (File midiFile : midiFiles) {
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
-			List<MelodyInstrument> melodies = midiInfo.getMelodies();
+			List<MelodyInstrument> parsedMelodies = midiInfo.getMelodies();
+			//split
+			int size = parsedMelodies.size();
+			List<MelodyInstrument> melodies = new ArrayList<>(parsedMelodies.subList(0, size/2));
+			List<MelodyInstrument> harmonies = new ArrayList<>(parsedMelodies.subList(size/2, size));
 		
-			List<MelodyInstrument> playList = playOnInstruments(midiInfo, Ensemble.getPianoAndViolin());
-			playOnKontakt(playList, midiInfo.getTempo());
-			View.notate(scoreUtilities.createScoreFromMelodyInstrument(playList, midiInfo.getTempo()));
-//			write(melodies, "resources/transform/" + midiFile.getName());
-//			Score score = new Score();
-//			Read.midi(score, midiFile.getAbsolutePath());
-//			View.notate(score);
-			Thread.sleep(13000);
+			assignInstruments(melodies, Ensemble.getChoir(), 0);
+			
+			List<Integer> voicesForAccomp = new ArrayList<>();
+			voicesForAccomp.add(1);
+			voicesForAccomp.add(2);
+//			voicesForAccomp.add(3);
+			List<MelodyInstrument> accompMelodies = filterAccompagnementMelodies(voicesForAccomp, melodies);
+			createAccompagnement(accompMelodies, melodies, midiInfo.getHarmonyPositionsForVoice(0));
+			
+//			playOnKontakt(melodies, midiInfo.getTempo());
+//			View.notate(scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo()));
+			write(melodies, "resources/transform/" + midiFile.getName());
+//			Thread.sleep(13000);
 		}
 	}
 	
+	private void createAccompagnement(List<MelodyInstrument> accompMelodies, List<MelodyInstrument> melodies, List<HarmonyPosition> harmonyPositions) {
+		for (MelodyInstrument melodyInstrument : accompMelodies) {
+			melodies.remove(melodyInstrument);
+			MelodyInstrument accomp = getAccomp(melodyInstrument.getNotes(), harmonyPositions, melodyInstrument.getVoice());
+			accomp.setInstrument(melodyInstrument.getInstrument());
+			melodies.add(accomp);
+		}
+	}
+	
+	private List<MelodyInstrument> filterAccompagnementMelodies(List<Integer> voicesForAccomp,
+			List<MelodyInstrument> melodies){
+		return melodies.stream().filter(m -> voicesForAccomp.contains(m.getVoice())).collect(Collectors.toList());
+	}
+
 	public List<List<Note>> chordal(List<Note> harmonyNotes) {
 		ArrayList<List<Note>> list = new ArrayList<List<Note>>();
 		list.add(harmonyNotes);
@@ -125,31 +151,24 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		return playList;
 	}
 	
-	
-	private List<MelodyInstrument> playOnInstruments(MidiInfo midiInfo, List<Instrument> instruments) {
-		List<MelodyInstrument> playList = new ArrayList<>();
-		List<MelodyInstrument> melodies = midiInfo.getMelodies();
+	private void assignInstruments(List<MelodyInstrument> melodies, List<Instrument> instruments, int offset) {
 		for (int i = 0; i < instruments.size(); i++) {
 			MelodyInstrument melodyInstrument = melodies.get(i);
-			arrangement.transpose(melodyInstrument.getNotes(), 12);//kontakt voice octave too low for string quartet!
-			Optional<Instrument> instrument = instruments.stream().filter(instr -> instr.getVoice() == melodyInstrument.getVoice()).findFirst();
+			Optional<Instrument> instrument = instruments.stream().filter(instr -> (instr.getVoice() + offset) == melodyInstrument.getVoice()).findFirst();
 			if (instrument.isPresent()) {
 				melodyInstrument.setInstrument(instrument.get());
-				playList.add(melodyInstrument);
 			}else{
 				throw new IllegalArgumentException("Instrument for voice " + i + " is missing!");
 			}
 		}
-		return playList;
 	}
 	
-	
-
 	private void playOnKontakt(List<MelodyInstrument> melodies,
 			float tempo) throws InvalidMidiDataException {
-		Sequence seq = midiDevicesUtil.createSequence(melodies);
+		int size = melodies.size();
+		List<MelodyInstrument> melo = melodies.subList(size/2, size);
+		Sequence seq = midiDevicesUtil.createSequence(melo);
 		midiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTAKT);
-		
 	}
 
 	public void playMidiFilesOnKontaktFor(Instrument instrument) throws IOException, InvalidMidiDataException, InterruptedException {
@@ -170,8 +189,35 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	}
 	
 	private void write(List<MelodyInstrument> melodies, String outputPath) throws InvalidMidiDataException, IOException{
-		Sequence seq = midiDevicesUtil.createSequence(melodies);
+		Sequence seq = null;
+		if (containsInstrument(melodies, GeneralMidi.PIANO)) {
+			MelodyInstrument piano = mergeMelodies(melodies, 2, new KontaktLibPiano(1, 2));
+			List<MelodyInstrument> otherInstruments = melodies.stream()
+				.filter(m -> m.getInstrument().getGeneralMidi().equals(GeneralMidi.PIANO))
+				.collect(Collectors.toList());
+			List<MelodyInstrument> instruments = new ArrayList<>();
+			instruments.addAll(otherInstruments);
+			instruments.add(piano);
+			seq = midiDevicesUtil.createSequenceGeneralMidi(instruments);
+		}else{
+			seq = midiDevicesUtil.createSequenceGeneralMidi(melodies);
+		}
 		midiDevicesUtil.write(seq, outputPath);
+	}
+
+	private MelodyInstrument mergeMelodies(List<MelodyInstrument> melodies, int generalMidi, Instrument instrument) {
+		List<Note> notes = melodies.stream()
+				.filter(m -> m.getInstrument().getGeneralMidi().equals(GeneralMidi.PIANO))
+				.flatMap(m -> m.getNotes().stream())
+				.sorted()
+				.collect(Collectors.toList());
+		MelodyInstrument melodyInstrument = new MelodyInstrument(notes, instrument.getVoice());
+		melodyInstrument.setInstrument(instrument);
+		return melodyInstrument;
+	}
+
+	private boolean containsInstrument(List<MelodyInstrument> melodies, GeneralMidi gm) {
+		return melodies.stream().anyMatch(m -> m.getInstrument().getGeneralMidi().equals(gm));
 	}
 	
 }

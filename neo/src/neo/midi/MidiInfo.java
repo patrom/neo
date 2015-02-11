@@ -62,7 +62,7 @@ public class MidiInfo {
 		List<Note> harmonyNotes = new ArrayList<>();
 		harmonyNotes.addAll(melodies.get(voice).getNotes());
 		return harmonyNotes.stream()
-		 .filter(note -> note.getVoice() != 0)
+		 .filter(note -> note.getVoice() == voice)
 		 .collect(Collectors.collectingAndThen(
 				 	groupingBy(note -> note.getPosition(), HarmonyCollector.toHarmonyCollector()),
 				 			(value) -> { 

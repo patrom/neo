@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 
 public class KontaktLibFrenchHorn extends Instrument {
 
@@ -8,6 +10,7 @@ public class KontaktLibFrenchHorn extends Instrument {
 		setLowest(34);
 		setHighest(70);
 		setKeySwitch(true);
+		setGeneralMidi(GeneralMidi.FRENCH_HORN);
 	}
 
 	@Override

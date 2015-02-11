@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 
 public class KontaktLibOboe extends Instrument {
 
@@ -8,6 +10,7 @@ public class KontaktLibOboe extends Instrument {
 		setLowest(58);
 		setHighest(84);
 		setKeySwitch(true);
+		setGeneralMidi(GeneralMidi.OBOE);
 	}
 
 	@Override

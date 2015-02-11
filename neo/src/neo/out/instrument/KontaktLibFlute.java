@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 
 public class KontaktLibFlute extends Instrument {
 
@@ -8,6 +10,7 @@ public class KontaktLibFlute extends Instrument {
 		setLowest(60);
 		setHighest(84);
 		setKeySwitch(true);
+		setGeneralMidi(GeneralMidi.FLUTE);
 	}
 
 	@Override
