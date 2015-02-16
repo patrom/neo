@@ -84,17 +84,17 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	public void run(String... arg0) throws Exception {
 		deleteMidiFiles(midiFilesPath);
 		musicProperties.threeFour();
-		int[] harmonies = {0,36,72,108,144};
-		int[][] melodies = {{0, 12, 24, 36},{0, 12, 24, 36},{0, 12, 24, 36},{0, 12, 24, 36},{}};
+		int[] harmonies = {0,36,72,108,144,180};
+		int[][] melodies = {{24, 36},{0, 12, 24, 36},{0, 12, 24, 36},{0, 12, 24, 36},{}};
 		
 //		BeginEndChordGenerator generator = beginEndChordGenerator;
 		
-		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
-		tonalChordGenerator.setChords(TonalChords.getTriads(0));
-		Generator generator = tonalChordGenerator;
+//		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
+//		tonalChordGenerator.setChords(TonalChords.getTriads(0));
+//		Generator generator = tonalChordGenerator;
 		
-//		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-		generator.generateHarmonicMelodiesForVoice(melodies, 4);
+		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
+		generator.generateHarmonicMelodiesForVoice(melodies, 3);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
 //		Generator generator = new PerleChordGenerator(harmonies, musicProperties);
@@ -111,7 +111,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 1.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    

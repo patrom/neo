@@ -25,6 +25,8 @@ public class Harmony implements Comparable<Harmony>{
 	private double innerMetricWeight;
 	private List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 	private PitchSpace pitchSpace;
+	private Chord chord;
+	private boolean rootPosition;
 	
 	public Harmony(int position, int length, List<HarmonicMelody> harmonicMelodies) {
 		this.position = position;
@@ -44,12 +46,19 @@ public class Harmony implements Comparable<Harmony>{
 				.collect(toList());
 	}
 	
-	private Chord toChord(){
-		Chord chord = new Chord();
+	public void toChord(){
+		chord = new Chord(getBassNote());
 		harmonicMelodies.stream()
 			.map(harmonicMelodic -> harmonicMelodic.getHarmonyNote())
 			.forEach(note -> chord.addPitchClass(note.getPitchClass()));
-		return chord;
+	}
+	
+	private int getBassNote(){
+		return harmonicMelodies.stream()
+					.filter(h -> h.getVoice() == 0)
+					.mapToInt(h -> h.getHarmonyNote().getPitchClass()).
+					findFirst()
+					.getAsInt();
 	}
 
 	public void translateToPitchSpace() {
@@ -124,7 +133,7 @@ public class Harmony implements Comparable<Harmony>{
 	}
 
 	public Chord getChord() {
-		return toChord();
+		return chord;
 	}
 
 	public int getLength() {
@@ -182,7 +191,7 @@ public class Harmony implements Comparable<Harmony>{
 //				chord.addPitchClass(note.getPitchClass());
 //				return chord;
 //			}).max(Comparator.comparing(Chord::getChordType));
-			Chord chord = new Chord();
+			Chord chord = new Chord(0);
 			for (Note note : harmonyPosition.getValue()){
 				chord.addPitchClass(note.getPitchClass());
 			}
@@ -197,6 +206,10 @@ public class Harmony implements Comparable<Harmony>{
 		for (Note note : bestChord) {
 			harmonicMelodies.stream().filter(h -> h.getVoice() == note.getVoice()).forEach(h -> h.setHarmonyNote(note));
 		}
+	}
+
+	public boolean isRootPosition() {
+		return rootPosition;
 	}
 
 }

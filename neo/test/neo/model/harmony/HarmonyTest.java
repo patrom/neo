@@ -17,6 +17,7 @@ public class HarmonyTest {
 	public void testTransposeSecond() {
 		Harmony harmony = harmony().notes(0,4,7).build();
 		harmony.transpose(1);
+		harmony.toChord();
 		assertEquals(1, harmony.getNotes().get(0).getPitchClass());
 		assertEquals(5, harmony.getNotes().get(1).getPitchClass());
 		assertEquals(8, harmony.getNotes().get(2).getPitchClass());
@@ -27,6 +28,7 @@ public class HarmonyTest {
 	public void testTransposeSixth() {
 		Harmony harmony = harmony().notes(0,4,7).build();
 		harmony.transpose(8);
+		harmony.toChord();
 		assertEquals(8, harmony.getNotes().get(0).getPitchClass());
 		assertEquals(0, harmony.getNotes().get(1).getPitchClass());
 		assertEquals(3, harmony.getNotes().get(2).getPitchClass());

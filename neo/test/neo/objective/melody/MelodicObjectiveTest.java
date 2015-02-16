@@ -12,6 +12,8 @@ import java.util.stream.IntStream;
 import neo.AbstractTest;
 import neo.DefaultConfig;
 import neo.generator.MusicProperties;
+import neo.model.dissonance.Dissonance;
+import neo.model.harmony.Chord;
 import neo.model.harmony.ChordType;
 import neo.model.note.Interval;
 import neo.model.note.Note;
@@ -20,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationContextLoader;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,6 +33,9 @@ public class MelodicObjectiveTest extends AbstractTest {
 
 	@Autowired
 	private MelodicObjective melodicObjective;
+	@Autowired
+	@Qualifier(value="TonalDissonance")
+	private Dissonance dissonance;
 	private double totalWeight;
 	private List<Note> melodyNotes;
 	
@@ -160,7 +166,7 @@ public class MelodicObjectiveTest extends AbstractTest {
 		notes.add(note().pc(7).pos(12).len(6).positionWeight(1.0).build());
 		notes.add(note().pc(0).pos(18).len(6).positionWeight(0.5).build());
 		double value = melodicObjective.evaluateTriadicValueMelody(notes);
-		assertEquals(0.8, value, 0);
+		assertEquals(0.985, value, 0);
 	}
 
 

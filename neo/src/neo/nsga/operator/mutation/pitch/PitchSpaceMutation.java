@@ -49,9 +49,9 @@ public class PitchSpaceMutation extends Mutation {
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 			List<Harmony> harmonies = motive.getHarmonies();
 			IntStream ints = RandomUtil.range(harmonies.size());
-			PitchSpace pitchSpace = randomPitchSpace();
 			ints.forEach(i -> {
 				Harmony harmony = harmonies.get(i);
+				PitchSpace pitchSpace = randomPitchSpace();
 				harmony.setPitchSpace(pitchSpace);
 			});
 			LOGGER.fine("pitch space mutated");

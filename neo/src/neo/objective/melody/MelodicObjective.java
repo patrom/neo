@@ -21,10 +21,16 @@ import neo.model.note.Interval;
 import neo.model.note.Note;
 import neo.objective.Objective;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MelodicObjective extends Objective {
+	
+	@Autowired
+	@Qualifier(value="TonalDissonance")
+	private Dissonance dissonance;
 	
 	@Override
 	public double evaluate(Motive motive) {
@@ -37,7 +43,7 @@ public class MelodicObjective extends Objective {
 //			notes = extractNotesOnLevel(notes, 1);
 			for (double level : musicProperties.getFilterLevels()) {
 				List<Note> filteredNotes = filterNotesWithWeightEqualToOrGreaterThan(notes, level);
-				if (!filteredNotes.isEmpty() && filteredNotes.size() != notes.size()) {
+				if ((filteredNotes.size() > 1) && filteredNotes.size() != notes.size()) {
 					double value = evaluateMelody(filteredNotes, 1);
 					totalMelodySum = totalMelodySum + value;
 					melodyCount++;
@@ -68,12 +74,11 @@ public class MelodicObjective extends Objective {
 	protected double evaluateTriadicValueMelody(Collection<Note> notes) {
 		Note[] notePositions = notes.toArray(new Note[notes.size()]);
 		double harmonicValue = 0;
-		Dissonance dissonance = new TonalDissonance();
 		for (int i = 0; i < notePositions.length - 2; i++) {
 				Note firstNote = notePositions[i];
 				Note secondNote = notePositions[i + 1];
 				Note thirdNote = notePositions[i + 2];
-				Chord chord = new Chord();
+				Chord chord = new Chord(firstNote.getPitchClass());
 				chord.addPitchClass(firstNote.getPitchClass());
 				chord.addPitchClass(secondNote.getPitchClass());
 				chord.addPitchClass(thirdNote.getPitchClass());
@@ -85,6 +90,9 @@ public class MelodicObjective extends Objective {
 	}
 
 	protected double evaluateMelody(List<Note> notes, int maxDistance) {
+		if (notes.size() == 1) {
+			throw new IllegalStateException("size");
+		}
 		double totalPositionWeigth = 0;
 		Note[] notePositions = notes.toArray(new Note[notes.size()]);
 		double melodyIntervalValueSum = 0;

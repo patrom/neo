@@ -11,15 +11,23 @@ public class TonalDissonance implements Dissonance {
 	public double getDissonance(Chord chord) {
 		switch (chord.getChordType()) {
 			case MAJOR:
-				return 0.9;
+				return 1.0;
+			case MAJOR_1:
+				return 0.98;
+			case MAJOR_2:
+				return 0.97;
 			case MINOR:
-				return 0.9;
+				return 1.0;
+			case MINOR_1:
+				return 0.98;
+			case MINOR_2:
+				return 0.97;
 			case HALFDIM:
-				return 0.8;
+				return 0.99;
 			case AUGM:
-				return 0.5;
+				return 0.95;
 			case DOM:
-				return 0.9;
+				return 1.0;
 			case CH0:
 				return 0.0;
 			case CH1:
@@ -33,15 +41,27 @@ public class TonalDissonance implements Dissonance {
 			case CH5:
 				return 0.0;
 			case MAJOR7:
-				return 1.0;	
+				return 0.99;
+			case MAJOR7_1:
+				return 0.98;	
+			case MAJOR7_2:
+				return 0.97;	
+			case MAJOR7_3:
+				return 0.95;	
 			case MINOR7:
-				return 1.0;
+				return 0.99;
+			case MINOR7_1:
+				return 0.98;
+			case MINOR7_2:
+				return 0.97;
+			case MINOR7_3:
+				return 0.97;
 			case DOM7:
-				return 1.0;
-			case HALFDIM7:
-				return 1.0;
-			case DIM:
 				return 1.0;	
+			case HALFDIM7:
+				return 0.98;	
+			case DIM:
+				return 0.98;	
 		}
 		return 0.0;
 	}

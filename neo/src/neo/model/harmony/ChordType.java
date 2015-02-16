@@ -8,7 +8,11 @@ public enum ChordType {
 	
 	CH3(3),
 	MAJOR(3),
+	MAJOR_1(3),
+	MAJOR_2(3),
 	MINOR(3),
+	MINOR_1(3),
+	MINOR_2(3),
 	HALFDIM(3),
 	AUGM(3),
 	DOM(3),
@@ -16,12 +20,22 @@ public enum ChordType {
 	
 	CH4(4),
 	MAJOR7(4),
+	MAJOR7_1(4),
+	MAJOR7_2(4),
+	MAJOR7_3(4),
 	MINOR7(4),
+	MINOR7_1(4),
+	MINOR7_2(4),
+	MINOR7_3(4),
 	DOM7(4),
 	HALFDIM7(4),
 	DIM(4),
 	
 	CH5(5);
+	
+	public enum Inversion {
+		ROOT, INVERSION1, INVERSION2, OTHER;
+	}
 	
 	private int size;
 	

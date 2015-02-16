@@ -50,10 +50,20 @@ public class Motive {
 			.flatMap(hm -> hm.getMelodyNotes().stream())
 			.forEach(note -> note.setPitch(0));
 		harmonies.stream().forEach(harmony -> harmony.translateToPitchSpace());
+		if(containsZeroPitch()){
+			throw new IllegalStateException("Contains O pitch!");
+		};
 		for (int i = 0; i < musicProperties.getChordSize(); i++) {
 			Melody melody = new Melody(getMelodyForVoice(i), i);
 			melodies.add(melody);
 		}
+	}
+
+	private boolean containsZeroPitch() {
+		return harmonies.stream()
+			.flatMap(harmony -> harmony.getHarmonicMelodies().stream())
+			.flatMap(hm -> hm.getMelodyNotes().stream())
+			.anyMatch(note -> note.getPitch() == 0);
 	}
 	
 	public void updateInnerMetricWeightMelodies() {
@@ -93,6 +103,11 @@ public class Motive {
 			rhythm[i] = harmony.getPosition();
 		}
 		return rhythm;
+	}
+
+	public void extractChords() {
+		harmonies.forEach(harmony -> harmony.toChord());
+		
 	}
 	
 }

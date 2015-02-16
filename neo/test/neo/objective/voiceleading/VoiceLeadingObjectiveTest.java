@@ -38,6 +38,7 @@ public class VoiceLeadingObjectiveTest extends AbstractTest{
 		List<Harmony> harmonies = new ArrayList<>();
 		harmonies.add(harmony().pos(0).len(12).notes(0,4,7).build());
 		harmonies.add(harmony().pos(12).len(12).notes(11,2,7).build());
+		harmonies.forEach(harmony -> harmony.toChord());
 		double VoiceLeadingValue = voiceLeadingObjective.evaluate(new Motive(harmonies, musicProperties));
 		LOGGER.info("VoiceLeadingValue : " + VoiceLeadingValue);
 		assertEquals("Wrong VoiceLeading value", 3, VoiceLeadingValue, 0);
@@ -48,6 +49,7 @@ public class VoiceLeadingObjectiveTest extends AbstractTest{
 		List<Harmony> harmonies = new ArrayList<>();
 		harmonies.add(harmony().pos(0).len(12).notes(0,4,7).build());
 		harmonies.add(harmony().pos(12).len(12).notes(11,2,7).build());
+		harmonies.forEach(harmony -> harmony.toChord());
 		double VoiceLeadingValue = voiceLeadingObjective.evaluate(new Motive(harmonies, musicProperties));
 		LOGGER.info("VoiceLeadingValue : " + VoiceLeadingValue);
 		assertEquals("Wrong VoiceLeading value", 3, VoiceLeadingValue, 0);
@@ -60,6 +62,7 @@ public class VoiceLeadingObjectiveTest extends AbstractTest{
 		harmonies.add(harmony().pos(6).len(6).notes(10,2,7).build());
 		harmonies.add(harmony().pos(12).len(6).notes(11,2,7).build());
 		harmonies.add(harmony().pos(18).len(6).notes(0,4,7).build());
+		harmonies.forEach(harmony -> harmony.toChord());
 		double VoiceLeadingValue = voiceLeadingObjective.evaluate(new Motive(harmonies, musicProperties));
 		LOGGER.info("VoiceLeadingValue : " + VoiceLeadingValue);
 		assertEquals("Wrong VoiceLeading value", 8/3d, VoiceLeadingValue, 0);
