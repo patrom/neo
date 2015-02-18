@@ -31,7 +31,9 @@ public enum ChordType {
 	HALFDIM7(4),
 	DIM(4),
 	
-	CH5(5);
+	CH5(5),
+	
+	CH6(6);
 	
 	public enum Inversion {
 		ROOT, INVERSION1, INVERSION2, OTHER;

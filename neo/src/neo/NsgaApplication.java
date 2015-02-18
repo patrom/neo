@@ -94,7 +94,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //		Generator generator = tonalChordGenerator;
 		
 		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-		generator.generateHarmonicMelodiesForVoice(melodies, 3);
+		generator.generateHarmonicMelodiesForVoice(melodies, 5);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
 //		Generator generator = new PerleChordGenerator(harmonies, musicProperties);

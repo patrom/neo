@@ -79,19 +79,19 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			List<MelodyInstrument> melodies = new ArrayList<>(parsedMelodies.subList(0, size/2));
 			List<MelodyInstrument> harmonies = new ArrayList<>(parsedMelodies.subList(size/2, size));
 		
-			assignInstruments(melodies, Ensemble.getChoir(), 0);
+			assignInstruments(melodies, Ensemble.getPianoAnd2Flutes(), 0);
 			
 			List<Integer> voicesForAccomp = new ArrayList<>();
 			voicesForAccomp.add(1);
 			voicesForAccomp.add(2);
-//			voicesForAccomp.add(3);
+			voicesForAccomp.add(3);
 			List<MelodyInstrument> accompMelodies = filterAccompagnementMelodies(voicesForAccomp, melodies);
 			createAccompagnement(accompMelodies, melodies, midiInfo.getHarmonyPositionsForVoice(0));
 			
-//			playOnKontakt(melodies, midiInfo.getTempo());
-//			View.notate(scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo()));
+			playOnKontakt(melodies, midiInfo.getTempo());
+			View.notate(scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo()));
 			write(melodies, "resources/transform/" + midiFile.getName());
-//			Thread.sleep(13000);
+			Thread.sleep(13000);
 		}
 	}
 	
@@ -102,6 +102,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			accomp.setInstrument(melodyInstrument.getInstrument());
 			melodies.add(accomp);
 		}
+		melodies.sort(Comparator.comparing(m -> m.getVoice()));
 	}
 	
 	private List<MelodyInstrument> filterAccompagnementMelodies(List<Integer> voicesForAccomp,
@@ -165,9 +166,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	
 	private void playOnKontakt(List<MelodyInstrument> melodies,
 			float tempo) throws InvalidMidiDataException {
-		int size = melodies.size();
-		List<MelodyInstrument> melo = melodies.subList(size/2, size);
-		Sequence seq = midiDevicesUtil.createSequence(melo);
+		Sequence seq = midiDevicesUtil.createSequence(melodies);
 		midiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTAKT);
 	}
 
@@ -193,7 +192,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		if (containsInstrument(melodies, GeneralMidi.PIANO)) {
 			MelodyInstrument piano = mergeMelodies(melodies, 2, new KontaktLibPiano(1, 2));
 			List<MelodyInstrument> otherInstruments = melodies.stream()
-				.filter(m -> m.getInstrument().getGeneralMidi().equals(GeneralMidi.PIANO))
+				.filter(m -> !m.getInstrument().getGeneralMidi().equals(GeneralMidi.PIANO))
 				.collect(Collectors.toList());
 			List<MelodyInstrument> instruments = new ArrayList<>();
 			instruments.addAll(otherInstruments);

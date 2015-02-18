@@ -80,6 +80,8 @@ public class Chord {
 			return getTetraChordType(chord, bassNote);
 		case 5:
 			return ChordType.CH5;
+		case 6:
+			return ChordType.CH5;
 		default:
 			throw new IllegalArgumentException("chord type doesn't exist?");
 		}

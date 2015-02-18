@@ -57,7 +57,7 @@ public class MusicProperties {
 		this.measureWeights = new double[]{1.0, 0.5, 0.75, 0.5, 0.75, 0.5};// measure must correspond to minimumlength!
 		this.numerator = 3;
 		this.denominator = 4;
-		this.instruments = Ensemble.getStringQuartet();
+		this.instruments = Ensemble.getPianoAnd2Flutes();
 		this.chordSize = instruments.size();
 	}
 	
