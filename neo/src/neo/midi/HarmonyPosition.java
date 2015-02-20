@@ -5,7 +5,7 @@ import java.util.List;
 
 import neo.model.note.Note;
 
-public class HarmonyInstrument implements Comparable<HarmonyInstrument>{
+public class HarmonyPosition implements Comparable<HarmonyPosition>{
 
 	private List<Note> notes = new ArrayList<>();
 	private int position;
@@ -17,7 +17,6 @@ public class HarmonyInstrument implements Comparable<HarmonyInstrument>{
 	public List<Note> getNotes() {
 		return notes;
 	}
-	
 	
 	public void setNotes(List<Note> notes) {
 		this.notes = notes;
@@ -32,7 +31,7 @@ public class HarmonyInstrument implements Comparable<HarmonyInstrument>{
 	}
 
 	@Override
-	public int compareTo(HarmonyInstrument harmonyInstrument) {
+	public int compareTo(HarmonyPosition harmonyInstrument) {
 		if (getPosition() < harmonyInstrument.getPosition()) {
 			return -1;
 		} if (getPosition() > harmonyInstrument.getPosition()) {

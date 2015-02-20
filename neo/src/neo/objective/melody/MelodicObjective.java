@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import org.springframework.stereotype.Component;
-
 import neo.model.Motive;
+import neo.model.dissonance.Dissonance;
+import neo.model.dissonance.TonalDissonance;
 import neo.model.harmony.Chord;
 import neo.model.harmony.ChordType;
 import neo.model.melody.Melody;
@@ -21,8 +21,16 @@ import neo.model.note.Interval;
 import neo.model.note.Note;
 import neo.objective.Objective;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 @Component
 public class MelodicObjective extends Objective {
+	
+	@Autowired
+	@Qualifier(value="TonalDissonance")
+	private Dissonance dissonance;
 	
 	@Override
 	public double evaluate(Motive motive) {
@@ -35,7 +43,7 @@ public class MelodicObjective extends Objective {
 //			notes = extractNotesOnLevel(notes, 1);
 			for (double level : musicProperties.getFilterLevels()) {
 				List<Note> filteredNotes = filterNotesWithWeightEqualToOrGreaterThan(notes, level);
-				if (!filteredNotes.isEmpty() && filteredNotes.size() != notes.size()) {
+				if ((filteredNotes.size() > 1) && filteredNotes.size() != notes.size()) {
 					double value = evaluateMelody(filteredNotes, 1);
 					totalMelodySum = totalMelodySum + value;
 					melodyCount++;
@@ -70,18 +78,21 @@ public class MelodicObjective extends Objective {
 				Note firstNote = notePositions[i];
 				Note secondNote = notePositions[i + 1];
 				Note thirdNote = notePositions[i + 2];
-				Chord chord = new Chord();
+				Chord chord = new Chord(firstNote.getPitchClass());
 				chord.addPitchClass(firstNote.getPitchClass());
 				chord.addPitchClass(secondNote.getPitchClass());
 				chord.addPitchClass(thirdNote.getPitchClass());
-				if (chord.getChordType().equals(ChordType.MAJOR) || chord.getChordType().equals(ChordType.MINOR)) {
-					harmonicValue = harmonicValue + ChordType.MAJOR.getDissonance();
+				if ("3-11".equals(chord.getForteName())) {
+					harmonicValue = harmonicValue + dissonance.getDissonance(chord);
 				}
 		}
 		return (harmonicValue == 0)? 0:harmonicValue/(notePositions.length - 2);
 	}
 
 	protected double evaluateMelody(List<Note> notes, int maxDistance) {
+		if (notes.size() == 1) {
+			throw new IllegalStateException("size");
+		}
 		double totalPositionWeigth = 0;
 		Note[] notePositions = notes.toArray(new Note[notes.size()]);
 		double melodyIntervalValueSum = 0;

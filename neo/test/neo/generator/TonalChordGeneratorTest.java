@@ -3,6 +3,7 @@ package neo.generator;
 import static org.junit.Assert.assertTrue;
 import neo.AbstractTest;
 import neo.DefaultConfig;
+import neo.model.dissonance.TonalDissonance;
 import neo.model.harmony.Chord;
 import neo.model.harmony.ChordType;
 
@@ -19,11 +20,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class TonalChordGeneratorTest extends AbstractTest{
 
 	private TonalChordGenerator tonalChordGenerator;
-	private int[][] positions;
+	private int[] positions;
 	
 	@Before
 	public void setUp() throws Exception {
-		positions = new int[][]{{0,0,48},{48,48,96},{96,96,144},{144,144,192}, {192,192,240}};
+		positions = new int[]{0,48,96,144,192};
 		musicProperties.setMeasureWeights(new double[]{1.0, 0.5, 0.75, 0.5, 1.0, 0.5, 0.75, 0.5});
 		musicProperties.setChordSize(6);
 	}
@@ -34,7 +35,7 @@ public class TonalChordGeneratorTest extends AbstractTest{
 		tonalChordGenerator.setChords(TonalChords.getTriads(0));
 		int[] chord = tonalChordGenerator.pickRandomChord();
 		assertTrue(chord.length == musicProperties.getChordSize());
-		Chord ch = new Chord();
+		Chord ch = new Chord(0);
 		for (int j = 0; j < chord.length; j++) {
 			ch.addPitchClass(chord[j]);
 		}

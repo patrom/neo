@@ -17,7 +17,7 @@ public class PerleChordGenerator extends Generator {
 	private AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(IntervalCycle.P_IC7, 0), 0,
 			new CyclicSet(IntervalCycle.P_IC7, 2), 0);
 
-	public PerleChordGenerator(int[][] positions, MusicProperties musicProperties) {
+	public PerleChordGenerator(int[] positions, MusicProperties musicProperties) {
 		super(positions, musicProperties);
 	}
 
@@ -51,21 +51,5 @@ public class PerleChordGenerator extends Generator {
 		}
 		return harmonies;
 	}
-
-//	@Override
-//	public List<Harmony> generateHarmonies() {
-//		List<Harmony> harmonies = new ArrayList<>();
-//		for (HarmonyBuilder harmonyBuilder :harmonyBuilders) {
-//			List<Integer> chordPitchClasses = harmonyBuilder.getPitchClasses();
-//			List<Note> harmonyNotes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
-//			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(harmonyNotes);
-//			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
-//			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
-//			harmony.setPositionWeight(totalWeight);
-//			harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveLowestPitchClassRange(), musicProperties.getInstruments()));
-//			harmonies.add(harmony);		
-//		}
-//		return harmonies;
-//	}
 
 }

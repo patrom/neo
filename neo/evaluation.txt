@@ -1,8 +1,13 @@
 How to set evaluation optimized values:
 
 Harmony: set chord type dissonance value (position + inner metric weight)
+		Dissonance set in harmony objective (annotation)
+		Decorator set in NSGA
 
 Voice leading: voice leading sizes < 3
 
 melody: interval evaluation based on note position + inner metric weight
 		filter levels apply this evaluation to hyper metric levels
+		
+Accompagnement:
+Pattern needs to have same length as harmony

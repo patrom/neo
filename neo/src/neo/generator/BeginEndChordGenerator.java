@@ -16,7 +16,7 @@ public class BeginEndChordGenerator  extends Generator{
 	private int[] beginPitchClasses;
 	private int[] endPitchClasses;
 	
-	public BeginEndChordGenerator(int[][] positions, MusicProperties musicProperties) {
+	public BeginEndChordGenerator(int[] positions, MusicProperties musicProperties) {
 		super(positions, musicProperties);
 	}
 
@@ -47,7 +47,7 @@ public class BeginEndChordGenerator  extends Generator{
 		List<Harmony> harmonies = new ArrayList<>();
 		int size = musicProperties.getChordSize();
 		int[] chord = new int[size];
-		int lastPosition = positions[positions.length - 2][0];
+		int lastPosition = positions[positions.length - 2];
 		for (HarmonyBuilder harmonyBuilder : harmonyBuilders) {
 			if (harmonyBuilder.getPosition() == 0) {
 				if (beginPitchClasses.length < size) {
@@ -95,27 +95,5 @@ public class BeginEndChordGenerator  extends Generator{
 			return new HarmonicMelody(harmonyNote, harmonyNote.getVoice(), harmonyNote.getPosition());
 		}
 	}
-
-
-//	@Override
-//	public List<Harmony> generateHarmonies(){
-//		List<Harmony> harmonies = new ArrayList<>();
-//		for (HarmonyBuilder harmonyBuilder :harmonyBuilders) {
-//			List<Integer> chordPitchClasses;
-//			if (harmonyBuilder.containsNotes()) {
-//				chordPitchClasses = harmonyBuilder.getPitchClasses();
-//			} else {
-//				chordPitchClasses = generatePitchClasses();
-//			}
-//			List<Note> harmonyNotes = generateNotes(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), chordPitchClasses);
-//			List<HarmonicMelody> harmonicMelodies = getHarmonicMelodies(harmonyNotes);
-//			Harmony harmony = new Harmony(harmonyBuilder.getPosition(), harmonyBuilder.getLength(), harmonicMelodies);
-//			double totalWeight = calculatePositionWeight(harmonyBuilder.getPosition(), harmonyBuilder.getLength());
-//			harmony.setPositionWeight(totalWeight);
-//			harmony.setPitchSpace(new UniformPitchSpace(musicProperties.getOctaveLowestPitchClassRange(), musicProperties.getInstruments()));
-//			harmonies.add(harmony);		
-//		}
-//		return harmonies;
-//	}
 
 }

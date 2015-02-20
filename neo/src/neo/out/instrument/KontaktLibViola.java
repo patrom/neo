@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 public class KontaktLibViola extends Instrument {
 
 	public KontaktLibViola(int voice, int channel) {
@@ -7,6 +9,7 @@ public class KontaktLibViola extends Instrument {
 		setLowest(48);
 		setHighest(72);
 		setKeySwitch(true);
+		setGeneralMidi(GeneralMidi.VIOLA);
 	}
 
 	@Override

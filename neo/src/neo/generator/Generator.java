@@ -22,12 +22,12 @@ import neo.util.RandomUtil;
 public abstract class Generator {
 
 	protected List<HarmonyBuilder> harmonyBuilders = new ArrayList<>();
-	protected int[][] positions;
+	protected int[] positions;
 	protected Map<Integer, Double> rhythmWeightValues;
 	protected MusicProperties musicProperties;
 	protected List<HarmonicMelody> harmonicMelodies = new ArrayList<>();
 	
-	public Generator(int[][] positions, MusicProperties musicProperties) {
+	public Generator(int[] positions, MusicProperties musicProperties) {
 		this.positions = positions;
 		this.musicProperties = musicProperties;
 		generateRhythmWeights();
@@ -42,7 +42,7 @@ public abstract class Generator {
 	
 	private void generateHarmonyBuilders() {
 		for (int i = 0; i < positions.length - 1; i++) {
-			harmonyBuilders.add(harmony().pos(positions[i][0]).len(positions[i + 1][0] - positions[i][0]));
+			harmonyBuilders.add(harmony().pos(positions[i]).len(positions[i + 1] - positions[i]));
 		}
 	}
 
@@ -179,22 +179,21 @@ public abstract class Generator {
 		return harmonicMelodies;
 	}
 	
-	public void generateHarmonicMelodiesForVoice(int[][] harmonies, int melodyVoice) {
-        for (int i = 0; i < harmonies.length - 1; i++) {
-            if (harmonies[i].length > 1) {
-                List<Note> notes = new ArrayList<>();
-                for (int j = 1; j < harmonies[i].length - 1; j++) {
-                    notes.add(note().voice(melodyVoice).pos(harmonies[i][j]).len(harmonies[i][j + 1] - harmonies[i][j]).build());
-                }
-                Note harmonyNote = note().pos(harmonies[i][0]).len(harmonies[i + 1][0] - harmonies[i][0]).build();
-                HarmonicMelody harmonicMelody = harmonicMelody()
-                		.harmonyNote(harmonyNote)
-                		.voice(melodyVoice)
-                		.pos(harmonies[i][0])
-                		.notes(notes)
-                		.build();
-                harmonicMelodies.add(harmonicMelody);
-            }
+	public void generateHarmonicMelodiesForVoice(int[][] melodies, int melodyVoice) {
+        for (int i = 0; i < melodies.length - 1; i++) {
+        	int[] melody = melodies[i];
+        	List<Note> notes = new ArrayList<>();
+        	for (int j = 0; j < melody.length - 1; j++) {
+        		 notes.add(note().voice(melodyVoice).pos(melody[j] + positions[i]).len(melody[j + 1] - melody[j]).build());
+			}
+            Note harmonyNote = note().pos(positions[i]).len(positions[i + 1] - positions[i]).build();
+            HarmonicMelody harmonicMelody = harmonicMelody()
+                	.harmonyNote(harmonyNote)
+                	.voice(melodyVoice)
+                	.pos(positions[i])
+                	.notes(notes)
+                	.build();
+           harmonicMelodies.add(harmonicMelody);
         }
 	}
 

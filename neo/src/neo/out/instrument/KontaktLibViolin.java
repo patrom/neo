@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 
 public class KontaktLibViolin extends Instrument {
 
@@ -8,6 +10,7 @@ public class KontaktLibViolin extends Instrument {
 		setLowest(55);
 		setHighest(84);
 		setKeySwitch(true);
+		setGeneralMidi(GeneralMidi.VIOLIN);
 	}
 
 	@Override

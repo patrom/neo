@@ -26,6 +26,7 @@ public class FitnessEvaluationTemplate {
 		motive.extractMelodies();
 		motive.updateInnerMetricWeightMelodies();
 		motive.updateInnerMetricWeightHarmonies();
+		motive.extractChords();
 		return evaluateObjectives(motive);
 	}
 

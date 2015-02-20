@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 
 public class KontaktLibCello extends Instrument {
 
@@ -8,6 +10,7 @@ public class KontaktLibCello extends Instrument {
 		setLowest(36);
 		setHighest(70);
 		setKeySwitch(true);
+		setGeneralMidi(GeneralMidi.CELLO);
 	}
 
 	@Override

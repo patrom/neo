@@ -1,35 +1,48 @@
 package neo.model.harmony;
 
 public enum ChordType {
-
-	MAJOR(0.8,3),
-	MINOR(0.8,3),
-	HALFDIM(0.8,3),
-	AUGM(0.5,3),
-	DOM(0.8,3),
-	CH0(0,0),
-	CH1(0,1),
-	CH2(0,2),
-	CH3(0.5,3),
-	CH4(0.5,4),
-	CH5(0.5,5),
-	MAJOR7(1,4),
-	MINOR7(1,4),
-	DOM7(1,4),
-	HALFDIM7(1,4),
-	DIM(1,4);
+	
+	CH0(0),
+	CH1(1),
+	CH2(2),
+	
+	CH3(3),
+	MAJOR(3),
+	MAJOR_1(3),
+	MAJOR_2(3),
+	MINOR(3),
+	MINOR_1(3),
+	MINOR_2(3),
+	HALFDIM(3),
+	AUGM(3),
+	DOM(3),
 	
 	
-	private double dissonance;
-	private int size;
+	CH4(4),
+	MAJOR7(4),
+	MAJOR7_1(4),
+	MAJOR7_2(4),
+	MAJOR7_3(4),
+	MINOR7(4),
+	MINOR7_1(4),
+	MINOR7_2(4),
+	MINOR7_3(4),
+	DOM7(4),
+	HALFDIM7(4),
+	DIM(4),
 	
-	ChordType(double dissonance, int size){
-		this.dissonance = dissonance;
-		this.size = size;
+	CH5(5),
+	
+	CH6(6);
+	
+	public enum Inversion {
+		ROOT, INVERSION1, INVERSION2, OTHER;
 	}
 	
-	public double getDissonance() {
-		return dissonance;
+	private int size;
+	
+	ChordType(int size){
+		this.size = size;
 	}
 	
 	public int getSize() {

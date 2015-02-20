@@ -2,6 +2,7 @@ package neo.nsga.operator.mutation;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +12,8 @@ import neo.generator.MusicProperties;
 import neo.model.harmony.Harmony;
 
 public abstract class AbstractMutation extends Mutation{
+	
+	protected static Logger LOGGER = Logger.getLogger(AbstractMutation.class.getName());
 
 	@Autowired
 	protected MusicProperties musicProperties;

@@ -52,7 +52,7 @@ public class SwapHarmonyNotes extends AbstractMutation{
 				harmonyNote.setPitchClass(switchHarmonyPitchClass);
 				switchHarmonicMelody.updateMelodyNotes(switchHarmonyPitchClass, harmonyPitchClass);
 				switchHarmonyNote.setPitchClass(harmonyPitchClass);
-//				harmony.toChord();
+				LOGGER.fine("swap");
 			}
 		}
 	}

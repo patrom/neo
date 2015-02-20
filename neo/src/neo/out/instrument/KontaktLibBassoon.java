@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 
 public class KontaktLibBassoon extends Instrument {
 
@@ -8,6 +10,7 @@ public class KontaktLibBassoon extends Instrument {
 		setLowest(34);
 		setHighest(70);
 		setKeySwitch(true);
+		setGeneralMidi(GeneralMidi.BASSOON);
 	}
 
 	@Override

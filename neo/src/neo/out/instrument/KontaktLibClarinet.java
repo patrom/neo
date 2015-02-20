@@ -1,5 +1,7 @@
 package neo.out.instrument;
 
+import neo.midi.GeneralMidi;
+
 
 public class KontaktLibClarinet extends Instrument {
 
@@ -8,6 +10,7 @@ public class KontaktLibClarinet extends Instrument {
 		setLowest(50);
 		setHighest(84);
 		setKeySwitch(true);
+		setGeneralMidi(GeneralMidi.CLARINET);
 	}
 
 	@Override

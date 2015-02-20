@@ -79,11 +79,13 @@ public class HarmonicMelody {
 	
 	public void mutateMelodyNoteToHarmonyNote(int newPitchClass){
 		if (melodyNotes.size() > 1) {
-			List<Note> melodyNotesWithoutHarmonyNote = getMelodyNotesWithoutHarmonyNote();
-			if (!melodyNotesWithoutHarmonyNote.isEmpty()) {
-				randomUpdateNoteInList(newPitchClass, melodyNotesWithoutHarmonyNote);
-			} else {//all are harmony notes
-				randomUpdateNoteInList(newPitchClass, melodyNotes);
+			if (melodyContainsHarmonyNote()) {
+				List<Note> nonChordNotes = getNonChordNotes();
+				if (nonChordNotes.size() > 0) {
+					randomUpdateNoteInList(newPitchClass, getNonChordNotes());
+				}
+			}else{
+				throw new RuntimeException("Melody contains no harmony note");
 			}
 		}
 	}
@@ -93,11 +95,9 @@ public class HarmonicMelody {
 		melodyNote.setPitchClass(newPitchClass);
 	}
 
-	private List<Note> getMelodyNotesWithoutHarmonyNote() {
-		List<Note> notes = melodyNotes.stream()
-				.filter(note -> harmonyNote.getPitchClass() != note.getPitchClass())
-				.collect(toList());
-		return notes;
+	protected boolean melodyContainsHarmonyNote() {
+		return melodyNotes.stream()
+				.anyMatch(note -> harmonyNote.getPitchClass() == note.getPitchClass());
 	}
 	
 	public List<Note> getNonChordNotes(){
@@ -154,6 +154,11 @@ public class HarmonicMelody {
 		melodyNotes.forEach(updateMelodyPitchClasses);
 		melodyNotes.get(0).setPitchClass(harmonyPitch);
 		harmonyNote.setPitchClass(harmonyPitch);
+	}
+	
+	public HarmonicMelody copy(int voice) {
+		List<Note> notes = melodyNotes.stream().map(note -> note.copy()).collect(toList());
+		return new HarmonicMelody(harmonyNote.copy(), notes, voice, position);
 	}
 	
 }

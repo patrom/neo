@@ -17,12 +17,14 @@ import neo.midi.MelodyInstrument;
 import neo.midi.MidiConverter;
 import neo.midi.MidiInfo;
 import neo.midi.MidiParser;
+import neo.model.dissonance.Dissonance;
 import neo.model.note.Note;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationContextLoader;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -36,6 +38,11 @@ public class MelodiesTest extends AbstractTest{
 	private List<File> midiFiles;
 	@Autowired
 	private MidiParser midiParser;
+	@Autowired
+	@Qualifier(value="TonalDissonance")
+	private Dissonance dissonance;
+	@Autowired
+	private MelodicObjective melodicObjective;
 	
 	@Before
 	public void setUp() throws IOException, InvalidMidiDataException {
@@ -51,7 +58,6 @@ public class MelodiesTest extends AbstractTest{
 			MidiConverter.updatePositionNotes(melodies, midiInfo.getTimeSignature());
 			for (MelodyInstrument melodyInstrument : melodies) {
 				List<Note> notes = melodyInstrument.getNotes();
-				MelodicObjective melodicObjective = new MelodicObjective();
 				double value = melodicObjective.evaluateMelody(notes, 1);
 				LOGGER.info("Intervals : " + value);
 				value = melodicObjective.evaluateTriadicValueMelody(notes);

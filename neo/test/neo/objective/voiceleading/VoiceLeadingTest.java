@@ -46,6 +46,8 @@ public class VoiceLeadingTest extends AbstractTest{
 	}
 	
 	private void compareVoiceLeading(Harmony source, Harmony target) {
+		source.toChord();
+		target.toChord();
 		Multiset<Integer> sourceSet = source.getChord().getPitchClassMultiSet();
 		for (int i = 0; i < 12; i++) {
 			VoiceLeadingSize minimalVoiceLeadingSize = VoiceLeading.caculateSize(sourceSet, target.getChord().getPitchClassMultiSet());

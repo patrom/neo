@@ -20,7 +20,7 @@ public class HarmonicMelodyTest {
 
 	@Before
 	public void setUp() {
-		harmonicMelody = harmonicMelody()
+		harmonicMelody = harmonicMelody().voice(0)
 				.notes(note().pc(0).pitch(60).ocatve(5).build(), note().pc(2).pitch(62).ocatve(5).build())
 				.harmonyNote(note().pc(0).pitch(60).ocatve(5).build())
 				.build();
@@ -112,5 +112,13 @@ public class HarmonicMelodyTest {
 				.anyMatch(note -> note.getPitchClass() == harmonicMelody.getHarmonyNote().getPitchClass()));
 	}
 	
+	@Test
+	public void testCopy(){
+		HarmonicMelody copy = harmonicMelody.copy(1);
+		assertEquals(copy.getVoice(), 1);
+		Note note = copy.getMelodyNotes().get(0);
+		assertEquals(note.getVoice(), 1);
+		assertEquals(copy.getHarmonyNote().getVoice(), 1);
+	}
 
 }
