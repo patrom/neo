@@ -74,27 +74,28 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> parsedMelodies = midiInfo.getMelodies();
+			mapInstruments(parsedMelodies, Ensemble.getPiano(4));
 			//split
 			int size = parsedMelodies.size();
 			List<MelodyInstrument> melodies = new ArrayList<>(parsedMelodies.subList(0, size/2));
 			List<MelodyInstrument> harmonies = new ArrayList<>(parsedMelodies.subList(size/2, size));
-		
-			assignInstruments(melodies, Ensemble.getPianoAnd2Flutes(), 0);
-			
-			List<Integer> voicesForAccomp = new ArrayList<>();
-			voicesForAccomp.add(1);
-			voicesForAccomp.add(2);
-			voicesForAccomp.add(3);
-			List<MelodyInstrument> accompMelodies = filterAccompagnementMelodies(voicesForAccomp, melodies);
-			createAccompagnement(accompMelodies, melodies, midiInfo.getHarmonyPositionsForVoice(0));
+//			arrangement.transpose(melodies.get(1).getNotes(), 12);
+//			arrangement.transpose(melodies.get(2).getNotes(), 12);
+//			arrangement.transpose(melodies.get(3).getNotes(), 12);
+//			List<Integer> voicesForAccomp = new ArrayList<>();
+//			voicesForAccomp.add(1);
+//			voicesForAccomp.add(2);
+//			voicesForAccomp.add(3);
+//			List<MelodyInstrument> accompMelodies = filterAccompagnementMelodies(voicesForAccomp, melodies);
+//			createAccompagnement(accompMelodies, melodies, midiInfo.getHarmonyPositionsForVoice(0));
 			
 			playOnKontakt(melodies, midiInfo.getTempo());
 			View.notate(scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo()));
-			write(melodies, "resources/transform/" + midiFile.getName());
-			Thread.sleep(13000);
+			write(melodies , "resources/transform/" + midiFile.getName());
+			Thread.sleep(14000);
 		}
 	}
-	
+
 	private void createAccompagnement(List<MelodyInstrument> accompMelodies, List<MelodyInstrument> melodies, List<HarmonyPosition> harmonyPositions) {
 		for (MelodyInstrument melodyInstrument : accompMelodies) {
 			melodies.remove(melodyInstrument);
@@ -118,7 +119,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	
 	private MelodyInstrument getAccomp(List<Note> melodies, List<HarmonyPosition> harmonyPositions, int voice) {
 		List<List<Note>> patterns = new ArrayList<>();
-		harmonyPositions.forEach(h -> patterns.add(Pattern.waltz(12, 12)));
+		harmonyPositions.forEach(h -> patterns.add(Pattern.repeat(12, 24)));
 		List<Note> accompagnement = arrangement.getAccompagnement(melodies, harmonyPositions, patterns, 12);
 		return new MelodyInstrument(accompagnement, voice);
 	}
@@ -152,12 +153,15 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		return playList;
 	}
 	
-	private void assignInstruments(List<MelodyInstrument> melodies, List<Instrument> instruments, int offset) {
+	private void mapInstruments(List<MelodyInstrument> melodies, List<Instrument> instruments) {
+		int offset = melodies.size() / 2;
 		for (int i = 0; i < instruments.size(); i++) {
 			MelodyInstrument melodyInstrument = melodies.get(i);
-			Optional<Instrument> instrument = instruments.stream().filter(instr -> (instr.getVoice() + offset) == melodyInstrument.getVoice()).findFirst();
+			MelodyInstrument melodyInstrumentOffset = melodies.get(i + offset);
+			Optional<Instrument> instrument = instruments.stream().filter(instr -> (instr.getVoice()) == melodyInstrument.getVoice()).findFirst();
 			if (instrument.isPresent()) {
 				melodyInstrument.setInstrument(instrument.get());
+				melodyInstrumentOffset.setInstrument(instrument.get());
 			}else{
 				throw new IllegalArgumentException("Instrument for voice " + i + " is missing!");
 			}

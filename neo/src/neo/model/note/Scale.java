@@ -10,9 +10,6 @@ public class Scale {
             MINOR_SCALE = {0, 2, 3, 5, 7, 8, 10},
             HARMONIC_MINOR_SCALE = {0, 2, 3, 5, 7, 8, 11},
             MELODIC_MINOR_SCALE = {0, 2, 3, 5, 7, 8, 9, 10, 11}, // mix of ascend and descend
-            NATURAL_MINOR_SCALE = {0, 2, 3, 5, 7, 8, 10},
-            DIATONIC_MINOR_SCALE = {0, 2, 3, 5, 7, 8, 10},
-            AEOLIAN_SCALE = {0, 2, 3, 5, 7, 8, 10},
             DORIAN_SCALE = {0, 2, 3, 5, 7, 9, 10},	
             LYDIAN_SCALE = {0, 2, 4, 6, 7, 9, 11},
             MIXOLYDIAN_SCALE = {0, 2, 4, 5, 7, 9, 10},

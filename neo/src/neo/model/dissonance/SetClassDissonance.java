@@ -10,7 +10,9 @@ public class SetClassDissonance implements Dissonance {
 	@Override
 	public double getDissonance(Chord chord) {
 		switch (chord.getForteName()) {
-			case "3-9":
+			case "3-7":
+				return 1.0;
+			case "3-8":
 				return 1.0;
 			case "3-10":
 				return 1.0;

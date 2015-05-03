@@ -11,3 +11,5 @@ melody: interval evaluation based on note position + inner metric weight
 		
 Accompagnement:
 Pattern needs to have same length as harmony
+
+NSGA: harmony, melody, voiceleading, tonality

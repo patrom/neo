@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class MusicProperties {
 	
 	private int harmonyBeatDivider = 12;
-	private float tempo = 90;
+	private float tempo = 85;
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength;
 	private int chordSize;
@@ -24,8 +24,8 @@ public class MusicProperties {
 	private List<Instrument> instruments;
 	
 	//tonality
-	private Scale scale = new Scale(Scale.MAJOR_SCALE);
-	private Scale melodyScale = new Scale(Scale.MAJOR_SCALE);
+	private Scale scale = new Scale(Scale.WHOLE_TONE_SCALE);
+	private Scale melodyScale = new Scale(Scale.OCTATCONIC_WHOLE);
 	
 	//harmony
 	private double harmonyConsDissValue = 0.3;
@@ -39,7 +39,7 @@ public class MusicProperties {
 	private String voiceLeadingStrategy;
 
 	//score
-	private int numerator = 3;
+	private int numerator = 4;
 	private int denominator = 4;
 	private int keySignature = 0;//1 = 1 kruis / -1 = 1 bemol
 	
@@ -57,7 +57,7 @@ public class MusicProperties {
 		this.measureWeights = new double[]{1.0, 0.5, 0.75, 0.5, 0.75, 0.5};// measure must correspond to minimumlength!
 		this.numerator = 3;
 		this.denominator = 4;
-		this.instruments = Ensemble.getPianoAnd2Flutes();
+		this.instruments = Ensemble.getPiano(3);
 		this.chordSize = instruments.size();
 	}
 	
@@ -66,7 +66,7 @@ public class MusicProperties {
 		this.measureWeights = new double[]{1.0, 0.5, 0.75, 0.5, 1.0, 0.5, 0.75, 0.5};
 	    this.numerator = 4;
 	    this.denominator = 4;
-	    this.instruments = Ensemble.getChoir();
+	    this.instruments = Ensemble.getPiano(4);
 		this.chordSize = instruments.size();
 	}
 	

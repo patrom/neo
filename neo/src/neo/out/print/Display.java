@@ -67,7 +67,7 @@ public class Display {
 		private void printHarmonies(List<Harmony> harmonies) {
 			harmonies.forEach(h ->  LOGGER.info(h.getChord() + ", "));
 //			harmonies.forEach(h ->  LOGGER.info(h.getChord().getPitchClassMultiSet() + ", "));
-			harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
+//			harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
 		}
 
 		private void viewScore(List<Melody> melodies, String id, double tempo) {

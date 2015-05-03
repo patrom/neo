@@ -22,7 +22,7 @@ public class TonalDissonance implements Dissonance {
 				return 0.98;
 			case MINOR_2:
 				return 0.97;
-			case HALFDIM:
+			case DIM:
 				return 0.99;
 			case AUGM:
 				return 0.95;
@@ -60,7 +60,7 @@ public class TonalDissonance implements Dissonance {
 				return 1.0;	
 			case HALFDIM7:
 				return 0.98;	
-			case DIM:
+			case DIM7:
 				return 0.98;	
 		}
 		return 0.0;

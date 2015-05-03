@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.swing.JFrame;
 
@@ -39,6 +42,7 @@ import org.springframework.context.annotation.Import;
 public class NsgaApplication extends JFrame implements CommandLineRunner{
 	
 	private static Logger LOGGER = Logger.getLogger(NsgaApplication.class.getName());
+	private Random random = new Random();
 	
 	@Autowired
 	private Problem problem;
@@ -83,18 +87,28 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	@Override
 	public void run(String... arg0) throws Exception {
 		deleteMidiFiles(midiFilesPath);
-		musicProperties.threeFour();
-		int[] harmonies = {0,36,72,108,144,180};
-		int[][] melodies = {{24, 36},{0, 12, 24, 36},{0, 12, 24, 36},{0, 12, 24, 36},{}};
-		
+//		musicProperties.threeFour();
+		musicProperties.fourFour();
+		int[] generatedHamonies = generateHarmonyPositions(12, 4, 4);
+		int[][] melodyPositions = generateMelodies(generatedHamonies, 12);
+		int[][] generatedMelodyPositions = new int[melodyPositions.length][];
+		for (int j = 0; j < melodyPositions.length; j++) {
+			int[] melody = generateMelody(melodyPositions[j], 6, 4);
+			generatedMelodyPositions[j] = melody;
+		}
+		int[] harmonies = {0,24,36,48,72,96, 108,120,144,168,192};
+		int[][] melodies = {{18,24},{0,6,18},{6,12},{0, 18, 24},{0,24},{0,12},{0,12},{0, 18, 24},{0,24},{}};
+//		int[][] melodies2 = {{18,24},{0, 12},{0, 12},{12,24},{0,12},{0,12},{0,12},{0,12},{0,12,24},{}};
+
 //		BeginEndChordGenerator generator = beginEndChordGenerator;
 		
 //		TonalChordGenerator tonalChordGenerator = new TonalChordGenerator(harmonies, musicProperties);
 //		tonalChordGenerator.setChords(TonalChords.getTriads(0));
 //		Generator generator = tonalChordGenerator;
 		
-		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-		generator.generateHarmonicMelodiesForVoice(melodies, 5);
+		Generator generator = new RandomNotesGenerator(generatedHamonies, musicProperties);
+		generator.generateHarmonicMelodiesForVoice(generatedMelodyPositions, 3);
+//		generator.generateHarmonicMelodiesForVoice(melodies2, 4);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
 //		Generator generator = new PerleChordGenerator(harmonies, musicProperties);
@@ -164,6 +178,62 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 		for (File file : midiFiles) {
 			file.delete();
 		}
+	}
+	
+	private int[] generateHarmonyPositions(int minimumLength, int maxHarmonies, int bars){
+		int limit = (12/minimumLength) * musicProperties.getNumerator() * bars;
+		IntStream intStream = random.ints(limit, 0, limit);
+		List<Integer> positions = intStream
+				.distinct()
+				.map(i -> i * minimumLength)
+				.boxed()
+				.collect(Collectors.toList());
+		int max = (maxHarmonies > positions.size())?positions.size():maxHarmonies;
+		positions = positions.subList(0, max + 1);
+		positions.sort(Comparator.naturalOrder());
+		int[] pos = new int[positions.size()];
+		for (int j = 0; j < pos.length; j++) {
+			pos[j] = positions.get(j);
+		}
+		return pos;
+	}
+	
+	private int[][] generateMelodies(int[] harmonyPositions, int minimumLength){
+		int[][] melodyPositions = new int[harmonyPositions.length - 1][];
+		for (int i = 0; i < harmonyPositions.length - 1; i++) {
+			int[] melPosition = new int[2];
+			melPosition[0] = 0;
+			melPosition[1] = harmonyPositions[i + 1] - harmonyPositions[i];
+			melodyPositions[i] = melPosition;
+		}
+		return melodyPositions;
+	}
+	
+	private int[] generateMelody(int[] harmony, int minimumLength, int maxMelodyNotes){
+		int[] pos = null;
+		int positionsInHarmony = ((harmony[1] - harmony[0])/minimumLength) - 1;//minus first position
+		int limit = random.nextInt(positionsInHarmony + 1);
+		if (limit > 0) {
+			int from = ((harmony[0])/minimumLength) + 1;
+			int toExlusive = (int)Math.ceil(harmony[1]/(double)minimumLength);
+			IntStream intStream = random.ints(limit,from,toExlusive);
+			List<Integer> positions = intStream
+					.distinct()
+					.map(i -> i * minimumLength)
+					.boxed()
+					.collect(Collectors.toList());
+			int max = (maxMelodyNotes > positions.size())?positions.size():maxMelodyNotes;
+			positions = positions.subList(0, max);
+			positions.sort(Comparator.naturalOrder());
+			pos = new int[positions.size() + 2];
+			pos[0] = harmony[0];
+			pos[pos.length - 1] = harmony[1];
+			for (int j = 1; j < pos.length - 1; j++) {
+				pos[j] = positions.get(j - 1);
+			}
+			return pos;
+		} 
+		return harmony;
 	}
 	
 }

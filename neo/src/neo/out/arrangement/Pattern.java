@@ -21,6 +21,12 @@ public class Pattern {
 		return notes;
 	}
 	
+	public static List<Note> waltzSecBeat(int quarterNote, int noteLength){
+		List<Note> notes = new ArrayList<>();
+		notes.add(note().pos(quarterNote).len(noteLength).build());
+		return notes;
+	}
+	
 	/**
 	 * Positions: repeat note depending on noteLength for harmonyLength
 	 * @param noteLength

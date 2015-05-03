@@ -114,22 +114,22 @@ public class Chord {
 					int chordPosition = Math.abs(chord[2] - bassNote);
 					return getMinor7Inversion(chordPosition);
 				} else if(thirdInterval == 4){
-					return chordType.DOM7;
+					return ChordType.DOM7;
 				}
 			} else if (secondInterval == 3) {
 				if (thirdInterval == 3) {
-					return chordType.DIM;
+					return ChordType.DIM;
 				} else if(thirdInterval == 4){
-					return chordType.HALFDIM7;
+					return ChordType.HALFDIM7;
 				} else if(thirdInterval == 2){
-					return chordType.DOM7;
+					return ChordType.DOM7;
 				}
 			}else if (secondInterval == 4) {
 				if (thirdInterval == 3) {
 					int chordPosition = Math.abs(chord[0] - bassNote);
 					return getMinor7Inversion(chordPosition);
 				} else if(thirdInterval == 2){
-					return chordType.HALFDIM7;
+					return ChordType.HALFDIM7;
 				} else if(thirdInterval == 1){
 					int chordPosition = Math.abs(chord[3] - bassNote);
 					return getMajor7Inversion(chordPosition);
@@ -144,11 +144,11 @@ public class Chord {
 				} 
 			} else if (secondInterval == 2) {
 				if (thirdInterval == 3) {
-					return chordType.HALFDIM7;
+					return ChordType.HALFDIM7;
 				} 
 			}else if (secondInterval == 3) {
 				if (thirdInterval == 3) {
-					return chordType.DOM7;
+					return ChordType.DOM7;
 				} else if(thirdInterval == 4){
 					int chordPosition = Math.abs(chord[0] - bassNote);
 					return getMajor7Inversion(chordPosition);
@@ -172,7 +172,7 @@ public class Chord {
 			return ChordType.DOM;
 		} else if (firstInterval == 3) {
 			if (secondInterval == 3 || secondInterval == 6) {
-				return ChordType.HALFDIM;
+				return ChordType.DIM;
 			} else if (secondInterval == 4) {
 				int chordPosition = Math.abs(chord[0] - bassNote);
 				return getMinorInversion(chordPosition);
@@ -202,9 +202,31 @@ public class Chord {
 			}
 		} else if (firstInterval == 6) {
 			if (secondInterval == 3) {
-				return ChordType.HALFDIM;
+				return ChordType.DIM;
 			} else if (secondInterval == 2) {
 				return ChordType.DOM;
+			}
+		}
+		
+		String forteName = getForteName();
+		if ("3-9".equals(forteName)) {
+			return ChordType.KWARTEN;
+		}
+		if ("3-4".equals(forteName)) {
+			if (firstInterval == 4 && secondInterval == 7 ) {
+				return ChordType.MAJOR7_OMIT5;
+			}
+		}
+		if ("3-6".equals(forteName)) {
+			if (firstInterval == 2 && secondInterval == 2 ) {
+				return ChordType.ADD9;
+			}
+		}
+		if ("3-7".equals(forteName)) {
+			if (firstInterval == 3 && secondInterval == 7 ) {
+				return ChordType.MINOR7_OMIT5;
+			} else if (firstInterval == 7 && secondInterval == 2 ) {
+				return ChordType.MINOR7_OMIT5_1;
 			}
 		}
 		return ChordType.CH3;

@@ -36,8 +36,8 @@ public class HarmonyNoteToPitch extends AbstractMutation{
 		if (PseudoRandom.randDouble() < probability) {
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 			mutateHarmonyNoteToRandomPitch(motive.getHarmonies());
-//			mutateHarmonyNoteToPreviousPitch(motive.getHarmonies());
-//			mutateHarmonyNoteToNextPitch(motive.getHarmonies());
+			mutateHarmonyNoteToPreviousPitch(motive.getHarmonies());
+			mutateHarmonyNoteToNextPitch(motive.getHarmonies());
 		} 
 	}
 

@@ -13,10 +13,14 @@ public enum ChordType {
 	MINOR(3),
 	MINOR_1(3),
 	MINOR_2(3),
-	HALFDIM(3),
+	DIM(3),
 	AUGM(3),
 	DOM(3),
-	
+	ADD9(3),
+	MINOR7_OMIT5(3),
+	MINOR7_OMIT5_1(3),
+	MAJOR7_OMIT5(3),
+	KWARTEN(3),
 	
 	CH4(4),
 	MAJOR7(4),
@@ -29,7 +33,7 @@ public enum ChordType {
 	MINOR7_3(4),
 	DOM7(4),
 	HALFDIM7(4),
-	DIM(4),
+	DIM7(4),
 	
 	CH5(5),
 	
