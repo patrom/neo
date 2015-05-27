@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableAutoConfiguration
 @ComponentScan
 public class DefaultConfig {
-
+	
 	@Bean
 	public HashMap<String, Object> parameters() {
 		return new HashMap<>();

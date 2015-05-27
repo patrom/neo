@@ -90,8 +90,8 @@ public class MelodicObjective extends Objective {
 	}
 
 	protected double evaluateMelody(List<Note> notes, int maxDistance) {
-		if (notes.size() == 1) {
-			throw new IllegalStateException("size");
+		if (notes.size() <= 1) {
+			throw new IllegalArgumentException("size");
 		}
 		double totalPositionWeigth = 0;
 		Note[] notePositions = notes.toArray(new Note[notes.size()]);

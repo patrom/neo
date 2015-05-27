@@ -16,6 +16,8 @@ import jm.music.data.Score;
 import neo.generator.MusicProperties;
 import neo.midi.MelodyInstrument;
 import neo.model.melody.Melody;
+import neo.model.note.NoteBuilder;
+import neo.variation.Embellisher;
 
 @Component
 public class ScoreUtilities implements JMC{
@@ -24,6 +26,8 @@ public class ScoreUtilities implements JMC{
 
 	private final double ATOMIC_VALUE = 12;
 	private Random random = new Random();
+	@Autowired
+	private Embellisher embellisher;
 	
 	@Autowired
 	private MusicProperties musicProperties;
@@ -47,8 +51,16 @@ public class ScoreUtilities implements JMC{
 		Part[] scoreParts = new Part[melodies.size() * 2];
 		int voice = 0;
 		for (Melody melody : melodies) {
+			Phrase phrase = null;
 			List<neo.model.note.Note> notes = melody.getMelodieNotes();
-			Phrase phrase = createPhrase(notes);	
+//			if (melody.getVoice() == 3) {
+				List<neo.model.note.Note> embellishedNotes = embellisher.embellish(notes);
+				phrase = createPhrase(embellishedNotes);	
+//			}
+//			else{
+//				phrase = createPhrase(notes);	
+//			}
+			
 			Part part = new Part(phrase);
 			scoreParts[voice] = part;
 			voice++;	

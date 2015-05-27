@@ -50,5 +50,9 @@ public class TonalChordGenerator extends Generator{
 	public void setChords(List<int[]> chords) {
 		this.chords = chords;
 	}
+	
+	public void addChords(List<int[]> chords){
+		this.chords.addAll(chords);
+	}
 
 }

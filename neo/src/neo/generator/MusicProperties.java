@@ -24,8 +24,8 @@ public class MusicProperties {
 	private List<Instrument> instruments;
 	
 	//tonality
-	private Scale scale = new Scale(Scale.WHOLE_TONE_SCALE);
-	private Scale melodyScale = new Scale(Scale.OCTATCONIC_WHOLE);
+	private Scale scale = new Scale(Scale.MAJOR_SCALE);
+	private Scale melodyScale = new Scale(Scale.MAJOR_SCALE);
 	
 	//harmony
 	private double harmonyConsDissValue = 0.3;

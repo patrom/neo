@@ -26,11 +26,23 @@ public class ScaleTest {
 		int next = scale.pickNextPitchFromScale(4);
 		assertEquals(5, next);
 	}
+	
+	@Test
+	public void testPickNextPitchFromScaleNoteNotInScale() {
+		int next = scale.pickNextPitchFromScale(10);
+		assertEquals(11, next);
+	}
 
 	@Test
 	public void testPickPreviousPitchFromScale() {
 		int previous = scale.pickPreviousPitchFromScale(4);
 		assertEquals(2, previous);
+	}
+	
+	@Test
+	public void testPickPreviousPitchFromScaleNoteNotInScale() {
+		int previous = scale.pickPreviousPitchFromScale(6);
+		assertEquals(5, previous);
 	}
 
 	@Test

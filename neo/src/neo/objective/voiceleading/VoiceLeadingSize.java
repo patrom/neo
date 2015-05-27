@@ -3,6 +3,8 @@ package neo.objective.voiceleading;
 import java.util.ArrayList;
 import java.util.List;
 
+import neo.util.Util;
+
 public class VoiceLeadingSize {
 
 	private List<Integer> source = new ArrayList<>();
@@ -46,10 +48,10 @@ public class VoiceLeadingSize {
 		int total = 0;
 		for (int i = 0; i < source.size(); i++) {
 			int diff = Math.abs(source.get(i) - target.get(i));
-			int ic = intervalClass(diff);
+			int ic = Util.intervalClass(diff);
 			total = total + ic;
 		}
-		this.size = total - (intervalClass(Math.abs(source.get(0) - target.get(0))));
+		this.size = total - (Util.intervalClass(Math.abs(source.get(0) - target.get(0))));
 	}
 	
 	public List<Integer> getVlSource() {
@@ -71,17 +73,5 @@ public class VoiceLeadingSize {
 		}
 		return list;
 	}
-	
-	 private int intervalClass (int c) {
-         int ic = PosMod(c);
-         if (ic > mod /2){
-        	 ic = mod - ic;
-         }
-         return ic;
-	}
-     
-     private  int PosMod (int c) { 
-    	 return ((c % mod) + mod) % mod; 
-    }  
      
 }

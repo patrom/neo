@@ -34,7 +34,6 @@ public class Scale {
 	private int[] scale;
 	
 	public Scale() {
-		
 	}
 	
 	public Scale(int[] scale) {
@@ -56,7 +55,6 @@ public class Scale {
 		return pitchClass;
 	}
 	
-	
 	public int pickNextPitchFromScale(int pitchClass){
 		for (int i = 0; i < scale.length; i++) {
 			if (pitchClass == scale[i]) {
@@ -67,7 +65,7 @@ public class Scale {
 				}
 			}
 		}
-		return pitchClass;
+		return pickNextPitchFromScale((pitchClass - 1) % 12);
 	}
 	
 	public int pickPreviousPitchFromScale(int pitchClass){
@@ -80,7 +78,7 @@ public class Scale {
 				}
 			}
 		}
-		return pitchClass;
+		return pickPreviousPitchFromScale((pitchClass + 1) % 12);
 	}
 	
 	public int pickLowerStepFromScale(int pitchClass, int lowerStep){

@@ -16,6 +16,10 @@ public class RandomUtil {
 		return array[random(array.length)];
 	}
 	
+	public static double[] getRandomFromDoubleArray(double[][] array){
+		return array[random(array.length)];
+	}
+	
 	public static int randomInt(int origin, int boundExclusive){
 		return random.ints(origin, boundExclusive).findFirst().getAsInt();
 	}
@@ -28,6 +32,10 @@ public class RandomUtil {
 		int start = randomInt(0, size);
 		int end = randomInt(start + 1, size + 1);
 		return IntStream.range(start, end);
+	}
+	
+	public static boolean toggleSelection(){
+		return random.nextBoolean();
 	}
 	
 }

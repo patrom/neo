@@ -1,0 +1,208 @@
+package neo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import neo.variation.nonchordtone.Variation;
+import neo.variation.nonchordtone.anticipation.Anticipation;
+import neo.variation.nonchordtone.appoggiatura.Appoggiature;
+import neo.variation.nonchordtone.escape.EscapeScaleDown;
+import neo.variation.nonchordtone.escape.EscapeScaleUp;
+import neo.variation.nonchordtone.neighbor.ChromaticNeigborDown;
+import neo.variation.nonchordtone.neighbor.ChromaticNeigborUp;
+import neo.variation.nonchordtone.neighbor.NeighborScaleDown;
+import neo.variation.nonchordtone.neighbor.NeighborScaleUp;
+import neo.variation.nonchordtone.passing.AccentedPassingDown;
+import neo.variation.nonchordtone.passing.ChromaticPassingDown;
+import neo.variation.nonchordtone.passing.ChromaticPassingUp;
+import neo.variation.nonchordtone.passing.PassingDown;
+import neo.variation.nonchordtone.passing.PassingUp;
+import neo.variation.nonchordtone.suspension.FreeSuspensionChromaticUp;
+import neo.variation.nonchordtone.suspension.FreeSuspensionScaleDown;
+import neo.variation.nonchordtone.suspension.FreeSuspensionScaleUp;
+import neo.variation.nonchordtone.suspension.Suspension;
+import neo.variation.pattern.VariationPattern;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class VariationConfig {
+	
+	@Autowired
+	@Qualifier(value="NeigborVariationPattern")
+	private VariationPattern neigborVariationPattern;
+	@Autowired
+	@Qualifier(value="PassingVariationPattern")
+	private VariationPattern passingVariationPattern;
+	@Autowired
+	@Qualifier(value="SuspensionVariationPattern")
+	private VariationPattern suspensionVariationPattern;
+	@Autowired
+	@Qualifier(value="AnticipationVariationPattern")
+	private VariationPattern anticipationVariationPattern;
+	@Autowired
+	@Qualifier(value="FreeSuspensionVariationPattern")
+	private VariationPattern freeSuspensionVariationPattern;
+	@Autowired
+	@Qualifier(value="EscapeVariationPattern")
+	private VariationPattern escapeVariationPattern;
+	@Autowired
+	@Qualifier(value="AppogiatureVariationPattern")
+	private VariationPattern apogiatureVariationPattern;
+	
+	@Autowired
+	private NeighborScaleDown neighborScaleDown;
+	@Autowired
+	private NeighborScaleUp neighborScaleUp;
+	@Autowired
+	private ChromaticNeigborDown chromaticNeigborDown;
+	@Autowired
+	private ChromaticNeigborUp chromaticNeigborUp;
+	@Autowired
+	private ChromaticPassingUp chromaticPassingUp;
+	@Autowired
+	private ChromaticPassingDown chromaticPassingDown;
+	@Autowired
+	private PassingDown passingDown;
+	@Autowired
+	private AccentedPassingDown accentedPassingDown;
+	@Autowired
+	private PassingUp passingUp;
+	@Autowired
+	private Suspension suspension;
+	@Autowired
+	private Anticipation anticipation;
+	@Autowired
+	private FreeSuspensionScaleDown freeSuspensionScaleDown;
+	@Autowired
+	private FreeSuspensionScaleUp freeSuspensionScaleUp;
+	@Autowired
+	private FreeSuspensionChromaticUp freeSuspensionChromaticUp;
+	@Autowired
+	private EscapeScaleUp escapeScaleUp;
+	@Autowired
+	private EscapeScaleDown escapeScaleDown;
+	@Autowired
+	private Appoggiature appoggiature;
+	
+	@Bean
+	public List<Variation> variations() {
+	    List<Variation> variationList = new ArrayList<>();
+//	    neighborScaleDown.setVariationPattern(neigborVariationPattern);
+//	    neighborScaleUp.setVariationPattern(neigborVariationPattern);
+//	    chromaticNeigborDown.setVariationPattern(neigborVariationPattern);
+//	    chromaticNeigborUp.setVariationPattern(neigborVariationPattern);
+//	    anticipation.setVariationPattern(anticipationVariationPattern);
+//	    freeSuspensionScaleDown.setVariationPattern(freeSuspensionVariationPattern);
+//	    freeSuspensionScaleUp.setVariationPattern(freeSuspensionVariationPattern);
+//	    freeSuspensionChromaticUp.setVariationPattern(freeSuspensionVariationPattern);
+//	    variationList.add(neighborScaleDown);
+//	    variationList.add(neighborScaleUp);
+//	    variationList.add(chromaticNeigborDown);
+//	    variationList.add(chromaticNeigborUp);
+//	    variationList.add(anticipation);
+//	    variationList.add(freeSuspensionScaleDown);
+//	    variationList.add(freeSuspensionScaleUp);
+//	    variationList.add(freeSuspensionChromaticUp);
+	    return variationList;
+	}
+	
+	@Bean
+	public List<Variation> majorSecondUpIntervalVariations() {
+	    List<Variation> variationList = new ArrayList<>();
+//	    chromaticPassingUp.setVariationPattern(passingVariationPattern);
+//	    variationList.add(chromaticPassingUp);
+//	    escapeScaleDown.setVariationPattern(escapeVariationPattern);
+//	    variationList.add(escapeScaleDown);
+	    appoggiature.setVariationPattern(apogiatureVariationPattern);
+	    variationList.add(appoggiature);
+	    return variationList;
+	}
+	
+	@Bean
+	public List<Variation> minorSecondDownIntervalVariations() {
+	    List<Variation> variationList = new ArrayList<>();
+	    escapeScaleUp.setVariationPattern(escapeVariationPattern);
+	    variationList.add(escapeScaleUp);
+	    return variationList;
+	}
+	
+	@Bean
+	public List<Variation> minorSecondUpIntervalVariations() {
+	    List<Variation> variationList = new ArrayList<>();
+//	    escapeScaleDown.setVariationPattern(escapeVariationPattern);
+//	    variationList.add(escapeScaleDown);
+	    appoggiature.setVariationPattern(apogiatureVariationPattern);
+	    variationList.add(appoggiature);
+	    return variationList;
+	}
+	
+	@Bean
+	public List<Variation> majorSecondDownIntervalVariations() {
+	    List<Variation> variationList = new ArrayList<>();
+	    chromaticPassingDown.setVariationPattern(passingVariationPattern);
+	    variationList.add(chromaticPassingDown);
+	    suspension.setVariationPattern(suspensionVariationPattern);
+	    variationList.add(suspension);
+	    escapeScaleUp.setVariationPattern(escapeVariationPattern);
+	    variationList.add(escapeScaleUp);
+	    return variationList;
+	}
+	
+	@Bean
+	public List<Variation> thirdDownIntervalVariations() {
+	    List<Variation> variationList = new ArrayList<>();
+	    passingDown.setVariationPattern(passingVariationPattern);
+	    accentedPassingDown.setVariationPattern(passingVariationPattern);
+	    variationList.add(passingDown);
+	    variationList.add(accentedPassingDown);
+	    return variationList;
+	}
+	
+	@Bean
+	public List<Variation> upIntervalVariations() {
+	    List<Variation> variationList = new ArrayList<>();
+	    appoggiature.setVariationPattern(apogiatureVariationPattern);
+	    variationList.add(appoggiature);
+	    return variationList;
+	}
+	
+	@Bean
+	public List<Variation> thirdUpIntervalVariations() {
+	    List<Variation> variationList = new ArrayList<>();
+	    passingUp.setVariationPattern(passingVariationPattern);
+	    variationList.add(passingUp);  
+	    appoggiature.setVariationPattern(apogiatureVariationPattern);
+	    variationList.add(appoggiature);
+	    return variationList;
+	}
+	
+	@Bean(name="intervalVariations")
+	public Map<Integer, List<Variation>> singleNoteInterval() {
+		Map<Integer, List<Variation>> map = new TreeMap<>();
+		map.put(1, minorSecondUpIntervalVariations());
+//		map.put(-1, minorSecondDownIntervalVariations());
+		map.put(2, majorSecondUpIntervalVariations());
+//		map.put(-2, majorSecondDownIntervalVariations());
+		map.put(3, thirdUpIntervalVariations());
+//		map.put(-3, thirdDownIntervalVariations());
+		map.put(4, thirdUpIntervalVariations());
+		
+		map.put(5, upIntervalVariations());
+		map.put(6, upIntervalVariations());
+		map.put(7, upIntervalVariations());
+		
+//		map.put(-4, thirdDownIntervalVariations());
+		map.put(8, thirdDownIntervalVariations());
+//		map.put(-8, thirdUpIntervalVariations());
+		map.put(9, thirdDownIntervalVariations());
+//		map.put(-9, thirdUpIntervalVariations());
+		return map;
+	}
+	
+}
