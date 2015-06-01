@@ -12,6 +12,10 @@ import neo.util.Util;
 
 @Component
 public class AccentedPassingDown extends Passing {
+	
+	public AccentedPassingDown() {
+		excludedVoices.add(0);
+	}
 
 	@Override
 	public List<Note> createVariation(Note firstNote, Note secondNote) {
@@ -26,7 +30,7 @@ public class AccentedPassingDown extends Passing {
 			notes.add(0, firstNote);
 			return notes;
 		} else {
-			return Collections.singletonList(firstNote);
+			return Collections.singletonList(firstNote.copy());
 		}
 	}
 

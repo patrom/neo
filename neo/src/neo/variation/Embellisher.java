@@ -31,6 +31,10 @@ public class Embellisher {
 			Note nextNote = notePositions[j + 1];
 			int interval = nextNote.getPitch() - note.getPitch();
 			Variation variation = selectVariation(interval);
+			if (variation.getExcludedVoices().contains(note.getVoice())) {
+				embellishedMelody.add(note.copy());
+				continue;
+			}
 			List<Note> embellishedNotes  = variation.createVariation(note, nextNote);
 			if (variation.isSecondNoteChanged()) {
 				j++;

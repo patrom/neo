@@ -7,11 +7,10 @@ import neo.model.note.Note;
 import neo.model.note.Scale;
 import neo.util.RandomUtil;
 import neo.util.Util;
-import neo.variation.nonchordtone.Variation;
 
 import org.springframework.stereotype.Component;
 @Component
-public class EscapeScaleUp extends Variation {
+public class EscapeScaleUp extends Escape {
 
 	@Override
 	public List<Note> createVariation(Note firstNote, Note secondNote) {
@@ -23,7 +22,7 @@ public class EscapeScaleUp extends Variation {
 			int newPitch = firstNote.getPitch() + ic;
 			return generateNonChordNote(firstNote, newPitchClass, newPitch, pattern);
 		} else {
-			return Collections.singletonList(firstNote);
+			return Collections.singletonList(firstNote.copy());
 		}
 	}
 

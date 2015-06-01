@@ -15,11 +15,13 @@ public abstract class Variation {
 	protected List<Scale> scales;
 	protected int profile;
 	protected boolean secondNoteChanged;
+	protected List<Integer> excludedVoices;
 
 	public Variation() {
 		scales = new ArrayList<>();
 		scales.add(new Scale(Scale.MAJOR_SCALE));
 		profile = 100;
+		excludedVoices = new ArrayList<>();
 	}
 	
 	/**
@@ -95,6 +97,14 @@ public abstract class Variation {
 
 	public void setSecondNoteChanged(boolean secondNoteChanged) {
 		this.secondNoteChanged = secondNoteChanged;
+	}
+
+	public List<Integer> getExcludedVoices() {
+		return excludedVoices;
+	}
+
+	public void setExcludedVoices(List<Integer> excludedVoices) {
+		this.excludedVoices = excludedVoices;
 	}
 
 }

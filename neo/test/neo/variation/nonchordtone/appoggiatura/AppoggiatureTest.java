@@ -28,7 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class AppoggiatureTest {
 
 	@Autowired
-	private Appoggiature appoggiature;
+	private AppoggiatureScaleDown appoggiature;
 	@Autowired
 	@Qualifier(value="AppogiatureVariationPattern")
 	private VariationPattern variationPattern;

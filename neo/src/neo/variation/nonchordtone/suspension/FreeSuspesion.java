@@ -9,6 +9,8 @@ public abstract class FreeSuspesion extends Variation {
 		scales.add(new Scale(Scale.MIXOLYDIAN_SCALE));
 		scales.add(new Scale(Scale.LYDIAN_SCALE));
 		profile = 70;
+		excludedVoices.add(0);
+		excludedVoices.add(1);
 	}
 
 }

@@ -10,6 +10,7 @@ public abstract class Neighbor extends Variation {
 	
 	public Neighbor() {
 		profile = 20;
+		excludedVoices.add(0);
 	}
 	
 	protected List<Note> generateNeighborNote(Note firstNote, int pitchClass, int pitch,

@@ -14,6 +14,7 @@ public class Anticipation extends Variation {
 	
 	public Anticipation() {
 		profile = 10;
+		excludedVoices.add(0);
 	}
 
 	@Override

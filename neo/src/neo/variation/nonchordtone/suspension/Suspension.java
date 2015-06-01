@@ -37,7 +37,7 @@ public class Suspension extends Variation {
 				return notes;
 			}
 		} 
-		return Collections.singletonList(firstNote);
+		return Collections.singletonList(firstNote.copy());
 	}
 
 }
