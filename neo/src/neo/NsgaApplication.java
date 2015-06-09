@@ -20,6 +20,7 @@ import jmetal.core.Operator;
 import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
 import jmetal.operators.selection.SelectionFactory;
+import neo.generator.MelodyGenerator;
 import neo.generator.MusicProperties;
 import neo.generator.TonalChordGenerator;
 import neo.generator.TonalChords;
@@ -40,7 +41,6 @@ import org.springframework.context.annotation.Import;
 public class NsgaApplication extends JFrame implements CommandLineRunner{
 	
 	private static Logger LOGGER = Logger.getLogger(NsgaApplication.class.getName());
-	private Random random = new Random();
 	
 	@Autowired
 	private Problem problem;
@@ -69,6 +69,8 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	private HashMap<String, Object> parameters;
 	@Autowired
 	private String midiFilesPath;
+	@Autowired
+	private MelodyGenerator melodyGenerator;
 	
 	public static AtomicInteger COUNTER = new AtomicInteger();
 	
@@ -87,11 +89,11 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 		deleteMidiFiles(midiFilesPath);
 //		musicProperties.threeFour();
 		musicProperties.fourFour();
-//		int[] generatedHamonies = generateHarmonyPositions(12, 4, 4);
-//		int[][] melodyPositions = generateMelodies(generatedHamonies, 12);
+//		int[] generatedHamonies = melodyGenerator.generateHarmonyPositions(12, 4, 4);
+//		int[][] melodyPositions = melodyGenerator.generateMelodies(generatedHamonies, 12);
 //		int[][] generatedMelodyPositions = new int[melodyPositions.length][];
 //		for (int j = 0; j < melodyPositions.length; j++) {
-//			int[] melody = generateMelody(melodyPositions[j], 6, 4);
+//			int[] melody = melodyGenerator.generateMelodyPositions(melodyPositions[j], 6, 4);
 //			generatedMelodyPositions[j] = melody;
 //		}
 		int[] harmonies = {0,24,36,48,72,96, 108,120,144,168,192};
@@ -180,62 +182,6 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 		for (File file : midiFiles) {
 			file.delete();
 		}
-	}
-	
-	private int[] generateHarmonyPositions(int minimumLength, int maxHarmonies, int bars){
-		int limit = (12/minimumLength) * musicProperties.getNumerator() * bars;
-		IntStream intStream = random.ints(limit, 0, limit);
-		List<Integer> positions = intStream
-				.distinct()
-				.map(i -> i * minimumLength)
-				.boxed()
-				.collect(Collectors.toList());
-		int max = (maxHarmonies > positions.size())?positions.size():maxHarmonies;
-		positions = positions.subList(0, max + 1);
-		positions.sort(Comparator.naturalOrder());
-		int[] pos = new int[positions.size()];
-		for (int j = 0; j < pos.length; j++) {
-			pos[j] = positions.get(j);
-		}
-		return pos;
-	}
-	
-	private int[][] generateMelodies(int[] harmonyPositions, int minimumLength){
-		int[][] melodyPositions = new int[harmonyPositions.length - 1][];
-		for (int i = 0; i < harmonyPositions.length - 1; i++) {
-			int[] melPosition = new int[2];
-			melPosition[0] = 0;
-			melPosition[1] = harmonyPositions[i + 1] - harmonyPositions[i];
-			melodyPositions[i] = melPosition;
-		}
-		return melodyPositions;
-	}
-	
-	private int[] generateMelody(int[] harmony, int minimumLength, int maxMelodyNotes){
-		int[] pos = null;
-		int positionsInHarmony = ((harmony[1] - harmony[0])/minimumLength) - 1;//minus first position
-		int limit = random.nextInt(positionsInHarmony + 1);
-		if (limit > 0) {
-			int from = ((harmony[0])/minimumLength) + 1;
-			int toExlusive = (int)Math.ceil(harmony[1]/(double)minimumLength);
-			IntStream intStream = random.ints(limit,from,toExlusive);
-			List<Integer> positions = intStream
-					.distinct()
-					.map(i -> i * minimumLength)
-					.boxed()
-					.collect(Collectors.toList());
-			int max = (maxMelodyNotes > positions.size())?positions.size():maxMelodyNotes;
-			positions = positions.subList(0, max);
-			positions.sort(Comparator.naturalOrder());
-			pos = new int[positions.size() + 2];
-			pos[0] = harmony[0];
-			pos[pos.length - 1] = harmony[1];
-			for (int j = 1; j < pos.length - 1; j++) {
-				pos[j] = positions.get(j - 1);
-			}
-			return pos;
-		} 
-		return harmony;
 	}
 	
 }

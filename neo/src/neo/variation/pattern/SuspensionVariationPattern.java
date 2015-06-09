@@ -12,6 +12,7 @@ public class SuspensionVariationPattern extends VariationPattern{
 		//pattern is for second note only!
 		setPatterns(new double[][]{{0.5, 0.5}});
 		List<Integer> allowedLengths = new ArrayList<>();
+		allowedLengths.add(6);
 		allowedLengths.add(12);
 		allowedLengths.add(24);
 		setNoteLengths(allowedLengths);

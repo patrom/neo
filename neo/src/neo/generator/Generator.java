@@ -5,10 +5,13 @@ import static neo.model.melody.HarmonicMelodyBuilder.harmonicMelody;
 import static neo.model.note.NoteBuilder.note;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import neo.model.Motive;
 import neo.model.harmony.Harmony;
@@ -85,6 +88,8 @@ public abstract class Generator {
 		}
 		return newChord;
 	}
+	
+	
 	
 //	private HarmonicMelody copyHarmonicMelody(HarmonicMelody harmonicMelody) {
 //		Note harmonyNote = harmonicMelody.getHarmonyNote();

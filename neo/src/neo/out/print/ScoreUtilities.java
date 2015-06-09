@@ -103,7 +103,7 @@ public class ScoreUtilities implements JMC{
 		return score;
 	}
 
-	private Phrase createPhrase(List<neo.model.note.Note> notes) {
+	public Phrase createPhrase(List<neo.model.note.Note> notes) {
 		Phrase phrase = new Phrase();
 		if (!notes.isEmpty()) {
 			double startTime = (double)notes.get(0).getPosition()/ATOMIC_VALUE;
@@ -127,6 +127,14 @@ public class ScoreUtilities implements JMC{
 			}
 		}
 		return phrase;
+	}
+	
+	public Score createMelody(List<neo.model.note.Note> notes){
+		Score score = new Score();
+		Phrase phrase = createPhrase(notes);	
+		Part part = new Part(phrase);
+		score.add(part);
+		return score;
 	}
 	
 }
