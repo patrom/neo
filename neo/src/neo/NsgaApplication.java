@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 package neo;
 
 import java.io.File;
@@ -374,4 +374,4 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	}
 	
 }
->>>>>>> branch 'master' of https://github.com/patrom/neo
+

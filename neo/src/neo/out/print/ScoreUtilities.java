@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package neo.out.print;
 
 import java.util.List;
@@ -280,4 +279,4 @@ public class ScoreUtilities implements JMC{
 	}
 	
 }
->>>>>>> branch 'master' of https://github.com/patrom/neo
+

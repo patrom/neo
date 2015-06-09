@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package neo.variation.pattern;
 
 import java.util.ArrayList;
@@ -39,4 +38,4 @@ public class PassingVariationPattern extends VariationPattern {
 		setNoteLengths(allowedLengths);
 	}
 }
->>>>>>> branch 'master' of https://github.com/patrom/neo
+
