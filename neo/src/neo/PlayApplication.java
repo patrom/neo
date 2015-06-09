@@ -33,6 +33,7 @@ import neo.out.instrument.KontaktLibPiano;
 import neo.out.instrument.KontaktLibViolin;
 import neo.out.instrument.MidiDevice;
 import neo.out.print.ScoreUtilities;
+import neo.variation.Embellisher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -56,6 +57,8 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	private ScoreUtilities scoreUtilities;
 	@Autowired
 	private String midiFilesPath;
+	@Autowired
+	private Embellisher embellisher;
 	
 	public static void main(final String[] args) {
 	 	SpringApplication app = new SpringApplication(PlayApplication.class);
@@ -74,7 +77,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> parsedMelodies = midiInfo.getMelodies();
-			mapInstruments(parsedMelodies, Ensemble.getPiano(4));
+			mapInstruments(parsedMelodies, Ensemble.getStringQuartet());
 			//split
 			int size = parsedMelodies.size();
 			List<MelodyInstrument> melodies = new ArrayList<>(parsedMelodies.subList(0, size/2));
@@ -88,11 +91,15 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 //			voicesForAccomp.add(3);
 //			List<MelodyInstrument> accompMelodies = filterAccompagnementMelodies(voicesForAccomp, melodies);
 //			createAccompagnement(accompMelodies, melodies, midiInfo.getHarmonyPositionsForVoice(0));
-			
+			for (int i = melodies.size() - 1; i >= 2; i--) {
+				MelodyInstrument melodyInstrument = melodies.get(i);
+				List<Note> embellishedNotes = embellisher.embellish(melodyInstrument.getNotes());
+				melodyInstrument.setNotes(embellishedNotes);
+			}
 			playOnKontakt(melodies, midiInfo.getTempo());
 			View.notate(scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo()));
 			write(melodies , "resources/transform/" + midiFile.getName());
-			Thread.sleep(14000);
+			Thread.sleep(16000);
 		}
 	}
 

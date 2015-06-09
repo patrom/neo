@@ -1,6 +1,9 @@
 package neo.midi;
 
+import java.io.OutputStream;
+
 import javax.sound.midi.MetaMessage;
+import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiMessage;
 
 public class MidiTempoParser {
@@ -41,4 +44,5 @@ public class MidiTempoParser {
 		}
 		return microsecondsPerMinute / value;
 	}
+	
 }

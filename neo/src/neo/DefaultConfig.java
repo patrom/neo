@@ -19,10 +19,10 @@ public class DefaultConfig {
 	
 	@Bean
 	public String midiFilesPath(){
-		// "C:/Users/prombouts/git/neo/neo/resources/midi"
+		return "C:/Users/prombouts/git/neo/neo/resources/midi";
 		// "C:/Dev/git/neo/neo/resources/midi"
 		// /Users/parm/git/neo/neo/resources/midi
-		return "/Users/parm/git/neo/neo/resources/midi";
+//		return "/Users/parm/git/neo/neo/resources/midi";
 	}
 	
 }

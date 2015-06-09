@@ -24,8 +24,8 @@ public class MusicProperties {
 	private List<Instrument> instruments;
 	
 	//tonality
-	private Scale scale = new Scale(Scale.MAJOR_SCALE);
-	private Scale melodyScale = new Scale(Scale.MAJOR_SCALE);
+	private Scale scale = new Scale(Scale.OCTATCONIC_HALF);
+	private Scale melodyScale = new Scale(Scale.OCTATCONIC_HALF);
 	
 	//harmony
 	private double harmonyConsDissValue = 0.3;
@@ -66,7 +66,7 @@ public class MusicProperties {
 		this.measureWeights = new double[]{1.0, 0.5, 0.75, 0.5, 1.0, 0.5, 0.75, 0.5};
 	    this.numerator = 4;
 	    this.denominator = 4;
-	    this.instruments = Ensemble.getPiano(4);
+	    this.instruments = Ensemble.getStringQuartet();
 		this.chordSize = instruments.size();
 	}
 	

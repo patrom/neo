@@ -20,9 +20,9 @@ public class FourCubeTrio implements Dissonance {
 				return 1.0;
 			
 			case "3-11":
-				return 0.99;
-			case "3-12":
-				return 0.99;
+				return 0.95;
+			case "3-12"://aug
+				return 1.0;
 		}
 		return 0;
 	}

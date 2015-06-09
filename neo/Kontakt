@@ -1,3 +1,4 @@
+Start eclipe, then Kontakt (set channels - Loop Internal Midi)
 (channel 0 java = channel 1 Kontakt)
 
 Windows: use loopBE channel 1 on kontakt 

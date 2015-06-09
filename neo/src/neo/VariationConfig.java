@@ -219,15 +219,15 @@ public class VariationConfig {
 		map.put(-3, thirdDownIntervalVariations());
 		map.put(4, thirdUpIntervalVariations());
 		
-		map.put(5, upIntervalVariations());
-		map.put(6, upIntervalVariations());
-		map.put(7, upIntervalVariations());
-		
-		map.put(-4, thirdDownIntervalVariations());
-		map.put(8, thirdDownIntervalVariations());
-		map.put(-8, thirdUpIntervalVariations());
-		map.put(9, thirdDownIntervalVariations());
-		map.put(-9, thirdUpIntervalVariations());
+//		map.put(5, upIntervalVariations());
+//		map.put(6, upIntervalVariations());
+//		map.put(7, upIntervalVariations());
+//		
+//		map.put(-4, thirdDownIntervalVariations());
+//		map.put(8, thirdDownIntervalVariations());
+//		map.put(-8, thirdUpIntervalVariations());
+//		map.put(9, thirdDownIntervalVariations());
+//		map.put(-9, thirdUpIntervalVariations());
 		return map;
 	}
 
