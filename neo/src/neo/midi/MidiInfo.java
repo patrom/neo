@@ -20,7 +20,7 @@ public class MidiInfo {
 
 	private List<MelodyInstrument> melodies;
 	private String timeSignature;
-	private float tempo;
+	private int tempo;
 	
 	public String getTimeSignature() {
 		return timeSignature;
@@ -28,10 +28,10 @@ public class MidiInfo {
 	public void setTimeSignature(String timeSignature) {
 		this.timeSignature = timeSignature;
 	}
-	public float getTempo() {
+	public int getTempo() {
 		return tempo;
 	}
-	public void setTempo(float tempo) {
+	public void setTempo(int tempo) {
 		this.tempo = tempo;
 	}
 	public List<MelodyInstrument> getMelodies() {

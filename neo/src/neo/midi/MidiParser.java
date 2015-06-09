@@ -194,7 +194,7 @@ public class MidiParser {
 			float bpm = convertTempo(nTempo);
 			// truncate it to 2 digits after dot
 			bpm = (float) (Math.round(bpm*100.0f)/100.0f);
-			midiInfo.setTempo(bpm);
+			midiInfo.setTempo((int) bpm);
 			break;
 		case 0x54:
 			strMessage = "SMTPE Offset: "

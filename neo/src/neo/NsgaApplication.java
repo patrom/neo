@@ -20,8 +20,10 @@ import jmetal.core.Operator;
 import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
 import jmetal.operators.selection.SelectionFactory;
+import neo.generator.Generator;
 import neo.generator.MelodyGenerator;
 import neo.generator.MusicProperties;
+import neo.generator.RandomNotesGenerator;
 import neo.generator.TonalChordGenerator;
 import neo.generator.TonalChords;
 import neo.model.Motive;
@@ -102,17 +104,17 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 
 //		BeginEndChordGenerator generator = beginEndChordGenerator;
 		
-		TonalChordGenerator generator = new TonalChordGenerator(harmonies, musicProperties);
+//		TonalChordGenerator generator = new TonalChordGenerator(harmonies, musicProperties);
 //		generator.generateHarmonicMelodiesForVoice(melodies, 3);
-		int key = 0;
-		musicProperties.setKeySignature(key);
-		generator.setChords(TonalChords.getTriads(key));
+//		int key = 0;
+//		musicProperties.setKeySignature(key);
+//		generator.setChords(TonalChords.getTriads(key));
 //		generator.addChords(TonalChords.getTriads(key + 7));
 //		generator.addChords(TonalChords.getTriads(key + 5));
 
-//		Generator generator = new RandomNotesGenerator(generatedHamonies, musicProperties);
+		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
 //		generator.generateHarmonicMelodiesForVoice(generatedMelodyPositions, 3);
-//		generator.generateHarmonicMelodiesForVoice(melodies, 3);
+		generator.generateHarmonicMelodiesForVoice(melodies, 3);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
 //		Generator generator = new PerleChordGenerator(harmonies, musicProperties);
@@ -120,7 +122,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    solutionType.setMotive(motive);
 	    
 	    // Algorithm parameters
-	    int populationSize = 20;
+	    int populationSize = 30;
 	    algorithm.setInputParameter("populationSize", populationSize);
 	    algorithm.setInputParameter("maxEvaluations", populationSize * 1000);
 	    
@@ -129,7 +131,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 1.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
@@ -141,7 +143,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    melodyNoteToHarmonyNote.setOuterBoundaryIncluded(false);
 	    
-	    oneNoteMutation.setParameter("probabilityOneNote", 0.0);
+	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
 	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    oneNoteMutation.setOuterBoundaryIncluded(false);
 	    

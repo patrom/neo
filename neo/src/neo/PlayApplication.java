@@ -98,7 +98,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			}
 			playOnKontakt(melodies, midiInfo.getTempo());
 			View.notate(scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo()));
-			write(melodies , "resources/transform/" + midiFile.getName());
+			write(melodies , "resources/transform/" + midiFile.getName(), midiInfo.getTempo());
 			Thread.sleep(16000);
 		}
 	}
@@ -176,7 +176,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 	}
 	
 	private void playOnKontakt(List<MelodyInstrument> melodies,
-			float tempo) throws InvalidMidiDataException {
+			int tempo) throws InvalidMidiDataException {
 		Sequence seq = midiDevicesUtil.createSequence(melodies);
 		midiDevicesUtil.playOnDevice(seq, tempo, MidiDevice.KONTAKT);
 	}
@@ -198,7 +198,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 		playOnKontakt(midiInfo.getMelodies(), midiInfo.getTempo());
 	}
 	
-	private void write(List<MelodyInstrument> melodies, String outputPath) throws InvalidMidiDataException, IOException{
+	private void write(List<MelodyInstrument> melodies, String outputPath, int tempo) throws InvalidMidiDataException, IOException{
 		Sequence seq = null;
 		if (containsInstrument(melodies, GeneralMidi.PIANO)) {
 			MelodyInstrument piano = mergeMelodies(melodies, 2, new KontaktLibPiano(1, 2));
@@ -208,9 +208,9 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			List<MelodyInstrument> instruments = new ArrayList<>();
 			instruments.addAll(otherInstruments);
 			instruments.add(piano);
-			seq = midiDevicesUtil.createSequenceGeneralMidi(instruments);
+			seq = midiDevicesUtil.createSequenceGeneralMidi(instruments, tempo);
 		}else{
-			seq = midiDevicesUtil.createSequenceGeneralMidi(melodies);
+			seq = midiDevicesUtil.createSequenceGeneralMidi(melodies, tempo);
 		}
 		midiDevicesUtil.write(seq, outputPath);
 	}

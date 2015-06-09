@@ -1,9 +1,7 @@
 package neo.midi;
 
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -21,18 +19,12 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.SysexMessage;
 import javax.sound.midi.Track;
 import javax.sound.midi.Transmitter;
-import javax.sound.midi.spi.MidiFileWriter;
-
-import jm.midi.event.EndTrack;
-import jm.midi.event.KeySig;
-import jm.midi.event.TempoEvent;
-import jm.midi.event.TimeSig;
-
-import org.springframework.stereotype.Component;
 
 import neo.model.melody.Melody;
 import neo.model.note.Note;
 import neo.out.instrument.Instrument;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class MidiDevicesUtil {
@@ -45,7 +37,7 @@ public class MidiDevicesUtil {
 
 	private final int RESOLUTION = 12;
 	
-	public void playOnDevice(Sequence sequence, float tempo, neo.out.instrument.MidiDevice kontakt) {
+	public void playOnDevice(Sequence sequence, int tempo, neo.out.instrument.MidiDevice kontakt) {
 		LOGGER.info("tempo:" + tempo);
 		MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
 		for (int i = 0; i < infos.length; i++) {
@@ -98,7 +90,7 @@ public class MidiDevicesUtil {
 	public Sequence createSequence(List<Melody> motives, List<Instrument> instruments)
 			throws InvalidMidiDataException {
 		int motiveSize = motives.size();
-		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
+		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION);
 		for (int i = 0; i < motiveSize; i++) {
 			List<Note> notes = motives.get(i).getMelodieNotes();
 			createTrack(sequence, notes, instruments.get(i));
@@ -109,7 +101,7 @@ public class MidiDevicesUtil {
 	public Sequence createSequence(List<Melody> motives, Instrument instrument)
 			throws InvalidMidiDataException {
 		int motiveSize = motives.size();
-		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
+		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION);
 		for (int i = 0; i < motiveSize; i++) {
 			List<Note> notes = motives.get(i).getMelodieNotes();
 			createTrack(sequence, notes, instrument);
@@ -119,8 +111,7 @@ public class MidiDevicesUtil {
 	
 	public Sequence createSequence(List<MelodyInstrument> melodies)
 			throws InvalidMidiDataException {
-		int motiveSize = melodies.size();
-		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
+		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION);
 		for (MelodyInstrument melodyInstrument : melodies) {
 			if (melodyInstrument.getInstrument() != null) {
 				createTrack(sequence, melodyInstrument.getNotes(), melodyInstrument.getInstrument());
@@ -129,23 +120,16 @@ public class MidiDevicesUtil {
 		return sequence;
 	}
 	
-	public Sequence createSequenceGeneralMidi(List<MelodyInstrument> melodies)
+	public Sequence createSequenceGeneralMidi(List<MelodyInstrument> melodies, int tempo)
 			throws InvalidMidiDataException {
-		int motiveSize = melodies.size();
-		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, motiveSize);
+		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION);
 		for (MelodyInstrument melodyInstrument : melodies) {
 			if (melodyInstrument.getInstrument() != null) {
-				createTrackGeneralMidi(sequence, melodyInstrument.getNotes(), melodyInstrument.getInstrument());
+				createTrackGeneralMidi(sequence, melodyInstrument.getNotes(), melodyInstrument.getInstrument(), tempo);
 			}
 		}
 		return sequence;
 	}
-	
-//	public Sequence createSequenceFromNotes(List<Note> notes, Instrument intstrument) throws InvalidMidiDataException {
-//		Sequence sequence = new Sequence(Sequence.PPQ, RESOLUTION, 1);
-//		createTrack(sequence, notes, intstrument);
-//		return sequence;
-//	}
 	
 	private void createTrack(Sequence sequence, List<Note> notes, Instrument instrument)
 			throws InvalidMidiDataException {
@@ -166,76 +150,17 @@ public class MidiDevicesUtil {
 		}
 	}
 	
-	public int write(DataOutputStream dos) throws IOException{
-		int bytes_out = jm.midi.MidiUtil.writeVarLength(0,dos); 
-		dos.writeByte(0xFF);
-		dos.writeByte(0x58);	
-		bytes_out += jm.midi.MidiUtil.writeVarLength(4,dos); 
-		dos.writeByte((byte) 3); //numerator
-		int num = 4; //this.denominator;
-        int cnt = 0;
-		while(num%2==0){num /= 2;cnt++;}
-        dos.writeByte((byte)cnt);
-        dos.writeByte(0x18);
-		dos.writeByte(0x08);
-		return bytes_out+6;
-	} 
-	
-	// write a meta event to current track at certain tick
-    private void writeMetaEvent(int id, byte[] val, int b3, int tick, Track currentTrack) {
-        MetaMessage mt = new MetaMessage();
-        try {
-            mt.setMessage(id, val, b3);
-        } catch (InvalidMidiDataException e) {
-            System.out.println(e.toString());
-        }
-        MidiEvent me = new MidiEvent(mt, (long) tick);
-        currentTrack.add(me);
-    }
-	
-	private void createTrackGeneralMidi(Sequence sequence, List<Note> notes, Instrument instrument)
+	private void createTrackGeneralMidi(Sequence sequence, List<Note> notes, Instrument instrument, int tempo)
 			throws InvalidMidiDataException {
 		Track track = sequence.createTrack();
+
+		MidiTempo midiTempo = new MidiTempo();
+		MidiEvent midiTempoEvent = midiTempo.getTempoMidiEvent(tempo);
+		track.add(midiTempoEvent);
 		
-		// general MIDI configuration
-        // have to do (byte) casts because Java has unsigned int problems
-//        byte[] b = {(byte) 0xF0, 0x7E, 0x7F, 0x09, 0x01, (byte) 0xF7};
-//        SysexMessage sm = new SysexMessage();
-//        sm.setMessage(b, 6);
-//
-//        MidiEvent me = new MidiEvent(sm, START_TICK);
-//        track.add(me);
-//
-//        // calculate tempo in bytes
-//        float microPerMinute = 60000000;
-//        int microPerPulse = (int) (microPerMinute / 50);
-//        byte[] bytes = ByteBuffer.allocate(4).putInt(microPerPulse).array();
-//
-//        // three bytes represent number of microseconds per pulse
-//        byte[] bt = {bytes[1], bytes[2], bytes[3]};
-//        writeMetaEvent(SET_TEMPO, bt, 3, START_TICK, track);
-        
-//		MetaMessage message = new MetaMessage();
-//		byte b1 = (byte) 3;
-//		byte b2 = (byte) 2;
-//		byte b3 = 0x18;
-//		byte b4 = 0x08;
-//		byte[] data = ByteBuffer.allocate(4).put(0, b1).put(1, b2).put(1, b3).put(3, b4).array();
-//		for (byte b : data) {
-//			System.out.format("0x%x ", b);
-//		}
-////		strMessage = "Time Signature: "
-////				+ (abData[0] & 0xFF) + "/" + (1 << (abData[1] & 0xFF))
-////				+ ", MIDI clocks per metronome tick: " + (abData[2] & 0xFF)
-////				+ ", 1/32 per 24 MIDI clocks: " + (abData[3] & 0xFF);
-//		byte[] arr = ByteBuffer.allocate(1).put(0,(byte) (0x58 & 0x00ff)).array();
-//		int type = ByteBuffer.wrap(arr).getInt();
-//		message.setMessage(type, data, 1);//time signature
-//
-//		MidiEvent ev = new MidiEvent(message, 0);
-//		track.add(ev);
 		MidiEvent event = createGeneralMidiEvent(instrument);
 		track.add(event);
+		
 		for (Note notePos : notes) {
 			MidiEvent eventOn = createNoteMidiEvent(ShortMessage.NOTE_ON, notePos, notePos.getPosition(), instrument.getChannel());
 			track.add(eventOn);
@@ -306,6 +231,92 @@ public class MidiDevicesUtil {
 	
 	public void write(Sequence in, String ouputPath) throws IOException{
 		MidiSystem.write(in, 1, new File(ouputPath));//1 = multi-track
+	}
+	
+	// write a meta event to current track at certain tick
+    private void writeMetaEvent(int id, byte[] val, int b3, int tick, Track currentTrack) {
+        MetaMessage mt = new MetaMessage();
+        try {
+            mt.setMessage(id, val, b3);
+        } catch (InvalidMidiDataException e) {
+            System.out.println(e.toString());
+        }
+        MidiEvent me = new MidiEvent(mt, (long) tick);
+        currentTrack.add(me);
+    }
+	
+	public static void main(String[] args) throws IOException, InvalidMidiDataException {
+		writeMidi();
+	}
+	
+	public static void writeMidi() throws IOException, InvalidMidiDataException {
+		// **** Create a new MIDI sequence with 24 ticks per beat ****
+		Sequence s = new Sequence(javax.sound.midi.Sequence.PPQ, 24);
+
+		// **** Obtain a MIDI track from the sequence ****
+		Track t = s.createTrack();
+
+		// **** General MIDI sysex -- turn on General MIDI sound set ****
+		byte[] b = { (byte) 0xF0, 0x7E, 0x7F, 0x09, 0x01, (byte) 0xF7 };
+		SysexMessage sm = new SysexMessage();
+		sm.setMessage(b, 6);
+		MidiEvent me = new MidiEvent(sm, (long) 0);
+		t.add(me);
+
+		// **** set tempo (meta event) ****
+		MetaMessage mt = new MetaMessage();
+		byte[] bt = { 0x02, (byte) 0x00, 0x00 };
+		mt.setMessage(0x51, bt, 3);
+		me = new MidiEvent(mt, (long) 0);
+		t.add(me);
+
+		// **** set track name (meta event) ****
+		mt = new MetaMessage();
+		String TrackName = new String("midifile track");
+		mt.setMessage(0x03, TrackName.getBytes(), TrackName.length());
+		me = new MidiEvent(mt, (long) 0);
+		t.add(me);
+
+		// **** set omni on ****
+		ShortMessage mm = new ShortMessage();
+		mm.setMessage(0xB0, 0x7D, 0x00);
+		me = new MidiEvent(mm, (long) 0);
+		t.add(me);
+
+		// **** set poly on ****
+		mm = new ShortMessage();
+		mm.setMessage(0xB0, 0x7F, 0x00);
+		me = new MidiEvent(mm, (long) 0);
+		t.add(me);
+
+		// **** set instrument to Piano ****
+		mm = new ShortMessage();
+		mm.setMessage(0xC0, 0x00, 0x00);
+		me = new MidiEvent(mm, (long) 0);
+		t.add(me);
+
+		// **** note on - middle C ****
+		mm = new ShortMessage();
+		mm.setMessage(0x90, 0x3C, 0x60);
+		me = new MidiEvent(mm, (long) 1);
+		t.add(me);
+
+		// **** note off - middle C - 120 ticks later ****
+		mm = new ShortMessage();
+		mm.setMessage(0x80, 0x3C, 0x40);
+		me = new MidiEvent(mm, (long) 121);
+		t.add(me);
+
+		// **** set end of track (meta event) 19 ticks later ****
+		mt = new MetaMessage();
+		byte[] bet = {}; // empty array
+		mt.setMessage(0x2F, bet, 0);
+		me = new MidiEvent(mt, (long) 140);
+		t.add(me);
+
+		// **** write the MIDI sequence to a MIDI file ****
+		File f = new File("midifile.mid");
+		MidiSystem.write(s, 1, f);
 	}
 
 }

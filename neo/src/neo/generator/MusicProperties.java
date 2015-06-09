@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class MusicProperties {
 	
 	private int harmonyBeatDivider = 12;
-	private float tempo = 85;
+	private int tempo = 50;
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength;
 	private int chordSize;
@@ -168,11 +168,11 @@ public class MusicProperties {
 		this.harmonyBeatDivider = harmonyBeatDivider;
 	}
 	
-	public float getTempo() {
+	public int getTempo() {
 		return tempo;
 	}
 	
-	public void setTempo(float tempo) {
+	public void setTempo(int tempo) {
 		this.tempo = tempo;
 	}
 	
