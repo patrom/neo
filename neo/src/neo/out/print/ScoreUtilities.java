@@ -54,11 +54,11 @@ public class ScoreUtilities implements JMC{
 			Phrase phrase = null;
 			List<neo.model.note.Note> notes = melody.getMelodieNotes();
 //			if (melody.getVoice() == 3) {
-				List<neo.model.note.Note> embellishedNotes = embellisher.embellish(notes);
-				phrase = createPhrase(embellishedNotes);	
+//				List<neo.model.note.Note> embellishedNotes = embellisher.embellish(notes);
+//				phrase = createPhrase(embellishedNotes);	
 //			}
 //			else{
-//				phrase = createPhrase(notes);	
+				phrase = createPhrase(notes);	
 //			}
 			
 			Part part = new Part(phrase);
