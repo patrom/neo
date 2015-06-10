@@ -15,6 +15,7 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
 import javax.swing.JFrame;
 
+import jm.music.data.Score;
 import jm.util.View;
 import neo.generator.MusicProperties;
 import neo.midi.GeneralMidi;
@@ -97,9 +98,11 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 				melodyInstrument.setNotes(embellishedNotes);
 			}
 			playOnKontakt(melodies, midiInfo.getTempo());
-			View.notate(scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo()));
+			Score score = scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo());
+			score.setTitle(midiFile.getName());
+			View.notate(score);
 			write(melodies , "resources/transform/" + midiFile.getName(), midiInfo.getTempo());
-			Thread.sleep(16000);
+			Thread.sleep(21000);
 		}
 	}
 
