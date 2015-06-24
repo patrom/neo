@@ -1,6 +1,7 @@
 package neo.variation.nonchordtone.anticipation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import neo.model.note.Note;
@@ -23,10 +24,7 @@ public class Anticipation extends Variation {
 			double[] pattern = RandomUtil.getRandomFromDoubleArray(variationPattern.getPatterns());
 			return generateNonChordNote(firstNote, secondNote.getPitchClass(), secondNote.getPitch(), pattern);
 		} 
-		List<Note> notes = new ArrayList<>();
-		notes.add(firstNote);
-		notes.add(secondNote);
-		return notes;
+		return Collections.singletonList(firstNote.copy());
 	}
 
 }

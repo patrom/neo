@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class Suspension extends Variation {
 	
+	public Suspension() {
+		excludedVoices.add(0);
+	}
+	
 	@Override
 	public List<Note> createVariation(Note firstNote, Note secondNote) {
 		List<Note> notes = new ArrayList<>();

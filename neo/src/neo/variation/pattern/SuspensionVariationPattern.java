@@ -17,7 +17,7 @@ public class SuspensionVariationPattern extends VariationPattern{
 		allowedLengths.add(24);
 		setNoteLengths(allowedLengths);
 		List<Integer> allowedSecondLengths = new ArrayList<>();
-		allowedSecondLengths.add(6);
+//		allowedSecondLengths.add(6);
 		allowedSecondLengths.add(12);
 		allowedSecondLengths.add(24);
 		setSecondNoteLengths(allowedSecondLengths);

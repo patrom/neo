@@ -6,10 +6,13 @@ import java.util.logging.Logger;
 import neo.model.Motive;
 import neo.model.melody.Melody;
 import neo.model.note.Note;
+import neo.nsga.operator.decorator.Decorator;
+import neo.nsga.operator.decorator.MelodyDecorator;
 import neo.objective.Objective;
 import neo.variation.Embellisher;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,29 +28,13 @@ public class FitnessEvaluationTemplate {
 	private Objective voiceLeadingObjective;
 	@Autowired
 	private Objective tonalityObjective;
-	@Autowired
-	private Embellisher embellisher;
-	private boolean nonChordTones = false;
 
 	public FitnessObjectiveValues evaluate(Motive motive) {
 		motive.extractMelodies();
 		motive.updateInnerMetricWeightMelodies();
 		motive.updateInnerMetricWeightHarmonies();
-		if (nonChordTones) {
-			embellish(motive);
-		}
 		motive.extractChords();
 		return evaluateObjectives(motive);
-	}
-
-	private void embellish(Motive motive) {
-		List<Melody> melodies = motive.getMelodies();
-		for(Melody melody: melodies){
-			List<Note> notes =  melody.getMelodieNotes();
-			List<Note> embellishedNotes = embellisher.embellish(notes);
-//			System.out.println(embellishedNotes);
-		}
-		
 	}
 
 	private FitnessObjectiveValues evaluateObjectives(Motive motive) {

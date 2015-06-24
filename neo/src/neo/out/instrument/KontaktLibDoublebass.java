@@ -7,9 +7,8 @@ public class KontaktLibDoublebass extends Instrument {
 
 	public KontaktLibDoublebass(int voice, int channel) {
 		super(voice, channel);
-		setLowest(28);
-		setHighest(67);
-		setKeySwitch(true);
+		setLowest(38);
+		setKeySwitch(false);
 		setGeneralMidi(GeneralMidi.CONTRABASS);
 	}
 

@@ -51,7 +51,7 @@ public class Motive {
 			.forEach(note -> note.setPitch(0));
 		harmonies.stream().forEach(harmony -> harmony.translateToPitchSpace());
 		if(containsZeroPitch()){
-			throw new IllegalStateException("Contains O pitch!");
+			throw new IllegalStateException("Contains 0 pitch!");
 		};
 		for (int i = 0; i < musicProperties.getChordSize(); i++) {
 			Melody melody = new Melody(getMelodyForVoice(i), i);

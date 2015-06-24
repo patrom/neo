@@ -26,11 +26,14 @@ public class ThirdDecorator implements Decorator{
 	public void decorate(Solution solution) {
 		Scale scale = musicProperties.getScale();
 		int step = 2;
-		Consumer<Note> noteConsumer = note -> note.setPitchClass(scale.pickLowerStepFromScale(note.getPitchClass(), step));
+		Consumer<Note> noteConsumer = (note -> {
+			int pitchClass = scale.pickLowerStepFromScale(note.getPitchClass(), step);
+			note.setPitchClass(pitchClass);
+//			note.setPitch(note.getPitch() - pitchClass);
+			});
 		
-		int voice = 3;
-		int voiceToDecorate = 2;
-		
+		int voice = 1;
+		int voiceToDecorate = voice - 1;
 		Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 		List<Harmony> harmonies = motive.getHarmonies();
 		for (Harmony harmony : harmonies) {

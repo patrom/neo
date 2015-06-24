@@ -71,4 +71,13 @@ public class Ensemble {
 		}
 		return voices;
 	}
+	
+	public static List<Instrument> getStrings(){
+		List<Instrument> strings = new ArrayList<Instrument>();
+		strings.add(new KontaktLibViolin(3, 0));
+		strings.add(new KontaktLibViola(2, 1));
+		strings.add(new KontaktLibCello(1, 2));
+		strings.add(new KontaktLibDoublebass(0, 3));
+		return strings;
+	}
 }

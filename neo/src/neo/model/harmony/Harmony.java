@@ -109,10 +109,12 @@ public class Harmony implements Comparable<Harmony>{
 	
 	public void setHarmonicMelodies(List<HarmonicMelody> harmonicMelodies) {
 		this.harmonicMelodies = harmonicMelodies;
+		pitchSpace.setHarmonicMelodies(harmonicMelodies);
 	}
 	
 	public void addHarmonicMelody(HarmonicMelody harmonicMelody){
 		harmonicMelodies.add(harmonicMelody);
+		pitchSpace.setHarmonicMelodies(harmonicMelodies);
 	}
 	
 	public PitchSpace getPitchSpace() {

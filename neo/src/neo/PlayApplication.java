@@ -78,7 +78,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> parsedMelodies = midiInfo.getMelodies();
-			mapInstruments(parsedMelodies, Ensemble.getStringQuartet());
+			mapInstruments(parsedMelodies, Ensemble.getStrings());
 			//split
 			int size = parsedMelodies.size();
 			List<MelodyInstrument> melodies = new ArrayList<>(parsedMelodies.subList(0, size/2));
@@ -92,7 +92,7 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 //			voicesForAccomp.add(3);
 //			List<MelodyInstrument> accompMelodies = filterAccompagnementMelodies(voicesForAccomp, melodies);
 //			createAccompagnement(accompMelodies, melodies, midiInfo.getHarmonyPositionsForVoice(0));
-			for (int i = melodies.size() - 1; i >= 2; i--) {
+			for (int i = melodies.size() - 1; i >= 0; i--) {
 				MelodyInstrument melodyInstrument = melodies.get(i);
 				List<Note> embellishedNotes = embellisher.embellish(melodyInstrument.getNotes());
 				melodyInstrument.setNotes(embellishedNotes);

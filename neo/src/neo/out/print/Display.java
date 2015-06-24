@@ -38,7 +38,7 @@ public class Display {
 		  Iterator<Solution> iterator = solutions.iterator();
 		  String dateID = generateDateID();
 		  int i = 1;
-		  while (iterator.hasNext() && i < 11) {
+		  while (iterator.hasNext() && i < 4) {
 			MusicSolution solution = (MusicSolution) iterator.next();
 			String id = dateID + "_" + NsgaApplication.COUNTER.getAndIncrement();
 			LOGGER.info(id);

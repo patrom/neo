@@ -2,6 +2,7 @@ package neo.variation.nonchordtone.suspension;
 
 import static neo.model.note.NoteBuilder.note;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +12,9 @@ import neo.DefaultConfig;
 import neo.VariationConfig;
 import neo.model.note.Note;
 import neo.model.note.Scale;
+import neo.variation.AbstractVariationTest;
 import neo.variation.nonchordtone.Variation;
+import neo.variation.pattern.NeigborVariationPattern;
 import neo.variation.pattern.VariationPattern;
 
 import org.junit.Before;
@@ -24,42 +27,40 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {DefaultConfig.class, VariationConfig.class}, loader = SpringApplicationContextLoader.class)
-public class SuspensionTest {
+public class SuspensionTest extends AbstractVariationTest{
 
 	@Autowired
 	private Suspension suspension;
 	@Autowired
-	@Qualifier(value="NeigborVariationPattern")
-	private VariationPattern variationPattern;
-
+	private NeigborVariationPattern neigborVariationPattern;
+	private double[][] neigbborPattern =  new double[][]{{0.5, 0.5}};
+	
 	@Before
 	public void setUp() throws Exception {
-	
-	}
-
-	private void setVariation(Variation variation) {
-		variation.setScales(Collections.singletonList(new Scale(Scale.MAJOR_SCALE)));
-		variationPattern.setPatterns(new double[][]{{0.5, 0.5}});
-		List<Integer> allowedLengths = new ArrayList<>();
-		allowedLengths.add(12);
-		variationPattern.setNoteLengths(allowedLengths);
-		variationPattern.setSecondNoteLengths(allowedLengths);
-		variation.setVariationPattern(variationPattern);
+		variation = suspension;
+		variationPattern = neigborVariationPattern;
+		pattern = neigbborPattern;
+		setVariation();
 	}
 
 	@Test
 	public void testCreateVariation() {
-		setVariation(suspension);
 		Note firstNote = note().pc(2).pitch(62).pos(0).len(12).ocatve(5).build();
 		Note secondNote = note().pc(0).pitch(60).pos(12).len(12).ocatve(5).build();
-		List<Note> notes = suspension.createVariation(firstNote, secondNote);
+		List<Note> notes = variation.createVariation(firstNote, secondNote);
 		assertEquals(firstNote.getPitch(), notes.get(0).getPitch());
 		assertEquals(secondNote.getPitch(), notes.get(1).getPitch());
 		
 		assertEquals(18, notes.get(0).getLength());
 		assertEquals(6, notes.get(1).getLength());
-		
 		assertEquals(18, notes.get(1).getPosition());
+	}
+	
+	@Test
+	public void testCreateVariationNotAllowedLength() {
+		List<Note> notes = testNotAllowedLength();
+		assertTrue(notes.size() == 1);
+		assertEquals(64, notes.get(0).getPitch());
 	}
 
 }
