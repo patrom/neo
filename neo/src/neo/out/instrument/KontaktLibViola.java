@@ -10,6 +10,10 @@ public class KontaktLibViola extends Instrument {
 		setHighest(72);
 		setKeySwitch(true);
 		setGeneralMidi(GeneralMidi.VIOLA);
+		
+		setInstrumentName("Viola");
+		setInstrumentSound("strings.viola");
+		setVirtualName("Viola 1 solo");
 	}
 
 	@Override

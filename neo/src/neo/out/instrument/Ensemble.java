@@ -80,4 +80,15 @@ public class Ensemble {
 		strings.add(new KontaktLibDoublebass(0, 3));
 		return strings;
 	}
+	
+	public static List<Instrument> getStringsDoubleTriads(){
+		List<Instrument> strings = new ArrayList<Instrument>();
+		strings.add(new KontaktLibViolin(5, 0));
+		strings.add(new KontaktLibViolin(4, 0));
+		strings.add(new KontaktLibViolin(3, 0));
+		strings.add(new KontaktLibCello(2, 2));
+		strings.add(new KontaktLibCello(1, 2));
+		strings.add(new KontaktLibDoublebass(0, 3));
+		return strings;
+	}
 }

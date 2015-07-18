@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 
 import neo.model.harmony.Chord;
 
-@Component(value="TriadDecorator")
-public class TriadDecorator implements Dissonance{
+@Component(value="TriadDissonance")
+public class TriadDissonance implements Dissonance{
 
 	@Override
 	public double getDissonance(Chord chord) {

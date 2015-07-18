@@ -1,7 +1,8 @@
 package neo.variation;
 
 import static neo.model.note.NoteBuilder.note;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -12,16 +13,12 @@ import neo.DefaultConfig;
 import neo.VariationConfig;
 import neo.model.note.Note;
 import neo.model.note.Scale;
-import neo.variation.Embellisher;
-import neo.variation.VariationSelector;
 import neo.variation.nonchordtone.Variation;
 import neo.variation.nonchordtone.neighbor.NeighborScaleDown;
-import neo.variation.nonchordtone.neighbor.NeighborScaleUp;
 import neo.variation.nonchordtone.passing.ChromaticPassingUp;
 import neo.variation.nonchordtone.suspension.Suspension;
 import neo.variation.pattern.VariationPattern;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +29,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationContextLoader;
-import org.springframework.test.AssertThrows;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 

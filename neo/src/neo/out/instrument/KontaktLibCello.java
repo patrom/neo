@@ -11,6 +11,11 @@ public class KontaktLibCello extends Instrument {
 		setHighest(70);
 		setKeySwitch(true);
 		setGeneralMidi(GeneralMidi.CELLO);
+		
+		setInstrumentName("Violoncello");
+		setInstrumentSound("strings.cello");
+		setVirtualName("Cello 1 solo");
+		setClef("F");
 	}
 
 	@Override

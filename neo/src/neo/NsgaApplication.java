@@ -88,7 +88,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 
 	@Override
 	public void run(String... arg0) throws Exception {
-		deleteMidiFiles(midiFilesPath);
+//		deleteMidiFiles(midiFilesPath);
 //		musicProperties.threeFour();
 		musicProperties.fourFour();
 //		int[] generatedHamonies = melodyGenerator.generateHarmonyPositions(12, 4, 4);
@@ -99,7 +99,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 		int[][] generatedMelodyPositions = new int[harmonies.length - 1][];
 		for (int i = 0, j = 0; i < harmonies.length - 1; i++, j++) {
 			int[] harmony = {0, harmonies[i + 1] - harmonies[i]};
-			int[] melody = melodyGenerator.generateMelodyPositions(harmony, 12, 4);
+			int[] melody = melodyGenerator.generateMelodyPositions(harmony, 12, 2);
 			generatedMelodyPositions[j] = melody;
 		}
 
@@ -115,7 +115,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 //		generator.addChords(TonalChords.getTriads(key + 5));
 
 		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-		generator.generateHarmonicMelodiesForVoice(generatedMelodyPositions, 2);
+		generator.generateHarmonicMelodiesForVoice(generatedMelodyPositions, 5);
 //		generator.generateHarmonicMelodiesForVoice(melodies, 3);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);

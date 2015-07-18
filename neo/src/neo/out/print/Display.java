@@ -2,6 +2,7 @@ package neo.out.print;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -32,8 +33,10 @@ public class Display {
 	
 	@Autowired
 	private ScoreUtilities scoreUtilities;
+	@Autowired
+	private MusicXMLWriter musicXMLWriter;
 	 
-	 public void view(SolutionSet solutions, double tempo) throws JMException, InvalidMidiDataException{
+	 public void view(SolutionSet solutions, double tempo) throws Exception{
 		 solutions.sort(Comparator.comparing(MusicSolution::getHarmony).thenComparing(MusicSolution::getMelody));
 		  Iterator<Solution> iterator = solutions.iterator();
 		  String dateID = generateDateID();
@@ -46,6 +49,9 @@ public class Display {
 			Motive motive = ((MusicVariable)solution.getDecisionVariables()[0]).getMotive();
 			printHarmonies(motive.getHarmonies());
 			viewScore(motive.getMelodies(), id, tempo);
+			List<Melody> reversedMelodies = motive.getMelodies();
+			Collections.reverse(reversedMelodies);
+			generateMusicXml(reversedMelodies, id);
 			i++;
 			
 //			List<MusicalStructure> structures = FugaUtilities.addTransposedVoices(sentences, inputProps.getScale(), 8, 12);
@@ -69,6 +75,10 @@ public class Display {
 //			harmonies.forEach(h ->  LOGGER.info(h.getChord().getPitchClassMultiSet() + ", "));
 //			harmonies.forEach(h ->  LOGGER.info(h.getNotes() + ", "));
 		}
+		
+		private void generateMusicXml(List<Melody> melodies, String id) throws Exception{
+			musicXMLWriter.generateMusicXMLForMelodies(melodies, id);
+		}
 
 		private void viewScore(List<Melody> melodies, String id, double tempo) {
 			melodies.forEach(h ->  LOGGER.info(h.getMelodieNotes() + ", "));
@@ -87,5 +97,5 @@ public class Display {
 //			String vexTab = ScoreUtilities.createVexTab(harmonies, inputProps);
 //			LOGGER.info(vexTab);
 //		}
-		
+
 }

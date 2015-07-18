@@ -78,31 +78,36 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> parsedMelodies = midiInfo.getMelodies();
-			mapInstruments(parsedMelodies, Ensemble.getStrings());
+			mapInstruments(parsedMelodies, Ensemble.getStringsDoubleTriads());
 			//split
 			int size = parsedMelodies.size();
 			List<MelodyInstrument> melodies = new ArrayList<>(parsedMelodies.subList(0, size/2));
 			List<MelodyInstrument> harmonies = new ArrayList<>(parsedMelodies.subList(size/2, size));
-//			arrangement.transpose(melodies.get(1).getNotes(), 12);
-//			arrangement.transpose(melodies.get(2).getNotes(), 12);
 //			arrangement.transpose(melodies.get(3).getNotes(), 12);
+//			arrangement.transpose(melodies.get(4).getNotes(), 12);
+//			arrangement.transpose(melodies.get(5).getNotes(), 12);
 //			List<Integer> voicesForAccomp = new ArrayList<>();
 //			voicesForAccomp.add(1);
 //			voicesForAccomp.add(2);
 //			voicesForAccomp.add(3);
 //			List<MelodyInstrument> accompMelodies = filterAccompagnementMelodies(voicesForAccomp, melodies);
 //			createAccompagnement(accompMelodies, melodies, midiInfo.getHarmonyPositionsForVoice(0));
-			for (int i = melodies.size() - 1; i >= 0; i--) {
-				MelodyInstrument melodyInstrument = melodies.get(i);
-				List<Note> embellishedNotes = embellisher.embellish(melodyInstrument.getNotes());
-				melodyInstrument.setNotes(embellishedNotes);
-			}
+			
+//			embellish(melodies);
 			playOnKontakt(melodies, midiInfo.getTempo());
 			Score score = scoreUtilities.createScoreFromMelodyInstrument(melodies, midiInfo.getTempo());
 			score.setTitle(midiFile.getName());
 			View.notate(score);
 			write(melodies , "resources/transform/" + midiFile.getName(), midiInfo.getTempo());
 			Thread.sleep(21000);
+		}
+	}
+
+	private void embellish(List<MelodyInstrument> melodies) {
+		for (int i = melodies.size() - 1; i >= 0; i--) {
+			MelodyInstrument melodyInstrument = melodies.get(i);
+			List<Note> embellishedNotes = embellisher.embellish(melodyInstrument.getNotes());
+			melodyInstrument.setNotes(embellishedNotes);
 		}
 	}
 

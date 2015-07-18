@@ -15,7 +15,7 @@ import neo.objective.Objective;
 public class HarmonicObjective extends Objective {
 	
 	@Autowired 
-	@Qualifier(value="FourCubeTrio")
+	@Qualifier(value="DoubleTriadDissonance")
 	private Dissonance dissonance;
 
 	@Override

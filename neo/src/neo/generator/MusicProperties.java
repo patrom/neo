@@ -1,5 +1,6 @@
 package neo.generator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -66,7 +67,7 @@ public class MusicProperties {
 		this.measureWeights = new double[]{1.0, 0.5, 0.75, 0.5, 1.0, 0.5, 0.75, 0.5};
 	    this.numerator = 4;
 	    this.denominator = 4;
-	    this.instruments = Ensemble.getStrings();
+	    this.instruments = Ensemble.getStringQuartet();
 		this.chordSize = instruments.size();
 	}
 	

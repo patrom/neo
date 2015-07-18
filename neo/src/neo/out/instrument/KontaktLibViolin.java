@@ -11,6 +11,10 @@ public class KontaktLibViolin extends Instrument {
 		setHighest(84);
 		setKeySwitch(true);
 		setGeneralMidi(GeneralMidi.VIOLIN);
+		
+		setInstrumentName("Violin");
+		setInstrumentSound("strings.violin");
+		setVirtualName("Violin 1 solo");
 	}
 
 	@Override

@@ -35,9 +35,9 @@ public class NSGAII extends Algorithm {
 	private static Logger LOGGER = Logger.getLogger(NSGAII.class.getName());
 
 	@Autowired
-	@Qualifier(value="ThirdDecorator")
+	@Qualifier(value="TriadDecorator")
 	private Decorator decorator;
-	private boolean decorated = false;
+	private boolean decorated = true;
 
 	/**
 	 * Constructor

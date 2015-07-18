@@ -10,6 +10,12 @@ public class Instrument {
 	protected int channel;
 	protected boolean keySwitch;
 	protected GeneralMidi generalMidi;
+	//musicXML properties
+	protected String instrumentName;
+	protected String instrumentSound;
+	protected String virtualLibrary = "Sibelius 7 Sounds";
+	protected String virtualName;
+	protected String clef = "G";
 	
 	public Instrument(int voice, int channel) {
 		this.voice = voice;
@@ -61,6 +67,67 @@ public class Instrument {
 	}
 	public void setGeneralMidi(GeneralMidi generalMidi) {
 		this.generalMidi = generalMidi;
+	}
+	public String getInstrumentName() {
+		return instrumentName;
+	}
+	public void setInstrumentName(String instrumentName) {
+		this.instrumentName = instrumentName;
+	}
+	public String getInstrumentSound() {
+		return instrumentSound;
+	}
+	public void setInstrumentSound(String instrumentSound) {
+		this.instrumentSound = instrumentSound;
+	}
+	public String getVirtualLibrary() {
+		return virtualLibrary;
+	}
+	public void setVirtualLibrary(String virtualLibrary) {
+		this.virtualLibrary = virtualLibrary;
+	}
+	public String getVirtualName() {
+		return virtualName;
+	}
+	public void setVirtualName(String virtualName) {
+		this.virtualName = virtualName;
+	}
+	public String getClef() {
+		return clef;
+	}
+	public void setClef(String clef) {
+		this.clef = clef;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((instrumentName == null) ? 0 : instrumentName.hashCode());
+		result = prime * result
+				+ ((instrumentSound == null) ? 0 : instrumentSound.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Instrument other = (Instrument) obj;
+		if (instrumentName == null) {
+			if (other.instrumentName != null)
+				return false;
+		} else if (!instrumentName.equals(other.instrumentName))
+			return false;
+		if (instrumentSound == null) {
+			if (other.instrumentSound != null)
+				return false;
+		} else if (!instrumentSound.equals(other.instrumentSound))
+			return false;
+		return true;
 	}
 	
 }

@@ -25,6 +25,9 @@ public class Note implements Comparable<Note>, Cloneable{
 	private int pitchClass;
 	private int voice;
 	
+	private boolean tieStart;
+	private boolean tieEnd;
+	
 	private Articulation performance = Articulation.LEGATO;
 
 	public double getBeat(int divider) {
@@ -219,6 +222,22 @@ public class Note implements Comparable<Note>, Cloneable{
 		newNote.setOctave(this.getOctave());
 		newNote.setPositionWeight(this.getPositionWeight());
 		return newNote;
+	}
+
+	public boolean isTieStart() {
+		return tieStart;
+	}
+
+	public void setTieStart(boolean tieStart) {
+		this.tieStart = tieStart;
+	}
+
+	public boolean isTieEnd() {
+		return tieEnd;
+	}
+
+	public void setTieEnd(boolean tieEnd) {
+		this.tieEnd = tieEnd;
 	}
 
 }

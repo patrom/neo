@@ -10,6 +10,11 @@ public class KontaktLibDoublebass extends Instrument {
 		setLowest(38);
 		setKeySwitch(false);
 		setGeneralMidi(GeneralMidi.CONTRABASS);
+		
+		setInstrumentName("Contrabass");
+		setInstrumentSound("strings.Contrabass");
+		setVirtualName("Bass 1 solo");
+		setClef("F");
 	}
 
 	@Override
