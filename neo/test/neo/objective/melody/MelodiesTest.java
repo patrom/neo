@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 import javax.sound.midi.InvalidMidiDataException;
 
+import jm.music.data.Score;
+import jm.util.View;
 import neo.AbstractTest;
 import neo.DefaultConfig;
 import neo.evaluation.FitnessEvaluationTemplate;
@@ -19,6 +21,7 @@ import neo.midi.MidiInfo;
 import neo.midi.MidiParser;
 import neo.model.dissonance.Dissonance;
 import neo.model.note.Note;
+import neo.out.print.ScoreUtilities;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,14 +46,17 @@ public class MelodiesTest extends AbstractTest{
 	private Dissonance dissonance;
 	@Autowired
 	private MelodicObjective melodicObjective;
+	@Autowired
+	private ScoreUtilities scoreUtilities;
 	
 	@Before
 	public void setUp() throws IOException, InvalidMidiDataException {
-		midiFiles = Files.list(new File(MelodiesTest.class.getResource("/melodies").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		
 	}
 
 	@Test
 	public void testMelodies() throws InvalidMidiDataException, IOException {
+		midiFiles = Files.list(new File(MelodiesTest.class.getResource("/melodies").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
 		for (File file : midiFiles) {
 			MidiInfo midiInfo = midiParser.readMidi(file);
 			LOGGER.fine(file.getName());
@@ -65,12 +71,25 @@ public class MelodiesTest extends AbstractTest{
 				List<Note> filteredNotes = melodicObjective.filterNotesWithWeightEqualToOrGreaterThan(notes, 0.5);
 				double filteredValue = melodicObjective.evaluateMelody(filteredNotes, 1);
 				LOGGER.info("filteredValue : " + filteredValue);
-//				List<Note> notesLevel2 = melodicObjective.extractNotesOnLevel(notes, 2);
-//				LOGGER.info("notesLevel2 : " + notesLevel2);
-//				Score score = ScoreUtilities.createScoreMelodies(melodies);
+				List<Note> notesLevel2 = melodicObjective.extractNotesOnLevel(notes, 2);
+				LOGGER.info("notesLevel2 : " + notesLevel2);
+//				Score score = scoreUtilities.createScoreFromMelodyInstrument(melodies, (double) midiInfo.getTempo());
 //				View.notate(score);
 //				jm.util.Play.midi(score, false);
 			}
+		}
+	}
+	
+	@Test
+	public void readMelodies() throws InvalidMidiDataException, IOException {
+		midiFiles = Files.list(new File(MelodiesTest.class.getResource("/melodies/solo").getPath()).toPath()).map(p -> p.toFile()).collect(Collectors.toList());
+		for (File file : midiFiles) {
+			MidiInfo midiInfo = midiParser.readMidi(file);
+			LOGGER.fine(file.getName());
+			List<MelodyInstrument> melodies = midiInfo.getMelodies();
+			Score score = scoreUtilities.createScoreFromMelodyInstrument(melodies, (double) midiInfo.getTempo());
+			View.notate(score);
+			jm.util.Play.midi(score, true);
 		}
 	}
 

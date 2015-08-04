@@ -88,34 +88,34 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 
 	@Override
 	public void run(String... arg0) throws Exception {
-//		deleteMidiFiles(midiFilesPath);
+		deleteMidiFiles(midiFilesPath);
 //		musicProperties.threeFour();
 		musicProperties.fourFour();
 //		int[] generatedHamonies = melodyGenerator.generateHarmonyPositions(12, 4, 4);
 //		int[][] melodyPositions = melodyGenerator.generateMelodies(generatedHamonies, 12);
-		int[] harmonies = {0,24,48,60,72,96,120,144,168,192};
+		int[] harmonies = {0,12, 24,48,72, 96};
 		int[][] melodies = {{18,24},{0,6,18},{6,12},{0, 18, 24},{0,24},{0,12},{0,12},{0, 18, 24},{0,24},{}};
 //		int[][] melodies2 = {{18,24},{0, 12},{0, 12},{12,24},{0,12},{0,12},{0,12},{0,12},{0,12,24},{}};
-		int[][] generatedMelodyPositions = new int[harmonies.length - 1][];
-		for (int i = 0, j = 0; i < harmonies.length - 1; i++, j++) {
-			int[] harmony = {0, harmonies[i + 1] - harmonies[i]};
-			int[] melody = melodyGenerator.generateMelodyPositions(harmony, 12, 2);
-			generatedMelodyPositions[j] = melody;
-		}
+//		int[][] generatedMelodyPositions = new int[harmonies.length - 1][];
+//		for (int i = 0, j = 0; i < harmonies.length - 1; i++, j++) {
+//			int[] harmony = {0, harmonies[i + 1] - harmonies[i]};
+//			int[] melody = melodyGenerator.generateMelodyPositions(harmony, 12, 2);
+//			generatedMelodyPositions[j] = melody;
+//		}
 
 
 //		BeginEndChordGenerator generator = beginEndChordGenerator;
 		
-//		TonalChordGenerator generator = new TonalChordGenerator(harmonies, musicProperties);
+		TonalChordGenerator generator = new TonalChordGenerator(harmonies, musicProperties);
 //		generator.generateHarmonicMelodiesForVoice(melodies, 3);
-//		int key = 0;
-//		musicProperties.setKeySignature(key);
-//		generator.setChords(TonalChords.getTriads(key));
-//		generator.addChords(TonalChords.getTriads(key + 7));
-//		generator.addChords(TonalChords.getTriads(key + 5));
+		int key = 0;
+		musicProperties.setKeySignature(key);
+		generator.setChords(TonalChords.getTriads(key));
+		generator.addChords(TonalChords.getTriads(key + 7));
+		generator.addChords(TonalChords.getTriads(key + 5));
 
-		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
-		generator.generateHarmonicMelodiesForVoice(generatedMelodyPositions, 5);
+//		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
+//		generator.generateHarmonicMelodiesForVoice(generatedMelodyPositions, 5);
 //		generator.generateHarmonicMelodiesForVoice(melodies, 3);
 		
 //		Generator generator = new DiffSizeGenerator(harmonies, musicProperties);
@@ -133,7 +133,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 1.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
@@ -145,7 +145,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    melodyNoteToHarmonyNote.setOuterBoundaryIncluded(false);
 	    
-	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
+	    oneNoteMutation.setParameter("probabilityOneNote", 0.0);
 	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    oneNoteMutation.setOuterBoundaryIncluded(false);
 	    

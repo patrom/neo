@@ -3,12 +3,89 @@ package neo.model.rhythm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import neo.midi.HarmonyPosition;
 import neo.model.note.Note;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Rhythm {
 	
-	protected List<Note> getTexture(List<Note> chordNotes, List<Note> melody, int[] texture){
+	private Random random = new Random();
+	
+	public List<Note> getRhythm(int harmonyPosition ,List<Note> chordNotes, Integer[] positions, int voice, Integer[] texture, Integer[] contour){
+		List<Note> soundNotes = getSounds(harmonyPosition, positions);
+		List<Note> contourNotes = getContour(chordNotes, soundNotes, contour, voice);
+		List<Note> textureNotes = getTexture(chordNotes, contourNotes, texture);
+		return textureNotes;
+	}
+	
+	protected List<Note> getSounds(int harmonyPosition, Integer[] positions) {
+		List<Note> sounds = new ArrayList<>();
+		for (int i = 0; i < positions.length - 1; i++) {
+			Note note = new Note();
+			note.setPosition(positions[i] + harmonyPosition);
+			note.setLength(positions[i + 1] - positions[i]);
+			sounds.add(note);
+		}
+		return sounds;
+	}
+	
+	protected List<Note> getSounds(int harmonyPosition, List<Integer> positions) {
+		List<Note> sounds = new ArrayList<>();
+		int size = positions.size() - 1;
+		for (int i = 0; i < size; i++) {
+			Note note = new Note();
+			note.setPosition(positions.get(i) + harmonyPosition);
+			note.setLength(positions.get(i + 1) - positions.get(i));
+			sounds.add(note);
+		}
+		return sounds;
+	}
+
+	public List<Note> getRhythm(List<Note> chordNotes, Integer[] positions, int voice, Integer[] texture, Integer[] contour){
+		List<Note> soundNotes = getSounds(0 ,positions);
+		List<Note> contourNotes = getContour(chordNotes, soundNotes, contour, voice);
+		List<Note> textureNotes = getTexture(chordNotes, contourNotes, texture);
+		return textureNotes;
+	}
+	
+	public List<Note> getRhythm(List<Note> chordNotes, List<Integer> positions, int voice, Integer[] texture, Integer[] contour){
+		List<Note> soundNotes = getSounds(0 ,positions);
+		List<Note> contourNotes = getContour(chordNotes, soundNotes, contour, voice);
+		List<Note> textureNotes = getTexture(chordNotes, contourNotes, texture);
+		return textureNotes;
+	}
+	
+	public List<Note> getRhythmRandomContourTexture(List<Note> chordNotes, Integer[] positions, int voice, int maxTexture){
+		List<Note> soundNotes = getSounds(0, positions);
+		Integer[] contour = getRandomContour(chordNotes.size() - 1, positions.length - 1);
+		List<Note> contourNotes = getContour(chordNotes, soundNotes, contour, voice);
+		Integer[] texture = getRandomTexture(maxTexture + 1, positions.length - 1);
+		List<Note> textureNotes = getTexture(chordNotes, contourNotes, texture);
+		return textureNotes;
+	}
+	
+	private Integer[] getRandomTexture(int chordSize, int soundsSize) {
+		return random.ints(1, chordSize).limit(soundsSize)
+				.boxed()
+				.toArray(Integer[]::new);
+	}
+
+	private Integer[] getRandomContour(int chordSize, int soundsSize) {
+		return random.ints(-chordSize, chordSize)
+				.limit(soundsSize)
+				.boxed()
+				.toArray(Integer[]::new);
+	}
+
+	protected List<Note> getTexture(List<Note> chordNotes, List<Note> melody, Integer[] texture){
 		List<Note> textures = new ArrayList<>();
 		int size = chordNotes.size();
 		for (int i = 0; i < melody.size(); i++) {
@@ -32,45 +109,82 @@ public class Rhythm {
 				}
 				textures.addAll(textureNotes);
 			} else {
-				textures.addAll(Collections.singletonList(melody.get(0)));
+				textures.addAll(Collections.singletonList(melody.get(i)));
 			}
 		}
 		return textures;
 	}
 	
+	protected void updateTexture(List<RhythmPosition> rhythmPositions, Integer[] texture){
+		for (int i = 0; i < rhythmPositions.size(); i++) {
+			RhythmPosition rhythmPosition = rhythmPositions.get(i);
+			if (!rhythmPosition.getNotes().isEmpty()) {
+				Note melodyNote = rhythmPosition.getNotes().get(0);
+				int nextTexture = getNextTexture(texture, i);
+				if (nextTexture > 1) {
+					List<Note> textureNotes = new ArrayList<Note>();
+						int size = rhythmPosition.getSelectableNotes().size();
+						textureNotes.add(melodyNote);
+						int index = getIndexOfNote(melodyNote, rhythmPosition.getSelectableNotes());
+						for (int j = 1; j < nextTexture; j++) {
+							 Note note = rhythmPosition.getSelectableNotes().get(((index - j) + size) % size).copy();
+							 note.setVoice(melodyNote.getVoice());
+							 note.setPosition(melodyNote.getPosition());
+							 note.setLength(melodyNote.getLength());
+							 if (melodyNote.getPitchClass() < note.getPitchClass()) {
+								 updateNotePitch(note, melodyNote.getOctave() - 1);
+							 }else{
+								 updateNotePitch(note, melodyNote.getOctave());
+							 }
+							 textureNotes.add(note);
+						}
+						rhythmPosition.updateAllNotes(textureNotes);
+				} 
+			}
+		}
+	}
+	
+	private void updateNotePitch(Note note, int octave){
+		note.setPitch(note.getPitchClass() + (12 * octave));
+		note.setOctave(octave);
+	}
+	
 	private int getIndexOfNote(Note melodyNote, List<Note> chordNotes) {
-		Note noteInList = chordNotes.stream().filter(note -> note.getPitch() == melodyNote.getPitch()).findFirst().get();
+		Note noteInList = chordNotes.stream().filter(note -> note.getPitchClass() == melodyNote.getPitchClass()).findFirst().get();
 		return chordNotes.indexOf(noteInList);
 	}
 
-	protected List<Note> getContour(List<Note> chordNotes, List<Note> sounds, int[] contour, int voice){
+	protected List<Note> getContour(List<Note> chordNotes, List<Note> sounds, Integer[] contour, int voice){
 		List<Note> contours = new ArrayList<>();
 		int index = 0;
 		int nextContour = 0;
 		int size = sounds.size();
 		for (int i = 0; i < size; i++) {
 			Note sound = sounds.get(i);
-			index = index + nextContour;
+			index = (index + nextContour) % chordNotes.size();
 			Note note = getNextNote(chordNotes, index);
 			note.setPosition(sound.getPosition());
 			note.setLength(sound.getLength());
 			note.setVoice(voice);
 			if (!contours.isEmpty()) {
-				Note lastNote = contours.get(contours.size() - 1);
-				if (nextContour > 0) {
-					while (lastNote.getPitch() > note.getPitch()) {
-						note.setPitch(note.getPitch() + 12);
-						note.setOctave(note.getOctave() + 1);
+				Note lastAddedNote = contours.get(contours.size() - 1);
+				if (lastAddedNote.getPitchClass() < note.getPitchClass()) {
+					updateNotePitch(note, lastAddedNote.getOctave() - 1);
+				}else if (lastAddedNote.getPitchClass() > note.getPitchClass()) {
+					updateNotePitch(note, lastAddedNote.getOctave() + 1);
+				}
+				if (nextContour == 0){
+					if (lastAddedNote.getPitchClass() == note.getPitchClass()){
+						updateNotePitch(note, lastAddedNote.getOctave());
+					} else if(lastAddedNote.getPitchClass() != note.getPitchClass()) {
+						int interval = ((lastAddedNote.getPitchClass() - note.getPitchClass()) + 12) % 12;
+						if (interval > 6) {
+							updateNotePitch(note, lastAddedNote.getOctave() - 1);
+						}else{
+							updateNotePitch(note, lastAddedNote.getOctave());
+						}
 					}
-				} else if (nextContour < 0) {
-					while (lastNote.getPitch() < note.getPitch()) {
-						note.setPitch(note.getPitch() - 12);
-						note.setOctave(note.getOctave() - 1);
-					}
-				} else if (nextContour == 0) {
-					note.setPitch(lastNote.getPitch());
-					note.setOctave(lastNote.getOctave());
-				}  
+				} 
 			}
 			nextContour = getNextContour(contour, i);
 			contours.add(note);
@@ -78,18 +192,51 @@ public class Rhythm {
 		return contours;
 	}
 	
-	protected List<Note> getSounds(int[] sound){
-		List<Note> sounds = new ArrayList<>();
-		for (int i = 0; i < sound.length - 1; i++) {
-			Note note = new Note();
-			note.setPosition(sound[i]);
-			note.setLength(sound[i + 1] - sound[i]);
-			sounds.add(note);
+	protected void updateContour(List<RhythmPosition> sounds, Integer[] contour, int voice){
+		List<Note> contours = new ArrayList<>();
+		int index = voice;
+		int nextContour = 0;
+		int size = sounds.size();
+		for (int i = 0; i < size; i++) {
+			RhythmPosition rhythmPosition = sounds.get(i);
+			if (!rhythmPosition.getNotes().isEmpty()) {
+				Note sound = rhythmPosition.getNotes().get(0);
+				//TODO if not rest
+				index = (index + nextContour) % rhythmPosition.getSelectableNotes().size();
+				Note note = getNextNote(rhythmPosition.getSelectableNotes(), index);
+				note.setPosition(sound.getPosition());
+				note.setLength(sound.getLength());
+				note.setVoice(voice);
+				if (!contours.isEmpty()) {
+					Note lastAddedNote = contours.get(contours.size() - 1);
+					//smooth voice leading
+					if ( lastAddedNote.getPitchClass() != note.getPitchClass() && Math.abs(lastAddedNote.getPitchClass() - note.getPitchClass()) > 7) {
+						note.setPitch(note.getPitchClass() + (12 * (lastAddedNote.getOctave() - 1)));
+						note.setOctave(lastAddedNote.getOctave() - 1);
+					} else {
+						note.setPitch(note.getPitchClass() + (12 * lastAddedNote.getOctave()));
+						note.setOctave(lastAddedNote.getOctave());
+					}
+					if (nextContour > 0) {
+						while (lastAddedNote.getPitch() > note.getPitch()) {
+							note.setPitch(note.getPitch() + 12);
+							note.setOctave(note.getOctave() + 1);
+						}
+					} else if (nextContour < 0) {
+						while (lastAddedNote.getPitch() < note.getPitch()) {
+							note.setPitch(note.getPitch() - 12);
+							note.setOctave(note.getOctave() - 1);
+						}
+					} 
+				}
+				nextContour = getNextContour(contour, i);
+				contours.add(note);
+				rhythmPosition.updateNote(note);
+			}
 		}
-		return sounds;
 	}
-
-	private int getNextTexture(int[] texture, int i) {
+	
+	private int getNextTexture(Integer[] texture, int i) {
 		return texture[i % texture.length];
 	}
 
@@ -116,7 +263,95 @@ public class Rhythm {
 		return textureNotes;
 	}
 	
-	private int getNextContour(int[] contour, int i) {
+	private int getNextContour(Integer[] contour, int i) {
 		return contour[i % contour.length];
 	}
+	
+	public Map<Integer, List<Integer>> splitRhythmPositionsOverHarmonies(int[] rhythmPositions, List<HarmonyPosition> harmonyPositions){
+		List<Integer[]> harmonyRanges = new ArrayList<>();
+		int harmonyPositionsSize = harmonyPositions.size() - 1;
+		for (int i = 0; i < harmonyPositionsSize; i++) {
+			HarmonyPosition harmonyPosition = harmonyPositions.get(i);
+			HarmonyPosition nextHarmonyPosition = harmonyPositions.get(i + 1);
+			Integer[] harmonyLength = new Integer[2];
+			harmonyLength[0] = harmonyPosition.getPosition();
+			harmonyLength[1] = nextHarmonyPosition.getPosition();
+			harmonyRanges.add(harmonyLength);
+		}
+		return splitRhythmPositionsOverHarmonyRanges(rhythmPositions, harmonyRanges);
+	}
+	
+	public List<Note> getRhythm(List<HarmonyPosition> harmonyPositions, int[] sounds, Integer[] texture, Integer[] contour, int voice){
+		List<RhythmPosition> rhythmPositions = getRhythmPositions(harmonyPositions, sounds);
+		updateSounds(rhythmPositions);
+		updateContour(rhythmPositions, contour, voice);
+		updateTexture(rhythmPositions, texture);
+		return rhythmPositions.stream().flatMap(r -> r.getNotes().stream()).collect(Collectors.toList());
+	}
+	
+	
+	public List<Note> getRhythm(List<HarmonyPosition> harmonyPositions, int[] sounds, Integer[] contour, int voice, int textureSize){
+		Integer[] texture = IntStream.generate(() -> textureSize)
+				.limit(sounds.length)
+				.boxed()
+				.toArray(Integer[]::new);
+		return getRhythm(harmonyPositions, sounds, texture, contour, voice);
+	}
+	
+	public List<Note> getRhythm(List<HarmonyPosition> harmonyPositions, Integer[] contour, int voice, int textureSize, int soundValue){
+		int lastPosition = harmonyPositions.get(harmonyPositions.size() - 1).getPosition();
+		int[] sounds = IntStream.range(0, (lastPosition / soundValue)).map(i -> i * soundValue).toArray();
+		return getRhythm(harmonyPositions, sounds, contour, voice, textureSize);
+	}
+
+	private void updateSounds(List<RhythmPosition> rhythmPositions) {
+		int size = rhythmPositions.size() - 1;
+		for (int i = 0; i < size; i++) {
+			RhythmPosition rhythmPosition = rhythmPositions.get(i);
+			Note note = new Note();
+			note.setPosition(rhythmPosition.getPosition());
+			note.setLength(rhythmPositions.get(i + 1).getPosition() - rhythmPosition.getPosition());
+			rhythmPosition.updateNote(note);
+		}
+	}
+	
+	protected List<RhythmPosition> getRhythmPositions(List<HarmonyPosition> harmonyPositions, int[] sounds){
+		Map<Integer, List<Integer>> soundsForHarmonies = splitRhythmPositionsOverHarmonies(sounds, harmonyPositions);
+		List<RhythmPosition> rhythmicPositions = new ArrayList<>();
+		for (HarmonyPosition harmonyPosition : harmonyPositions) {
+			int position = harmonyPosition.getPosition();
+			List<Integer> soundPositions = soundsForHarmonies.get(position);
+			if (soundPositions != null) {
+				for (Integer soundPosition : soundPositions) {
+					RhythmPosition rhythmPosition = new RhythmPosition(soundPosition, harmonyPosition.getNotes());
+					rhythmicPositions.add(rhythmPosition);
+				}
+			}
+			
+		}
+		return rhythmicPositions;
+	}
+	
+	public Map<Integer, List<Integer>> splitRhythmPositionsOverHarmonyRanges(int[] rhythmPositions, List<Integer[]> ranges){
+		Map<Integer, List<Integer>> rhythmPositionsInRange = new TreeMap<>();
+		for (Integer[] range : ranges) {
+			for (int index = 0; index < rhythmPositions.length; index++) {
+				int position = rhythmPositions[index];
+				if (range[0] <= position && position < range[1]) {
+					rhythmPositionsInRange.compute(range[0], (k, v) -> {
+						if (v == null) {
+							List<Integer> list = new ArrayList<>();
+							list.add(position);
+							return list;
+						}else {
+							v.add(position);
+							return v;
+						}
+					});
+				}
+			}
+		}
+		return rhythmPositionsInRange;
+	}
+	
 }

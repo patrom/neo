@@ -120,6 +120,7 @@ public class MidiParser {
 		int key = sm.getData1();
 		jNote.setPitch(key);
 		jNote.setPitchClass(key % 12);
+		jNote.setOctave((int) Math.floor(key/12));
 		jNote.setVoice(voice);
 		jNote.setPosition((int) ticks);
 		int velocity = sm.getData2();

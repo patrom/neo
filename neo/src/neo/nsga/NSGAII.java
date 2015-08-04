@@ -37,7 +37,7 @@ public class NSGAII extends Algorithm {
 	@Autowired
 	@Qualifier(value="TriadDecorator")
 	private Decorator decorator;
-	private boolean decorated = true;
+	private boolean decorated = false;
 
 	/**
 	 * Constructor

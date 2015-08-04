@@ -442,7 +442,7 @@ public class MusicXMLWriter {
 		} else if (note.getPitchClass() == 10 ){
 			createElementWithValue(xmlStreamWriter, "alter", String.valueOf(-1));
 		}
-		createElementWithValue(xmlStreamWriter, "octave", String.valueOf(note.getOctave()));
+		createElementWithValue(xmlStreamWriter, "octave", String.valueOf(note.getOctave() - 1));
 		
 		xmlStreamWriter.writeEndElement();
 		xmlStreamWriter.writeCharacters("\n");
