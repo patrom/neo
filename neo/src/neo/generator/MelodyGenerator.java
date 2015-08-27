@@ -7,12 +7,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import jm.music.data.Score;
-import jm.util.Play;
-import jm.util.View;
 import neo.model.note.Note;
 import neo.objective.melody.MelodicObjective;
-import neo.objective.melody.MelodicObjectiveTest;
 import neo.objective.rhythm.RhythmObjective;
 import neo.util.RandomUtil;
 
