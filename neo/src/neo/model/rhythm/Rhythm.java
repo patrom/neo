@@ -154,6 +154,44 @@ public class Rhythm {
 		return chordNotes.indexOf(noteInList);
 	}
 
+//	protected List<Note> getContour(List<Note> chordNotes, List<Note> sounds, Integer[] contour, int voice){
+//		List<Note> contours = new ArrayList<>();
+//		int index = 0;
+//		int nextContour = 0;
+//		int size = sounds.size();
+//		for (int i = 0; i < size; i++) {
+//			Note sound = sounds.get(i);
+//			index = (index + nextContour) % chordNotes.size();
+//			Note note = getNextNote(chordNotes, index);
+//			note.setPosition(sound.getPosition());
+//			note.setLength(sound.getLength());
+//			note.setVoice(voice);
+//			if (!contours.isEmpty()) {
+//				Note lastAddedNote = contours.get(contours.size() - 1);
+//				if (lastAddedNote.getPitchClass() < note.getPitchClass()) {
+//					updateNotePitch(note, lastAddedNote.getOctave() - 1);
+//				}else if (lastAddedNote.getPitchClass() > note.getPitchClass()) {
+//					updateNotePitch(note, lastAddedNote.getOctave() + 1);
+//				}
+//				if (nextContour == 0){
+//					if (lastAddedNote.getPitchClass() == note.getPitchClass()){
+//						updateNotePitch(note, lastAddedNote.getOctave());
+//					} else if(lastAddedNote.getPitchClass() != note.getPitchClass()) {
+//						int interval = ((lastAddedNote.getPitchClass() - note.getPitchClass()) + 12) % 12;
+//						if (interval > 6) {
+//							updateNotePitch(note, lastAddedNote.getOctave() - 1);
+//						}else{
+//							updateNotePitch(note, lastAddedNote.getOctave());
+//						}
+//					}
+//				} 
+//			}
+//			nextContour = getNextContour(contour, i);
+//			contours.add(note);
+//		}
+//		return contours;
+//	}
+	
 	protected List<Note> getContour(List<Note> chordNotes, List<Note> sounds, Integer[] contour, int voice){
 		List<Note> contours = new ArrayList<>();
 		int index = 0;
@@ -161,36 +199,34 @@ public class Rhythm {
 		int size = sounds.size();
 		for (int i = 0; i < size; i++) {
 			Note sound = sounds.get(i);
-			index = (index + nextContour) % chordNotes.size();
+			index = index + nextContour;
 			Note note = getNextNote(chordNotes, index);
 			note.setPosition(sound.getPosition());
 			note.setLength(sound.getLength());
 			note.setVoice(voice);
 			if (!contours.isEmpty()) {
-				Note lastAddedNote = contours.get(contours.size() - 1);
-				if (lastAddedNote.getPitchClass() < note.getPitchClass()) {
-					updateNotePitch(note, lastAddedNote.getOctave() - 1);
-				}else if (lastAddedNote.getPitchClass() > note.getPitchClass()) {
-					updateNotePitch(note, lastAddedNote.getOctave() + 1);
-				}
-				if (nextContour == 0){
-					if (lastAddedNote.getPitchClass() == note.getPitchClass()){
-						updateNotePitch(note, lastAddedNote.getOctave());
-					} else if(lastAddedNote.getPitchClass() != note.getPitchClass()) {
-						int interval = ((lastAddedNote.getPitchClass() - note.getPitchClass()) + 12) % 12;
-						if (interval > 6) {
-							updateNotePitch(note, lastAddedNote.getOctave() - 1);
-						}else{
-							updateNotePitch(note, lastAddedNote.getOctave());
-						}
+				Note lastNote = contours.get(contours.size() - 1);
+				if (nextContour > 0) {
+					while (lastNote.getPitch() > note.getPitch()) {
+						note.setPitch(note.getPitch() + 12);
+						note.setOctave(note.getOctave() + 1);
 					}
-				} 
+				} else if (nextContour < 0) {
+					while (lastNote.getPitch() < note.getPitch()) {
+						note.setPitch(note.getPitch() - 12);
+						note.setOctave(note.getOctave() - 1);
+					}
+				} else if (nextContour == 0) {
+					note.setPitch(lastNote.getPitch());
+					note.setOctave(lastNote.getOctave());
+				}  
 			}
 			nextContour = getNextContour(contour, i);
 			contours.add(note);
 		}
 		return contours;
 	}
+	
 	
 	protected void updateContour(List<RhythmPosition> sounds, Integer[] contour, int voice){
 		List<Note> contours = new ArrayList<>();
@@ -242,7 +278,7 @@ public class Rhythm {
 
 	private Note getNextNote(List<Note> notes, int index) {
 		int size = notes.size();
-		return notes.get((index + size) % size).copy();
+		return notes.get(Math.abs((index + size) % size)).copy();
 	}
 	
 	protected List<Note> getNextNotes(List<Note> notes, int index, int texture) {
