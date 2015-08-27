@@ -11,7 +11,7 @@ import neo.model.harmony.Harmony;
 import neo.model.melody.HarmonicMelody;
 import neo.model.melody.Melody;
 import neo.model.note.Note;
-import neo.objective.meter.InnerMetricWeight;
+import neo.objective.meter.InnerMetricWeightFunctions;
 
 public class Motive {
 
@@ -74,7 +74,7 @@ public class Motive {
 	}
 
 	protected void updateInnerMetricWeightNotes(List<Note> notes) {
-		Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(notes, musicProperties.getMinimumLength());
+		Map<Integer, Double> normalizedMap = InnerMetricWeightFunctions.getNormalizedInnerMetricWeight(notes, musicProperties.getMinimumLength());
 		for (Note note : notes) {
 			Integer key = note.getPosition()/musicProperties.getMinimumLength();
 			if (normalizedMap.containsKey(key)) {
@@ -86,7 +86,7 @@ public class Motive {
 	
 	public void updateInnerMetricWeightHarmonies() {
 		int[] harmonicRhythm = extractHarmonicRhythm();
-		Map<Integer, Double> normalizedMap = InnerMetricWeight.getNormalizedInnerMetricWeight(harmonicRhythm, musicProperties.getMinimumLength());
+		Map<Integer, Double> normalizedMap = InnerMetricWeightFunctions.getNormalizedInnerMetricWeight(harmonicRhythm, musicProperties.getMinimumLength());
 		for (Harmony harmony : harmonies) {
 			Integer key = harmony.getPosition()/musicProperties.getMinimumLength();
 			if (normalizedMap.containsKey(key)) {

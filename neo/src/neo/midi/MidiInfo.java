@@ -1,5 +1,6 @@
 package neo.midi;
 
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
@@ -60,7 +61,7 @@ public class MidiInfo {
 	
 	private List<HarmonyPosition> collectHarmonyNotes(List<Note> harmonyNotes) {
 		return harmonyNotes.stream()
-			 .collect(Collectors.collectingAndThen(
+			 .collect(collectingAndThen(
 					 	groupingBy(note -> note.getPosition(), HarmonyCollector.toHarmonyCollector()),
 					 			(value) -> { 
 					 				return value.values().stream()

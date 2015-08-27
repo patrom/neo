@@ -124,7 +124,7 @@ public class MidiParser {
 		jNote.setVoice(voice);
 		jNote.setPosition((int) ticks);
 		int velocity = sm.getData2();
-		jNote.setDynamic(velocity);
+		jNote.setDynamicLevel(velocity);
 		return jNote;
 	}
 	

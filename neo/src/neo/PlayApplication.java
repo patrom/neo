@@ -89,8 +89,8 @@ public class PlayApplication extends JFrame implements CommandLineRunner{
 			LOGGER.info(midiFile.getName());
 			MidiInfo midiInfo = midiParser.readMidi(midiFile);
 			List<MelodyInstrument> parsedMelodies = midiInfo.getMelodies();
-			musicProperties.setInstruments(Ensemble.getPiano(4));
-			mapInstruments(parsedMelodies, Ensemble.getPiano(4));
+			musicProperties.setInstruments(Ensemble.getStringQuartet());
+			mapInstruments(parsedMelodies, Ensemble.getStringQuartet());
 			//split
 			int size = parsedMelodies.size();
 			List<MelodyInstrument> melodies = new ArrayList<>(parsedMelodies.subList(0, size/2));

@@ -131,16 +131,16 @@ public class MelodicObjectiveTest extends AbstractTest {
 		assertEquals(expected, melodicValue, 0.001);
 	}
 	
-	@Test
-	public void testEvaluateMelody() {
-		List<Note> notes = new ArrayList<>();
-		notes.add(note().pc(0).pos(0).len(6).positionWeight(1.0).build());
-		notes.add(note().pc(2).pos(6).len(6).positionWeight(0.5).build());
-		notes.add(note().pc(4).pos(12).len(6).positionWeight(1.0).build());
-		notes.add(note().pc(2).pos(18).len(6).positionWeight(0.5).build());
-		double value = melodicObjective.evaluateMelody(notes, 1);
-		LOGGER.info("Melody value: " + value);
-	}
+//	@Test
+//	public void testEvaluateMelody() {
+//		List<Note> notes = new ArrayList<>();
+//		notes.add(note().pc(0).pos(0).len(6).positionWeight(1.0).build());
+//		notes.add(note().pc(2).pos(6).len(6).positionWeight(0.5).build());
+//		notes.add(note().pc(4).pos(12).len(6).positionWeight(1.0).build());
+//		notes.add(note().pc(2).pos(18).len(6).positionWeight(0.5).build());
+//		double value = melodicObjective.evaluateMelody(notes, 1);
+//		LOGGER.info("Melody value: " + value);
+//	}
 	
 	@Test
 	public void testExtractNotesOnLevel(){
@@ -167,6 +167,17 @@ public class MelodicObjectiveTest extends AbstractTest {
 		notes.add(note().pc(0).pos(18).len(6).positionWeight(0.5).build());
 		double value = melodicObjective.evaluateTriadicValueMelody(notes);
 		assertEquals(0.985, value, 0);
+	}
+	
+	@Test
+	public void testEvaluateMelody2() {
+		List<Note> notes = new ArrayList<>();
+		notes.add(note().pitch(60).pc(0).pos(0).len(6).positionWeight(2.0).build());
+		notes.add(note().pitch(62).pc(2).pos(6).len(6).positionWeight(2.0).build());
+		notes.add(note().pitch(64).pc(4).pos(12).len(6).positionWeight(1.0).build());
+		double value = melodicObjective.evaluateMelodyPosition(notes, 1);
+		LOGGER.info("Melody value: " + value);
+		assertEquals(1.0, value, 0);
 	}
 
 

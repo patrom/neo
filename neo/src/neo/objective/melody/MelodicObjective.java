@@ -89,7 +89,7 @@ public class MelodicObjective extends Objective {
 		return (harmonicValue == 0)? 0:harmonicValue/(notePositions.length - 2);
 	}
 
-	protected double evaluateMelody(List<Note> notes, int maxDistance) {
+	public double evaluateMelody(List<Note> notes, int maxDistance) {
 		if (notes.size() <= 1) {
 			throw new IllegalArgumentException("size");
 		}
@@ -111,8 +111,39 @@ public class MelodicObjective extends Objective {
 	}
 
 	private double getIntervalMelodicValue(Note note, Note nextNote) {
-		int difference = nextNote.getPitch() - note.getPitch();
+		int difference = 0;
+		if (note.getPitch() != 0 && nextNote.getPitch() != 0) {
+			difference = nextNote.getPitch() - note.getPitch();
+		}else{
+			difference = Math.abs(note.getPitchClass() - nextNote.getPitchClass());
+		}	
 		return Interval.getEnumInterval(difference).getMelodicValue();
+	}
+	
+	public double evaluateMelodyPosition(List<Note> notes, int maxDistance) {
+		if (notes.size() <= 1) {
+			throw new IllegalArgumentException("size");
+		}
+		double totalPositionWeight = getTotalPositionWeiht(notes);
+		Note[] notePositions = notes.toArray(new Note[notes.size()]);
+		double melodyIntervalValueSum = 0;
+		for (int distance = 1; distance <= maxDistance; distance++) {
+			for (int j = 0; j < notePositions.length - distance; j++) {
+				Note note = notePositions[j];
+				Note nextNote = notePositions[j + distance];
+				double intervalPositionWeight = (note.getPositionWeight() + nextNote.getPositionWeight())/totalPositionWeight;
+				double intervalMelodicValue = getIntervalMelodicValue(note, nextNote);
+				double intervalValue = intervalMelodicValue * intervalPositionWeight;
+				melodyIntervalValueSum = melodyIntervalValueSum + intervalValue;
+			}
+		}
+		return melodyIntervalValueSum;
+	}
+	
+	private double getTotalPositionWeiht(List<Note> notes){
+		double sumPositionWeights = notes.stream().mapToDouble(n -> n.getPositionWeight()).sum();
+		double total = (sumPositionWeights * 2) - notes.get(0).getPositionWeight() - notes.get(notes.size() - 1).getPositionWeight();
+		return total;
 	}
 
 }

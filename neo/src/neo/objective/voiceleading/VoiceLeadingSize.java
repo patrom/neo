@@ -5,12 +5,14 @@ import java.util.List;
 
 import neo.util.Util;
 
-public class VoiceLeadingSize {
+public class VoiceLeadingSize implements Comparable<VoiceLeadingSize>{
 
 	private List<Integer> source = new ArrayList<>();
 	private List<Integer> target = new ArrayList<>();
 	private int size;
 	private int mod = 12;
+	private String sourceForteName;
+	private String targetForteName;
 	
 	public List<Integer> getSource() {
 		return source;
@@ -73,5 +75,60 @@ public class VoiceLeadingSize {
 		}
 		return list;
 	}
+
+	public String getSourceForteName() {
+		return sourceForteName;
+	}
+
+	public void setSourceForteName(String sourceForteName) {
+		this.sourceForteName = sourceForteName;
+	}
+
+	public String getTargetForteName() {
+		return targetForteName;
+	}
+
+	public void setTargetForteName(String targetForteName) {
+		this.targetForteName = targetForteName;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((sourceForteName == null) ? 0 : sourceForteName.hashCode());
+		result = prime * result
+				+ ((targetForteName == null) ? 0 : targetForteName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		VoiceLeadingSize other = (VoiceLeadingSize) obj;
+		if (sourceForteName == null) {
+			if (other.sourceForteName != null)
+				return false;
+		} 
+		if (targetForteName == null) {
+			if (other.targetForteName != null)
+				return false;
+		} else if (!sourceForteName.equals(other.sourceForteName) && !targetForteName.equals(other.targetForteName))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int compareTo(VoiceLeadingSize voiceLeadingSize) {
+		return this.sourceForteName.compareTo(voiceLeadingSize.getSourceForteName());
+	}
+
+	
      
 }

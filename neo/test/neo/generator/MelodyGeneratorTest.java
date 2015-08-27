@@ -1,7 +1,5 @@
 package neo.generator;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,10 +15,11 @@ import neo.DefaultConfig;
 import neo.VariationConfig;
 import neo.model.note.Note;
 import neo.model.note.NoteBuilder;
+import neo.objective.melody.MelodicObjective;
+import neo.objective.rhythm.RhythmObjective;
 import neo.out.print.ScoreUtilities;
 import neo.variation.Embellisher;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +37,10 @@ public class MelodyGeneratorTest extends JFrame{
 	private ScoreUtilities scoreUtilities;
 	@Autowired
 	private Embellisher embellisher;
+	@Autowired
+	private RhythmObjective rhythmObjective;
+	@Autowired
+	private MelodicObjective melodicObjective;
 
 	@Before
 	public void setUp() throws Exception {
@@ -52,21 +55,23 @@ public class MelodyGeneratorTest extends JFrame{
 	}
 	
 	@Test
-	public void testGenerateMelodyChordNotes() {
-		int[] positions = {0, 12, 18, 24, 48};
-		List<Note> chordNotes = new ArrayList<>();
-		chordNotes.add(NoteBuilder.note().pc(0).build());
-		chordNotes.add(NoteBuilder.note().pc(4).build());
-		chordNotes.add(NoteBuilder.note().pc(7).build());
-		List<Note> melodyChordNotes = melodyGenerator.generateMelodyChordNotes(positions, chordNotes);
-		for (Note note : melodyChordNotes) {
-			note.setPitch(note.getPitchClass() + 60);
-		}
-		System.out.println(melodyChordNotes);
-		Score score = scoreUtilities.createMelody(melodyChordNotes);
+	public void testGenerateMelodyNotes() {
+		int[] beginEndPosition = {0, 96};
+		int minimumNoteValue = 6;
+		List<Note> scaleNotes = new ArrayList<>();
+		scaleNotes.add(NoteBuilder.note().pc(0).build());
+		scaleNotes.add(NoteBuilder.note().pc(2).build());
+		scaleNotes.add(NoteBuilder.note().pc(4).build());
+		scaleNotes.add(NoteBuilder.note().pc(5).build());
+		scaleNotes.add(NoteBuilder.note().pc(7).build());
+		scaleNotes.add(NoteBuilder.note().pc(9).build());
+		scaleNotes.add(NoteBuilder.note().pc(11).build());
+		
+		List<Note> melodyNotes = melodyGenerator.generateMelody(scaleNotes, beginEndPosition, minimumNoteValue);
+		melodyNotes.forEach(note -> note.setPitch(note.getPitchClass() + 60));
+		Score score = scoreUtilities.createMelody(melodyNotes);
 		View.notate(score);
 		Play.midi(score, true);
-		
 	}
 	
 	@Test

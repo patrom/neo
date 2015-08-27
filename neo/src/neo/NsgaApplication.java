@@ -106,15 +106,15 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 
 //		BeginEndChordGenerator generator = beginEndChordGenerator;
 		
-		TonalChordGenerator generator = new TonalChordGenerator(harmonies, musicProperties);
-//		generator.generateHarmonicMelodiesForVoice(melodies, 3);
-		int key = 0;
-		musicProperties.setKeySignature(key);
-		generator.setChords(TonalChords.getTriads(key));
-		generator.addChords(TonalChords.getTriads(key + 7));
-		generator.addChords(TonalChords.getTriads(key + 5));
+//		TonalChordGenerator generator = new TonalChordGenerator(harmonies, musicProperties);
+////		generator.generateHarmonicMelodiesForVoice(melodies, 3);
+//		int key = 0;
+//		musicProperties.setKeySignature(key);
+//		generator.setChords(TonalChords.getTriads(key));
+//		generator.addChords(TonalChords.getTriads(key + 7));
+//		generator.addChords(TonalChords.getTriads(key + 5));
 
-//		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
+		Generator generator = new RandomNotesGenerator(harmonies, musicProperties);
 //		generator.generateHarmonicMelodiesForVoice(generatedMelodyPositions, 5);
 //		generator.generateHarmonicMelodiesForVoice(melodies, 3);
 		
@@ -133,7 +133,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    
 	    //harmony
 	    List<Integer> allowedDefaultIndexes = allowedDefaultIndexes();
-	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 0.0);
+	    harmonyNoteToPitch.setParameter("probabilityHarmonyNoteToPitch", 1.0);
 	    harmonyNoteToPitch.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    harmonyNoteToPitch.setOuterBoundaryIncluded(false);//default == true;
 	    
@@ -145,7 +145,7 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 	    melodyNoteToHarmonyNote.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    melodyNoteToHarmonyNote.setOuterBoundaryIncluded(false);
 	    
-	    oneNoteMutation.setParameter("probabilityOneNote", 0.0);
+	    oneNoteMutation.setParameter("probabilityOneNote", 1.0);
 	    oneNoteMutation.setAllowedMelodyMutationIndexes(allowedDefaultIndexes);
 //	    oneNoteMutation.setOuterBoundaryIncluded(false);
 	    
@@ -176,10 +176,6 @@ public class NsgaApplication extends JFrame implements CommandLineRunner{
 		}
 		return allowedDefaultIndexes;
 	}
-	
-	private void prepareHarmonies() {
-//        rhythmWeightValues = RhythmWeight.generateRhythmWeight(harmonies.length - 1, musicProperties.getMeasureWeights());
-    }
 	
 	private void deleteMidiFiles(String midiFilesPath) throws IOException{
 		List<File> midiFiles = Files.list(new File(midiFilesPath).toPath()).map(p -> p.toFile()).collect(Collectors.toList());

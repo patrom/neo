@@ -80,6 +80,7 @@ public class Harmony implements Comparable<Harmony>{
 		harmonicMelodies.stream()
 			.map(harmonicMelodic -> harmonicMelodic.getHarmonyNote())
 			.forEach(note -> note.setPitchClass((note.getPitchClass() + t) % 12));
+		toChord();
 	}
 
 	@Override

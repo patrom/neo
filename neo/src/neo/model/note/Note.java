@@ -8,10 +8,12 @@ public class Note implements Comparable<Note>, Cloneable{
 	/** The pitch value which indicates a rest. */
 	public static final int REST = Integer.MIN_VALUE;
 	   /** default dynamic*/
-    public static final int DEFAULT_DYNAMIC = 85;
+    public static final int DEFAULT_DYNAMIC_LEVEL = Dynamic.MF.getLevel();
+    public static final Articulation DEFAULT_ARTICULATION = Articulation.LEGATO;
+    public static final Dynamic DEFAULT_DYNAMIC = Dynamic.MF;
 
 	private int pitch;
-	private int dynamic = DEFAULT_DYNAMIC;
+	private int dynamicLevel = DEFAULT_DYNAMIC_LEVEL;
 	private double rhythmValue;
 	private double duration;
 
@@ -28,7 +30,8 @@ public class Note implements Comparable<Note>, Cloneable{
 	private boolean tieStart;
 	private boolean tieEnd;
 	
-	private Articulation performance = Articulation.LEGATO;
+	private Articulation articulation = DEFAULT_ARTICULATION;
+	private Dynamic dynamic = DEFAULT_DYNAMIC;
 
 	public double getBeat(int divider) {
 		return Math.floor(position / divider);
@@ -74,12 +77,12 @@ public class Note implements Comparable<Note>, Cloneable{
 		this.pitch = pitch;
 	}
 
-	public int getDynamic() {
-		return dynamic;
+	public int getDynamicLevel() {
+		return dynamicLevel;
 	}
 
-	public void setDynamic(int dynamic) {
-		this.dynamic = dynamic;
+	public void setDynamicLevel(int dynamic) {
+		this.dynamicLevel = dynamic;
 	}
 
 	public double getRhythmValue() {
@@ -200,12 +203,16 @@ public class Note implements Comparable<Note>, Cloneable{
 		return super.clone();
 	}
 
-	public Articulation getPerformance() {
-		return performance;
+	public Articulation getArticulation() {
+		return articulation;
 	}
 	
-	public void setPerformance(Articulation performance) {
-		this.performance = performance;
+	public boolean hasArticulation(){
+		return !articulation.equals(DEFAULT_ARTICULATION);
+	}
+	
+	public void setArticulation(Articulation performance) {
+		this.articulation = performance;
 	}
 	
 	public Note copy(){
@@ -218,10 +225,24 @@ public class Note implements Comparable<Note>, Cloneable{
 		newNote.setVoice(this.getVoice());
 		newNote.setInnerMetricWeight(this.getInnerMetricWeight());
 		newNote.setRhythmValue(this.getRhythmValue());
-		newNote.setDynamic(this.getDynamic());
+		newNote.setDynamicLevel(this.getDynamicLevel());
 		newNote.setOctave(this.getOctave());
 		newNote.setPositionWeight(this.getPositionWeight());
 		return newNote;
+	}
+	
+	public void copy(Note note){
+		this.setLength(note.getLength());
+		this.setPosition(note.getPosition());
+		this.setPitch(note.getPitch());
+		this.setPitchClass(note.getPitchClass());
+		this.setDuration(note.getDuration());
+		this.setVoice(note.getVoice());
+		this.setInnerMetricWeight(note.getInnerMetricWeight());
+		this.setRhythmValue(note.getRhythmValue());
+		this.setDynamicLevel(note.getDynamicLevel());
+		this.setOctave(note.getOctave());
+		this.setPositionWeight(note.getPositionWeight());
 	}
 
 	public boolean isTieStart() {
@@ -238,6 +259,18 @@ public class Note implements Comparable<Note>, Cloneable{
 
 	public void setTieEnd(boolean tieEnd) {
 		this.tieEnd = tieEnd;
+	}
+	
+	public boolean hasDynamic(){
+		return dynamicLevel != DEFAULT_DYNAMIC_LEVEL;
+	}
+
+	public Dynamic getDynamic() {
+		return dynamic;
+	}
+
+	public void setDynamic(Dynamic dynamic) {
+		this.dynamic = dynamic;
 	}
 
 }

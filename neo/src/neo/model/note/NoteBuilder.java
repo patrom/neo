@@ -1,5 +1,7 @@
 package neo.model.note;
 
+import neo.out.instrument.Articulation;
+
 
 public class NoteBuilder {
 	
@@ -11,6 +13,9 @@ public class NoteBuilder {
 	private int pitch;
 	private int octave;
 	private int voice;
+//	private int dynamicLevel = Note.DEFAULT_DYNAMIC_LEVEL;
+	private Articulation articulation = Note.DEFAULT_ARTICULATION;
+	private Dynamic dynamic = Dynamic.MF;
 
 	public static NoteBuilder note(){
 		return new NoteBuilder();
@@ -46,6 +51,16 @@ public class NoteBuilder {
 		return this;
 	}
 	
+	public NoteBuilder dyn(Dynamic dynamic){
+		this.dynamic = dynamic;
+		return this;
+	}
+	
+	public NoteBuilder art(Articulation articulation){
+		this.articulation = articulation;
+		return this;
+	}
+	
 	public NoteBuilder positionWeight(Double positionWeight) {
 		this.positionWeight = positionWeight;
 		return this;
@@ -66,6 +81,9 @@ public class NoteBuilder {
 		note.setPitch(pitch);
 		note.setOctave(octave);
 		note.setVoice(voice);
+//		note.setDynamicLevel(dynamicLevel);
+		note.setArticulation(articulation);
+		note.setDynamic(dynamic);
 		return note;
 	}
 

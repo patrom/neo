@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class MusicProperties {
 	
 	private int harmonyBeatDivider = 12;
-	private int tempo = 90;
+	private int tempo = 100;
 	private Map<Integer, Double> rhythmWeightValues = new TreeMap<>(); //Must match length of harmonies based on division by minimumLength.
 	private int minimumLength;
 	private int chordSize;
@@ -26,7 +26,7 @@ public class MusicProperties {
 	
 	//tonality
 	private Scale scale = new Scale(Scale.CHROMATIC_SCALE);
-	private Scale melodyScale = new Scale(Scale.WHOLE_TONE_SCALE);
+	private Scale melodyScale = new Scale(Scale.OCTATCONIC_HALF);
 	
 	//harmony
 	private double harmonyConsDissValue = 0.3;

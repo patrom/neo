@@ -136,7 +136,7 @@ public class MidiDevicesUtil {
 		Track track = sequence.createTrack();
 		int prevPerfomance = 0;
 		for (Note notePos : notes) {
-			int performance = instrument.getPerformanceValue(notePos.getPerformance());
+			int performance = instrument.getPerformanceValue(notePos.getArticulation());
 			if (performance != prevPerfomance) {
 				MidiEvent changeEvent = createInstrumentChange(instrument, performance);
 				track.add(changeEvent);
@@ -191,7 +191,7 @@ public class MidiDevicesUtil {
 	private Note createKeySwitch(int performance) {
 		Note keySwitch = new Note();
 		keySwitch.setPitch(performance);
-		keySwitch.setDynamic(80);
+		keySwitch.setDynamicLevel(80);
 		return keySwitch;
 	}
 
@@ -214,7 +214,7 @@ public class MidiDevicesUtil {
 			note.setMessage(cmd, channel, 0, 0);
 		} else {
 			note.setMessage(cmd, channel,
-					notePos.getPitch(), notePos.getDynamic());
+					notePos.getPitch(), notePos.getDynamicLevel());
 		}
 		
 		MidiEvent event = new MidiEvent(note, position);

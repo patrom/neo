@@ -7,7 +7,13 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import jm.music.data.Score;
+import jm.util.Play;
+import jm.util.View;
 import neo.model.note.Note;
+import neo.objective.melody.MelodicObjective;
+import neo.objective.melody.MelodicObjectiveTest;
+import neo.objective.rhythm.RhythmObjective;
 import neo.util.RandomUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +21,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MelodyGenerator {
+	
+	@Autowired
+	private RhythmObjective rhythmObjective;
+	@Autowired
+	private MelodicObjective melodicObjective;
 
 	private Random random = new Random();
 	@Autowired
@@ -88,6 +99,22 @@ public class MelodyGenerator {
 			melodyChordNotes.add(noteCopy);
 		}
 		return melodyChordNotes;
+	}
+	
+	public List<Note> generateMelody(List<Note> scaleNotes, int[] beginEndPosition, int minimumNoteValue){
+		for (int i = 0; i < 10000; i++) {
+			int max = beginEndPosition[1]/minimumNoteValue;
+			int[] positions = generateMelodyPositions(beginEndPosition, minimumNoteValue, max);
+			List<Note> melodyNotes = generateMelodyChordNotes(positions, scaleNotes);
+			double profile = rhythmObjective.getProfileAverage(melodyNotes, 3.0);
+			if (profile >= 0.7 && melodyNotes.size() > 1) {
+				double melodicValue = melodicObjective.evaluateMelodyPosition(melodyNotes, 1);
+				if (melodicValue > 0.7) {
+					return melodyNotes;
+				}
+			}
+		}
+		throw new IllegalArgumentException("No melody generated");
 	}
 	
 }

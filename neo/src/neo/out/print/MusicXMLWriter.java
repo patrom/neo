@@ -204,6 +204,17 @@ public class MusicXMLWriter {
 				List<Note> notes = measure.getNotes();
 				int position = -1;
 				for (Note note : notes) {
+//					if (note.hasDynamic()) {
+//						<direction>
+//						<direction-type>
+//							<dynamics default-x="9" default-y="-118" color="#000000" font-family="Opus Text Std" font-style="normal" font-size="11.9365" font-weight="normal">
+//								<p />
+//							</dynamics>
+//						</direction-type>
+//						<voice>1</voice>
+//						<staff>1</staff>
+//					</direction>
+//					}
 					int staff = getStaff(instrument, note);
 					if (position == note.getPosition()) {
 						createNoteElement(xmlStreamWriter, note, instrument, true, -1 , staff);
@@ -381,15 +392,39 @@ public class MusicXMLWriter {
 			createTimeModification(xmlStreamWriter, noteType);
 		}
 		createElementWithValue(xmlStreamWriter, "staff", String.valueOf(staff));
-		if (note.isTieStart()) {
-			createNotationsStartElement(xmlStreamWriter);
-		}else if (note.isTieEnd()) {
-			createNotationsStopElement(xmlStreamWriter);
+		if (note.hasArticulation()|| note.isTieStart() || note.isTieEnd()) {
+			createNotationsElement(xmlStreamWriter, note);
 		}
 		xmlStreamWriter.writeEndElement();
 		xmlStreamWriter.writeCharacters("\n");
 	}
 	
+	private void createNotationsElement(XMLStreamWriter xmlStreamWriter, Note note) throws XMLStreamException {
+		xmlStreamWriter.writeStartElement("notations");
+		xmlStreamWriter.writeCharacters("\n");
+		if (note.isTieStart()) {
+			createElementWithAttributeValue(xmlStreamWriter, "tied", "type", "start");
+		}else if (note.isTieEnd()) {
+			createStopElement(xmlStreamWriter);
+		}
+		if (note.hasArticulation()) {
+			createArticulationElement(xmlStreamWriter, note);
+		}
+		xmlStreamWriter.writeEndElement();
+		xmlStreamWriter.writeCharacters("\n");
+	}
+
+	private void createArticulationElement(XMLStreamWriter xmlStreamWriter, Note note) throws XMLStreamException {
+		xmlStreamWriter.writeStartElement("Articulation");
+		xmlStreamWriter.writeCharacters("\n");
+		
+		xmlStreamWriter.writeEmptyElement(note.getArticulation().getMusicXmlLabel());
+		
+		xmlStreamWriter.writeEndElement();
+		xmlStreamWriter.writeCharacters("\n");
+		
+	}
+
 	private void createTimeModification(XMLStreamWriter xmlStreamWriter,NoteType noteType) throws XMLStreamException {
 		xmlStreamWriter.writeStartElement("time-modification");
 		xmlStreamWriter.writeCharacters("\n");
@@ -407,10 +442,7 @@ public class MusicXMLWriter {
 		xmlStreamWriter.writeCharacters("\n");
 	}
 
-	private void createNotationsStopElement(XMLStreamWriter xmlStreamWriter) throws XMLStreamException {
-		xmlStreamWriter.writeStartElement("notations");
-		xmlStreamWriter.writeCharacters("\n");
-		
+	private void createStopElement(XMLStreamWriter xmlStreamWriter) throws XMLStreamException {
 		xmlStreamWriter.writeStartElement("slur");
 		xmlStreamWriter.writeAttribute("color", "#000000");
 		xmlStreamWriter.writeAttribute("type", "stop");
@@ -419,8 +451,6 @@ public class MusicXMLWriter {
 		xmlStreamWriter.writeCharacters("\n");
 		
 		createElementWithAttributeValue(xmlStreamWriter, "tied", "type", "stop");
-		xmlStreamWriter.writeEndElement();
-		xmlStreamWriter.writeCharacters("\n");
 	}
 
 	private void createNotationsStartElement(XMLStreamWriter xmlStreamWriter) throws XMLStreamException {
