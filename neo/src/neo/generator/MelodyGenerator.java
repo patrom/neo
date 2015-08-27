@@ -108,7 +108,7 @@ public class MelodyGenerator {
 			List<Note> melodyNotes = generateMelodyChordNotes(positions, scaleNotes);
 			double profile = rhythmObjective.getProfileAverage(melodyNotes, 3.0);
 			if (profile >= 0.7 && melodyNotes.size() > 1) {
-				double melodicValue = melodicObjective.evaluateMelodyPosition(melodyNotes, 1);
+				double melodicValue = melodicObjective.evaluateMelody(melodyNotes, 1);
 				if (melodicValue > 0.7) {
 					return melodyNotes;
 				}
