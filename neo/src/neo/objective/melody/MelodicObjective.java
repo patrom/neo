@@ -13,9 +13,7 @@ import java.util.TreeMap;
 
 import neo.model.Motive;
 import neo.model.dissonance.Dissonance;
-import neo.model.dissonance.TonalDissonance;
 import neo.model.harmony.Chord;
-import neo.model.harmony.ChordType;
 import neo.model.melody.Melody;
 import neo.model.note.Interval;
 import neo.model.note.Note;
@@ -88,27 +86,6 @@ public class MelodicObjective extends Objective {
 		}
 		return (harmonicValue == 0)? 0:harmonicValue/(notePositions.length - 2);
 	}
-
-//	public double evaluateMelody(List<Note> notes, int maxDistance) {
-//		if (notes.size() <= 1) {
-//			throw new IllegalArgumentException("size");
-//		}
-//		double totalPositionWeigth = 0;
-//		Note[] notePositions = notes.toArray(new Note[notes.size()]);
-//		double melodyIntervalValueSum = 0;
-//		for (int distance = 1; distance <= maxDistance; distance++) {
-//			for (int j = 0; j < notePositions.length - distance; j++) {
-//				Note note = notePositions[j];
-//				Note nextNote = notePositions[j + distance];
-//				double intervalPositionWeight = (note.getWeightedSum() + nextNote.getWeightedSum());
-//				totalPositionWeigth = totalPositionWeigth + intervalPositionWeight;
-//				double intervalMelodicValue = getIntervalMelodicValue(note, nextNote);
-//				double intervalValue = intervalMelodicValue * intervalPositionWeight;
-//				melodyIntervalValueSum = melodyIntervalValueSum + intervalValue;
-//			}
-//		}
-//		return melodyIntervalValueSum/totalPositionWeigth;
-//	}
 
 	private double getIntervalMelodicValue(Note note, Note nextNote) {
 		int difference = 0;
